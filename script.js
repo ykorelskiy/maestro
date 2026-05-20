@@ -244,11 +244,12 @@ rafScroll.subscribe((scrollY) => {
     // Wheel / тачпад MacBook
     let wheelTimer = null;
     carousel.addEventListener('wheel', (e) => {
-        // Throttle: одно срабатывание за 300 мс
-        if(wheelTimer) return;
-        wheelTimer = setTimeout(() => { wheelTimer = null; }, 300);
-
+        // Блокируем вертикальный скролл и переключаем карусель
         e.preventDefault();
+        // Throttle: одно срабатывание за 600 мс (больше для тачпада)
+        if(wheelTimer) return;
+        wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
+
         if(e.deltaY > 0){
             stepForward();
         } else {
