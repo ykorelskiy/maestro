@@ -144,9 +144,112 @@ rafScroll.subscribe((scrollY) => {
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) closeManifest();
         });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                closeManifest();
-            }
-        });
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('active')) {
+        closeManifest();
+    }
+    
+    // Keyboard navigation for carousel
+    if (e.key === 'ArrowRight') {
+        stepForward();
+        stopAuto();
+        setTimeout(startAuto, 3000);
+    }
+    if (e.key === 'ArrowLeft') {
+        stepBackward();
+        stopAuto();
+        setTimeout(startAuto, 3000);
+    }
+});
     })();
+
+/* =========================================
+   APPROACH CAROUSEL (scroll-snap + auto-play + loop)
+========================================= */
+
+(function(){
+    const carousel = document.getElementById('approachCarousel');
+    const track = document.getElementById('approachTrack');
+    const dotsContainer = document.getElementById('approachDots');
+    if(!carousel || !track || !dotsContainer) return;
+
+    const slides = Array.from(track.querySelectorAll('.approach-slide'));
+    const total = slides.length;
+    if(total < 2) return;
+
+    // --- Create dots ---
+    slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'approach-dot';
+        dot.setAttribute('aria-label', `Перейти к карточке ${i + 1}`);
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+    });
+    const dots = Array.from(dotsContainer.querySelectorAll('.approach-dot'));
+
+    let autoTimer = null;
+    const INTERVAL = 5000;
+    let currentIndex = 0;
+    let userInteracted = false;
+
+    function setActive(index){
+        if(index < 0 || index >= total) return;
+        currentIndex = index;
+        slides.forEach(el => el.classList.remove('is-active'));
+        slides[index].classList.add('is-active');
+        dots.forEach(el => el.classList.remove('is-active'));
+        if(dots[index]) dots[index].classList.add('is-active');
+    }
+
+    function getSnapX(index){
+        return slides[index].offsetLeft + slides[index].offsetWidth / 2 - carousel.clientWidth / 2;
+    }
+
+    function goToSlide(index){
+        userInteracted = true;
+        setTimeout(() => { userInteracted = false; }, 100);
+        carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
+    }
+
+    function stepForward(){
+        const next = (currentIndex + 1) % total;
+        if(next === 0){
+            // Jump back to start instantly then animate
+            carousel.style.scrollBehavior = 'auto';
+            carousel.scrollLeft = getSnapX(0);
+            carousel.style.scrollBehavior = '';
+            setActive(0);
+        } else {
+            goToSlide(next);
+        }
+    }
+
+    // Detect active slide on scroll
+    carousel.addEventListener('scroll', () => {
+        if(userInteracted) return;
+        const cx = carousel.scrollLeft + carousel.clientWidth / 2;
+        let best = 0, bestD = Infinity;
+        slides.forEach((s, i) => {
+            const d = Math.abs(cx - (s.offsetLeft + s.offsetWidth / 2));
+            if(d < bestD){ bestD = d; best = i; }
+        });
+        if(best !== currentIndex) setActive(best);
+    }, { passive: true });
+
+    function startAuto(){
+        stopAuto();
+        autoTimer = setInterval(stepForward, INTERVAL);
+    }
+
+    function stopAuto(){
+        if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
+    }
+
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
+
+    // Init
+    carousel.scrollLeft = getSnapX(0);
+    setActive(0);
+    startAuto();
+})();
