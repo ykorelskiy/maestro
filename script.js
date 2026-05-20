@@ -248,6 +248,7 @@ rafScroll.subscribe((scrollY) => {
         if(wheelTimer) return;
         wheelTimer = setTimeout(() => { wheelTimer = null; }, 300);
 
+        e.preventDefault();
         if(e.deltaY > 0){
             stepForward();
         } else {
@@ -255,7 +256,7 @@ rafScroll.subscribe((scrollY) => {
         }
         stopAuto();
         setTimeout(startAuto, INTERVAL);
-    }, { passive: true });
+    }, { passive: false });
 
     // Drag handler (мышью)
     let isDragging = false;
@@ -322,8 +323,15 @@ rafScroll.subscribe((scrollY) => {
         if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
     }
 
-    carousel.addEventListener('mouseenter', stopAuto);
-    carousel.addEventListener('mouseleave', startAuto);
+    // Блокировка snap при наведении на карусель
+    carousel.addEventListener('mouseenter', () => {
+        document.documentElement.style.scrollSnapType = 'none';
+        stopAuto();
+    });
+    carousel.addEventListener('mouseleave', () => {
+        document.documentElement.style.scrollSnapType = '';
+        startAuto();
+    });
 
     // Dots
     dots.forEach((dot, i) => {
