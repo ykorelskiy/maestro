@@ -153,8 +153,7 @@ rafScroll.subscribe((scrollY) => {
 
 /* =========================================
    APPROACH CAROUSEL
-   Полностью переписан на transform: translateX.
-   Никакого scroll-snap — полный контроль.
+   transform: translateX — цикл + drag + throttle
 ========================================= */
 
 (function(){
@@ -178,9 +177,10 @@ rafScroll.subscribe((scrollY) => {
     const dots = Array.from(dotsContainer.querySelectorAll('.approach-dot'));
 
     let autoTimer = null;
-    const INTERVAL = 3000; // 3 секунды
+    const INTERVAL = 3000;
     let currentIndex = 0;
     let slideWidth = 0;
+    let isTransitioning = false;
 
     function calcSlideWidth(){
         if(slides.length > 0){
@@ -200,6 +200,9 @@ rafScroll.subscribe((scrollY) => {
 
     function goToSlide(index){
         if(index < 0 || index >= total) return;
+        if(isTransitioning) return;
+        isTransitioning = true;
+        setTimeout(() => { isTransitioning = false; }, 550);
         calcSlideWidth();
         const offset = -index * slideWidth;
         track.style.transform = `translateX(${offset}px)`;
@@ -216,29 +219,51 @@ rafScroll.subscribe((scrollY) => {
         goToSlide(prev);
     }
 
-    // Wheel handler (мышь колёсиком)
-    carousel.addEventListener('wheel', (e) => {
+    // Drag handler (мышью)
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartTrack = 0;
+
+    carousel.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartTrack = currentIndex;
+        carousel.style.cursor = 'grabbing';
         e.preventDefault();
-        if(e.deltaY > 0){
-            stepForward();
-        } else {
-            stepBackward();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if(!isDragging) return;
+        const diff = e.clientX - dragStartX;
+        if(Math.abs(diff) > slideWidth * 0.3){
+            isDragging = false;
+            carousel.style.cursor = '';
+            if(diff < 0){
+                stepForward();
+            } else {
+                stepBackward();
+            }
+            stopAuto();
+            setTimeout(startAuto, INTERVAL);
         }
-        stopAuto();
-        setTimeout(startAuto, INTERVAL);
-    }, { passive: false });
+    });
+
+    document.addEventListener('mouseup', () => {
+        if(isDragging){
+            isDragging = false;
+            carousel.style.cursor = '';
+        }
+    });
 
     // Touch/swipe handler
     let touchStartX = 0;
-    let touchEndX = 0;
 
     carousel.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
 
     carousel.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
+        const diff = touchStartX - e.changedTouches[0].screenX;
         if(Math.abs(diff) > 30){
             if(diff > 0){
                 stepForward();
@@ -262,7 +287,7 @@ rafScroll.subscribe((scrollY) => {
     carousel.addEventListener('mouseenter', stopAuto);
     carousel.addEventListener('mouseleave', startAuto);
 
-    // Click on dots
+    // Dots
     dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
             goToSlide(i);
@@ -271,7 +296,7 @@ rafScroll.subscribe((scrollY) => {
         });
     });
 
-    // Keyboard navigation
+    // Keyboard
     document.addEventListener('keydown', function(e) {
         const overlay = document.getElementById('manifestOverlay');
         if(overlay && overlay.classList.contains('active')) return;
