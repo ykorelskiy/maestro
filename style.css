@@ -22,10 +22,6 @@
 
 html{
     scroll-behavior:smooth;
-    scroll-snap-type: y mandatory;
-}
-@media(max-width:768px){
-    html{ scroll-snap-type: none; }
 }
 
 body{
@@ -774,15 +770,6 @@ body{
 
 section[id]{
     padding:120px 0;
-    scroll-snap-align: start;
-}
-section.hero,
-section.transition-section,
-section.contacts-section{
-    scroll-snap-align: start;
-}
-#approach{
-    scroll-snap-align: none;
 }
 
 .section-container{

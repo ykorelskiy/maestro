@@ -324,15 +324,8 @@ rafScroll.subscribe((scrollY) => {
         if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
     }
 
-    // Блокировка snap при наведении на карусель
-    carousel.addEventListener('mouseenter', () => {
-        document.documentElement.style.scrollSnapType = 'none';
-        stopAuto();
-    });
-    carousel.addEventListener('mouseleave', () => {
-        document.documentElement.style.scrollSnapType = '';
-        startAuto();
-    });
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
 
     // Dots
     dots.forEach((dot, i) => {
