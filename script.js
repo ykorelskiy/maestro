@@ -353,7 +353,7 @@ rafScroll.subscribe((scrollY) => {
 })();
 
 /* =========================================
-   CONTACTS — Visit card: letter scatter + icon migration + tilt
+   CONTACTS — Visit card: letter scatter + crossfade (no JS icon positioning)
    ========================================= */
 (function(){
     const section = document.getElementById('contacts');
@@ -395,130 +395,27 @@ rafScroll.subscribe((scrollY) => {
         nameEl.appendChild(span);
     });
     const letterSpans = nameEl.querySelectorAll('.contacts-letter');
-    let cardWidth = card.offsetWidth || 480;
 
     function getScaledVector(index, baseWidth){
-        const s = baseWidth / 480;
+        const s = (baseWidth || card.offsetWidth || 480) / 480;
         return { x: (vectors[index]?.x || 0) * s, y: (vectors[index]?.y || 0) * s, r: (vectors[index]?.r || 0) };
     }
 
-    const iconTelegram = card.querySelector('.contacts-icon--telegram');
-    const iconEmail = card.querySelector('.contacts-icon--email');
-    const anchorTelegram = card.querySelector('[data-anchor="telegram"]');
-    const anchorEmail = card.querySelector('[data-anchor="email"]');
-    const rows = card.querySelectorAll('.contacts-contact-row');
+    // ── Mobile: show contacts immediately, nothing else needed (CSS handles) ──
+    if(isMobile) return;
 
-    // ── Mobile: show contacts immediately ──
-    if(isMobile && rows.length === 2){
-        if(iconTelegram) iconTelegram.style.display = 'none';
-        if(iconEmail) iconEmail.style.display = 'none';
-        return;
-    }
-    if(!iconTelegram || !iconEmail || !anchorTelegram || !anchorEmail) return;
-
-    // ── Desktop: resting + hover positions ──
-
-    let restingPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
-    let targetPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
-
-    const ICON_SIZE = 24;
-    const DST_SIZE = 16;
-    const DST_SCALE = DST_SIZE / ICON_SIZE;
-    const HALF = ICON_SIZE / 2;
-
-    function computePositions(){
-        const cr = card.getBoundingClientRect();
-
-        // Resting: use the resting container as reference for Y
-        const restingEl = card.querySelector('.contacts-resting');
-        // The name element's bottom gives us the Y for resting icons
-        const nameRect = nameEl.getBoundingClientRect();
-        const nameBottom = nameRect.bottom - cr.top;
-
-        const cx = cr.width / 2;
-        const spread = 22;
-        const restY = nameBottom + 12; // 12px gap below name
-
-        restingPos.tg = { x: cx - spread - HALF, y: restY - HALF };
-        restingPos.em = { x: cx + spread - HALF, y: restY - HALF };
-
-        // Target: anchor top-left in card coordinates
-        const aTg = anchorTelegram.getBoundingClientRect();
-        const aEm = anchorEmail.getBoundingClientRect();
-        targetPos.tg = { x: aTg.left - cr.left, y: aTg.top - cr.top };
-        targetPos.em = { x: aEm.left - cr.left, y: aEm.top - cr.top };
-
-        // Center scaled icon (16px) within anchor (24px)
-        const off = (aTg.width - DST_SIZE) / 2;
-        targetPos.tg.x += off;
-        targetPos.tg.y += off;
-        targetPos.em.x += off;
-        targetPos.em.y += off;
-
-        // Telegram optical tweak
-        targetPos.tg.y -= 2;
-    }
-
-    // Initial compute and apply resting WITHOUT transition
-    computePositions();
-    iconTelegram.style.transform = `translate(${restingPos.tg.x}px, ${restingPos.tg.y}px) scale(1)`;
-    iconEmail.style.transform = `translate(${restingPos.em.x}px, ${restingPos.em.y}px) scale(1)`;
-
-    // Force reflow, THEN set transition
-    void card.offsetWidth;
-    const TRANSITION = 'transform .6s cubic-bezier(.22,1,.36,1)';
-    iconTelegram.style.transition = TRANSITION;
-    iconEmail.style.transition = TRANSITION;
-
-    function applyResting(){
-        iconTelegram.style.transform = `translate(${restingPos.tg.x}px, ${restingPos.tg.y}px) scale(1)`;
-        iconEmail.style.transform = `translate(${restingPos.em.x}px, ${restingPos.em.y}px) scale(1)`;
-    }
-
-    function applyHover(){
-        iconTelegram.style.transform = `translate(${targetPos.tg.x}px, ${targetPos.tg.y}px) scale(${DST_SCALE})`;
-        iconEmail.style.transform = `translate(${targetPos.em.x}px, ${targetPos.em.y}px) scale(${DST_SCALE})`;
-    }
-
-    let resizeTimer = null;
-    const recalc = () => {
-        if(resizeTimer) clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            computePositions();
-            if(!card._isHovering){
-                applyResting();
-            } else {
-                applyHover();
-            }
-        }, 100);
-    };
-    window.addEventListener('resize', recalc);
-
-    const ro = new ResizeObserver(() => recalc());
-    ro.observe(card);
-
-    // ── Hover logic (desktop only) ──
-    if(!isReduced && !isMobile){
+    // ── Desktop: letter scatter on hover (CSS handles icon crossfade) ──
+    if(!isReduced){
         card.addEventListener('mouseenter', () => {
-            card._isHovering = true;
-            // Recompute on each hover to catch any layout shifts
-            computePositions();
-            applyHover();
-
-            // Letter scatter
-            cardWidth = card.offsetWidth || 480;
             nameEl.classList.add('is-scattered');
             letterSpans.forEach((span, i) => {
-                const v = getScaledVector(i, cardWidth);
+                const v = getScaledVector(i);
                 span.style.transitionDelay = (i * 30) + 'ms';
                 span.style.transform = `translateX(${v.x}px) translateY(${v.y}px) rotate(${v.r}deg)`;
             });
         });
 
         card.addEventListener('mouseleave', () => {
-            card._isHovering = false;
-            applyResting();
-
             nameEl.classList.remove('is-scattered');
             letterSpans.forEach((span) => {
                 span.style.transitionDelay = '';
@@ -527,8 +424,8 @@ rafScroll.subscribe((scrollY) => {
         });
     }
 
-    // ── Tilt (desktop only) ──
-    if(isReduced || isMobile) return;
+    // ── Tilt (desktop only, no reduced motion) ──
+    if(isReduced) return;
 
     let tiltRAF = null;
     card.addEventListener('mousemove', (e) => {
@@ -537,8 +434,6 @@ rafScroll.subscribe((scrollY) => {
             const r = card.getBoundingClientRect();
             const dx = (e.clientX - r.left - r.width / 2) / r.width;
             const dy = (e.clientY - r.top - r.height / 2) / r.height;
-            // Don't override hover transform — tilt is applied via different property if needed
-            // For now, tilt only when not hovering (rare edge case), or just use separate layer
             tiltRAF = null;
         });
     });

@@ -1131,23 +1131,47 @@ section[id] p{
     opacity:0;
 }
 
-/* Icons that migrate from resting to hover positions */
-.contacts-icon{
-    position:absolute;
-    top:0;
-    left:0;
-    color:rgba(255,107,26,.5);
-    pointer-events:none;
-    z-index:6;
-    will-change:transform;
+/* === КОМПЛЕКТ A — крупные иконки в покое (flex, под MAESTRO.) === */
+.contacts-icons-rest{
+    display:flex;
+    justify-content:center;
+    gap:28px;
+    margin-top:24px;
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
+}
+.contacts-visit-card:hover .contacts-icons-rest{
+    opacity:0;
+    transform:translateY(6px);
 }
 
-/* Anchor spans inside contact rows — always in DOM, invisible */
-.contacts-icon-anchor{
-    display:inline-block;
+.contacts-icon-big{
+    width:24px;
+    height:24px;
+    color:rgba(255,107,26,.5);
+    display:block;
+    flex-shrink:0;
+}
+
+/* === КОМПЛЕКТ B — иконки внутри строк контактов === */
+.contacts-contact-icon-wrap{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
     width:24px;
     height:24px;
     flex-shrink:0;
+    color:var(--accent);
+    opacity:0;
+    transform:translateX(-8px);
+    transition:
+        opacity .35s ease .2s,
+        transform .35s ease .2s;
+}
+.contacts-visit-card:hover .contacts-contact-icon-wrap{
+    opacity:1;
+    transform:translateX(0);
 }
 
 /* --- Hover content: clickable contacts --- */
