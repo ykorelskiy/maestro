@@ -1131,17 +1131,29 @@ section[id] p{
     opacity:0;
 }
 
-.contacts-icons-row{
-    display:flex;
-    gap:20px;
-    align-items:center;
-    justify-content:center;
-    margin-top:2px;
+/* Icons that migrate from resting to hover positions */
+.contacts-icon{
+    position:absolute;
+    color:rgba(255,107,26,.5);
+    pointer-events:none;
+    z-index:6;
+    /* transition set via JS */
+    will-change:transform;
+}
+/* Resting position: centered under name, set via JS coordinates */
+.contacts-icon--telegram,
+.contacts-icon--email{
+    top:0;
+    left:0;
+    transform:none;
 }
 
-.contacts-icon{
-    color:rgba(255,107,26,.5);
-    transition:color .3s ease;
+/* Anchor spans inside contact rows — always in DOM, invisible */
+.contacts-icon-anchor{
+    display:inline-block;
+    width:24px;
+    height:24px;
+    flex-shrink:0;
 }
 
 /* --- Hover content: clickable contacts --- */

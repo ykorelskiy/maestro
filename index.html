@@ -392,41 +392,35 @@
                     <!-- Шум/текстура металла -->
                     <div class="contacts-grain" aria-hidden="true"></div>
 
-                    <!-- Содержимое в покое: MAESTRO. + иконки -->
+                    <!-- Содержимое в покое: MAESTRO. -->
                     <div class="contacts-resting" aria-hidden="false">
                         <div class="contacts-name" id="contactsName">MAESTRO.</div>
-                        <div class="contacts-icons-row">
-                            <svg class="contacts-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21.5 2.5L2.5 10.5L10.5 13.5L13.5 21.5L21.5 2.5Z"/>
-                                <path d="M10.5 13.5L14.5 9.5"/>
-                            </svg>
-                            <svg class="contacts-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                <path d="M22 4L12 13L2 4"/>
-                            </svg>
-                        </div>
                     </div>
 
-                    <!-- Содержимое при hover: кликабельные контакты -->
+                    <!-- Иконки — одни на всё, absolute, переезжают при hover -->
+                    <svg class="contacts-icon contacts-icon--telegram" data-icon="telegram" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2.5L2.5 10.5L10.5 13.5L13.5 21.5L21.5 2.5Z"/>
+                        <path d="M10.5 13.5L14.5 9.5"/>
+                    </svg>
+                    <svg class="contacts-icon contacts-icon--email" data-icon="email" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="M22 4L12 13L2 4"/>
+                    </svg>
+
+                    <!-- Содержимое при hover: кликабельные контакты (со всегда-существующими якорями для иконок) -->
                     <div class="contacts-hover-content" aria-hidden="true">
                         <a href="https://t.me/Maaeesstro"
                            target="_blank"
                            rel="noopener"
                            class="contacts-contact-row"
-                           data-index="0">
-                            <svg class="contacts-contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21.5 2.5L2.5 10.5L10.5 13.5L13.5 21.5L21.5 2.5Z"/>
-                                <path d="M10.5 13.5L14.5 9.5"/>
-                            </svg>
+                           data-row="0">
+                            <span class="contacts-icon-anchor" data-anchor="telegram" aria-hidden="true"></span>
                             <span class="contacts-contact-text">@Maaeesstro</span>
                         </a>
                         <a href="mailto:maestro.fisting@gmail.com"
                            class="contacts-contact-row"
-                           data-index="1">
-                            <svg class="contacts-contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                                <path d="M22 4L12 13L2 4"/>
-                            </svg>
+                           data-row="1">
+                            <span class="contacts-icon-anchor" data-anchor="email" aria-hidden="true"></span>
                             <span class="contacts-contact-text">maestro.fisting@gmail.com</span>
                         </a>
                     </div>
