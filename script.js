@@ -216,6 +216,11 @@ function stepForward(){
     goToSlide(next);
 }
 
+function stepBackward(){
+    const prev = (currentIndex - 1 + total) % total;
+    goToSlide(prev);
+}
+
     // Detect active slide on scroll
     carousel.addEventListener('scroll', () => {
         if(userInteracted) return;
