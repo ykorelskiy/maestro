@@ -1,0 +1,43 @@
+# Cline Project Rules — Maestro
+
+## Project info
+- **Name:** Maestro
+- **Type:** Personal website / blog
+- **Owner:** non-developer, works through AI agents
+- **Stack:** plain HTML + CSS + JS (no frameworks)
+- **Hosting:** GitHub Pages
+- **Files:** index.html, style.css, script.js
+
+## Context file
+- ALWAYS read `PROJECT_STATE.md` at the start of every task.
+- This file is the source of truth for current project status, structure, and decisions.
+- If `PROJECT_STATE.md` is missing or outdated, warn the user before proceeding.
+
+## When to update PROJECT_STATE.md
+Update it when:
+- A new section/feature is added
+- A bug is fixed that changes behavior
+- Architecture or stack changes
+- User signals end of session ("wrap up", "закрываем сессию", etc.)
+
+Do NOT update for:
+- Minor copy edits
+- CSS tweaks
+- Typo fixes
+
+## How to update PROJECT_STATE.md
+- Update the "Last updated" date
+- Add brief entries in relevant sections
+- Keep it concise — it's a map, not a diary
+- Commit with message: `docs: update project state — [what changed]`
+
+## Workflow rules
+- Run `git status` and `git diff` before claiming work is done
+- Make small, focused commits with clear messages
+- Ask before destructive actions (delete files, force push, reset)
+- After each task, briefly summarize what changed
+- User is non-technical: explain decisions in plain language, not jargon
+
+## Communication
+- Respond in Russian when user writes in Russian
+- Keep explanations short and actionable
