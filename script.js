@@ -375,58 +375,121 @@ rafScroll.subscribe((scrollY) => {
 
     // --- Split MAESTRO. into letter spans ---
     const nameEl = document.getElementById('contactsName');
-    if(nameEl){
-        const text = nameEl.textContent; // "MAESTRO."
-        nameEl.textContent = '';
-        const letters = text.split('');
-        const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const isMobile = window.matchMedia('(max-width: 1000px)').matches;
+    if(!nameEl) return;
+    const text = nameEl.textContent;
+    nameEl.textContent = '';
+    const letters = text.split('');
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 1000px)').matches;
 
-        // Predefined scatter vectors per letter index
-        const vectors = [
-            { x: 0, y: -90, r: -15 },   // M
-            { x: -70, y: -60, r: 25 },  // A
-            { x: 80, y: -50, r: -20 },  // E
-            { x: -40, y: 70, r: 35 },   // S
-            { x: 60, y: 65, r: -30 },   // T
-            { x: -80, y: -30, r: 20 },  // R
-            { x: 40, y: 80, r: 10 },    // O
-            { x: 0, y: 0, r: 0 },       // .
-        ];
-        // Scale vectors based on card size
-        function getScaledVector(index, baseWidth){
-            const scale = baseWidth / 480;
-            return {
-                x: (vectors[index]?.x || 0) * scale,
-                y: (vectors[index]?.y || 0) * scale,
-                r: (vectors[index]?.r || 0)
-            };
+    const vectors = [
+        { x: 0, y: -90, r: -15 },
+        { x: -70, y: -60, r: 25 },
+        { x: 80, y: -50, r: -20 },
+        { x: -40, y: 70, r: 35 },
+        { x: 60, y: 65, r: -30 },
+        { x: -80, y: -30, r: 20 },
+        { x: 40, y: 80, r: 10 },
+        { x: 0, y: 0, r: 0 },
+    ];
+
+    letters.forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'contacts-letter';
+        span.textContent = ch === '.' ? '·' : ch;
+        if(ch === '.') span.classList.add('is-dot');
+        nameEl.appendChild(span);
+    });
+
+    const letterSpans = nameEl.querySelectorAll('.contacts-letter');
+    let cardWidth = card.offsetWidth || 480;
+
+    function getScaledVector(index, baseWidth){
+        const scale = baseWidth / 480;
+        return {
+            x: (vectors[index]?.x || 0) * scale,
+            y: (vectors[index]?.y || 0) * scale,
+            r: (vectors[index]?.r || 0)
+        };
+    }
+
+    // --- Icons migration ---
+    const iconTelegram = card.querySelector('.contacts-icon--telegram');
+    const iconEmail = card.querySelector('.contacts-icon--email');
+    const rows = card.querySelectorAll('.contacts-contact-row');
+
+    function getRowCenter(row){
+        const rect = row.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        return {
+            x: rect.left - cardRect.left + 22, // ~icon width center
+            y: rect.top - cardRect.top + rect.height / 2
+        };
+    }
+
+    if(isMobile && iconTelegram && iconEmail && rows.length === 2){
+        // Mobile: hide absolute icons, insert into rows
+        iconTelegram.style.display = 'none';
+        iconEmail.style.display = 'none';
+        // Clone icons into rows with smaller size
+        [iconTelegram, iconEmail].forEach((icon, i) => {
+            const clone = icon.cloneNode(true);
+            clone.style.position = 'relative';
+            clone.style.display = 'inline';
+            clone.style.width = '16px';
+            clone.style.height = '16px';
+            clone.style.color = 'var(--accent)';
+            clone.style.flexShrink = '0';
+            clone.classList.remove('contacts-icon--telegram', 'contacts-icon--email');
+            rows[i].insertBefore(clone, rows[i].firstChild);
+        });
+    } else if(!isMobile && iconTelegram && iconEmail && rows.length === 2){
+        // Desktop: set resting positions and hover migration
+        const calcRestingPos = () => {
+            const cardRect = card.getBoundingClientRect();
+            const ch = cardRect.height;
+            const cw = cardRect.width;
+            // Under name center: vertically ~45% from top
+            const baseY = ch * 0.45 + 40;
+            iconTelegram.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1), color .3s ease';
+            iconEmail.style.transition = 'transform .6s cubic-bezier(.22,1,.36,1), color .3s ease';
+        };
+        calcRestingPos();
+
+        function migrateIconsToHover(){
+            const row0Rect = rows[0].getBoundingClientRect();
+            const row1Rect = rows[1].getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+            // Icon target: center-left of each row
+            const tScale = 16/24; // shrink from 24 to 16
+            iconTelegram.style.transform = `
+                translateX(${row0Rect.left - cardRect.left + 12}px)
+                translateY(${row0Rect.top - cardRect.top + row0Rect.height/2 - 12}px)
+                scale(${tScale})
+            `;
+            iconEmail.style.transform = `
+                translateX(${row1Rect.left - cardRect.left + 12}px)
+                translateY(${row1Rect.top - cardRect.top + row1Rect.height/2 - 12}px)
+                scale(${tScale})
+            `;
         }
 
-        letters.forEach((ch, i) => {
-            const span = document.createElement('span');
-            span.className = 'contacts-letter';
-            span.textContent = ch === '.' ? '·' : ch;
-            if(ch === '.') span.classList.add('is-dot');
-            nameEl.appendChild(span);
-        });
+        function resetIcons(){
+            iconTelegram.style.transform = 'translate(-70%, 0)';
+            iconEmail.style.transform = 'translate(30%, 0)';
+        }
 
-        // Store letters for hover
-        const letterSpans = nameEl.querySelectorAll('.contacts-letter');
-        let cardWidth = card.offsetWidth || 480;
-
-        // --- Hover scatter — only if not reduced motion and not mobile ---
-        if(!isReduced && !isMobile){
+        // Hover scatter + icon migration
+        if(!isReduced){
             card.addEventListener('mouseenter', () => {
                 cardWidth = card.offsetWidth || 480;
                 nameEl.classList.add('is-scattered');
                 letterSpans.forEach((span, i) => {
                     const v = getScaledVector(i, cardWidth);
-                    const delay = i * 30;
-                    span.style.transitionDelay = delay + 'ms';
-                    span.style.transform =
-                        `translateX(${v.x}px) translateY(${v.y}px) rotate(${v.r}deg)`;
+                    span.style.transitionDelay = (i * 30) + 'ms';
+                    span.style.transform = `translateX(${v.x}px) translateY(${v.y}px) rotate(${v.r}deg)`;
                 });
+                migrateIconsToHover();
             });
 
             card.addEventListener('mouseleave', () => {
@@ -435,12 +498,12 @@ rafScroll.subscribe((scrollY) => {
                     span.style.transitionDelay = '';
                     span.style.transform = '';
                 });
+                resetIcons();
             });
         }
     }
 
     // --- Tilt (desktop only, no reduced motion) ---
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(isReduced || window.matchMedia('(max-width: 1000px)').matches) return;
 
     let tiltRAF = null;
