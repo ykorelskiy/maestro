@@ -766,6 +766,8 @@ body{
 
 /* ============ SESSION 1: NEW SECTIONS ============ */
 
+/* --- Section defaults --- */
+
 section[id]{
     padding:120px 0;
 }
@@ -789,25 +791,13 @@ section[id] p{
     margin-bottom:1.5em;
 }
 
-.approach-node{
-    margin-bottom:40px;
-    font-size:1.5rem;
-    line-height:1.6;
-    font-family:'Cormorant Garamond',serif;
-    font-style:italic;
-    color:var(--text);
-}
-
-.approach-node:last-child{
-    margin-bottom:0;
-}
+/* --- Article cards --- */
 
 .article-card{
     background:var(--surface);
     border:1px solid var(--border);
     padding:30px;
     margin-bottom:20px;
-    border-radius:0;
 }
 
 .article-card h3{
@@ -842,16 +832,139 @@ section[id] p{
     color:#0e0e10;
 }
 
+/* --- Tools teaser --- */
+
 .tools-teaser{
     font-size:1.2rem;
     max-width:600px;
 }
 
+/* --- Contact links --- */
+
 .contacts-placeholder{
     margin-top:30px;
     display:flex;
     flex-direction:column;
-    gap:12px;
+    gap:16px;
+}
+
+.contact-link{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    padding:20px 28px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    text-decoration:none;
+    color:var(--muted);
+    transition:var(--transition);
+}
+
+.contact-label{
+    font-size:0.8rem;
+    letter-spacing:2px;
+    color:var(--accent);
+    text-transform:uppercase;
+    flex-shrink:0;
+}
+
+.contact-value{
     font-size:1rem;
     color:var(--muted);
+}
+
+.contact-link:hover{
+    border-color:var(--accent);
+    background:var(--accent);
+    color:#0e0e10;
+}
+
+.contact-link:hover .contact-value{
+    color:#0e0e10;
+}
+
+/* --- APPROACH GRID --- */
+
+.approach-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+}
+
+.approach-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:32px;
+    display:flex;
+    flex-direction:column;
+}
+
+.approach-number{
+    font-size:0.8rem;
+    color:var(--accent);
+    letter-spacing:2px;
+    margin-bottom:16px;
+}
+
+.approach-card h3{
+    font-size:1.25rem;
+    margin-bottom:14px;
+    color:var(--text);
+    letter-spacing:-0.5px;
+}
+
+.approach-card p{
+    font-size:0.95rem;
+    line-height:1.7;
+    color:var(--muted);
+    margin-bottom:0;
+}
+
+.approach-card p + p{
+    margin-top:1em;
+}
+
+/* --- REQUESTS --- */
+
+.requests-list{
+    list-style:none;
+    padding:0;
+    margin:0 0 48px;
+}
+
+.requests-list li{
+    position:relative;
+    padding-left:24px;
+    margin-bottom:12px;
+    line-height:1.7;
+    color:var(--text);
+}
+
+.requests-list li::before{
+    content:'—';
+    position:absolute;
+    left:0;
+    color:var(--accent);
+}
+
+.requests-not-title{
+    font-size:1.2rem;
+    margin-bottom:16px;
+    color:var(--text);
+    letter-spacing:-0.5px;
+}
+
+.requests-not-text{
+    font-size:0.95rem;
+    color:var(--muted);
+    line-height:1.7;
+}
+
+/* --- Articles subtitle --- */
+
+.articles-subtitle{
+    font-size:1.1rem;
+    color:var(--muted);
+    margin-bottom:40px;
+    line-height:1.7;
 }
