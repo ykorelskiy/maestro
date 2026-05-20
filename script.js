@@ -417,41 +417,72 @@ rafScroll.subscribe((scrollY) => {
     if(!iconTelegram || !iconEmail || !anchorTelegram || !anchorEmail) return;
 
     // ── Desktop: resting + hover positions ──
-    const TRANSITION = 'transform .6s cubic-bezier(.22,1,.36,1), color .3s ease';
+    const TRANSITION = 'transform .6s cubic-bezier(.22,1,.36,1)';
     iconTelegram.style.transition = TRANSITION;
     iconEmail.style.transition = TRANSITION;
+    iconTelegram.style.transformOrigin = 'center';
+    iconEmail.style.transformOrigin = 'center';
 
-    // Icon size in resting (24px), icon size in hover target (16px)
-    const SRC_SIZE = 24;
-    const DST_SIZE = 16;
-    const DST_SCALE = DST_SIZE / SRC_SIZE;
+    const ICON_SIZE = 24;         // resting size in px
+    const ICON_HALF = ICON_SIZE / 2;
+    const DST_SIZE = 16;           // hover target size
+    const DST_SCALE = DST_SIZE / ICON_SIZE;
 
-    let restingPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
-    let targetPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
+    // Vertical gap from bottom of resting name area to icon row
+    const REST_GAP = 32;           // px below the name
 
     function computePositions(){
         const cardRect = card.getBoundingClientRect();
-        // Resting: under MAESTRO name — center of card, vertically at 46% from top
-        const cx = cardRect.width / 2;
-        const baseY = cardRect.height * 0.46;
-        restingPos.tg = { x: cx - 14, y: baseY + 8 };
-        restingPos.em = { x: cx + 10, y: baseY + 8 };
+        const cr = cardRect;
 
-        // Target: left edge of anchor spans
+        // Resting: icons sit centered in a row below the name
+        // We use the approximate horizontal center of the card
+        const cx = cr.width / 2;
+        // vertical: we want icons ~32px below the bottom of the name area.
+        // The name is in .contacts-resting which is centered; the name itself
+        // sits roughly in the top half. A percentage is reliable enough:
+        const baseY = cr.height * 0.46;
+        // resting pos = center of each icon (so translate puts icon center here)
+        // Left icon (telegram) sits slightly left of center, right icon (email) slightly right
+        const spread = 22; // half-gap between icon centers
+        restingPos.tg = { x: cx - spread, y: baseY + REST_GAP };
+        restingPos.em = { x: cx + spread, y: baseY + REST_GAP };
+
+        // Target: align icon CENTER with anchor CENTER
         const aTg = anchorTelegram.getBoundingClientRect();
         const aEm = anchorEmail.getBoundingClientRect();
-        targetPos.tg = { x: aTg.left - cardRect.left, y: aTg.top - cardRect.top };
-        targetPos.em = { x: aEm.left - cardRect.left, y: aEm.top - cardRect.top };
+
+        // Anchor center in card coordinates
+        const atgCx = aTg.left - cr.left + aTg.width / 2;
+        const atgCy = aTg.top - cr.top + aTg.height / 2;
+        const aemCx = aEm.left - cr.left + aEm.width / 2;
+        const aemCy = aEm.top - cr.top + aEm.height / 2;
+
+        // We want icon center to land on anchor center.
+        // Since we translate by (dx, dy) from origin at icon's own center,
+        // and transform-origin is center, then:
+        //   translate(dx, dy) moves icon's center by (dx, dy).
+        // So we need dx = anchorCenterX - iconCenterX (in card space).
+        // But restingPos is already the icon center in card space.
+        // So:
+        targetPos.tg = { x: atgCx - restingPos.tg.x, y: atgCy - restingPos.tg.y };
+        targetPos.em = { x: aemCx - restingPos.em.x, y: aemCy - restingPos.em.y };
+
+        // Apply optical correction for telegram: shift up slightly
+        targetPos.tg.y -= 1.5;
     }
 
     function applyResting(){
-        iconTelegram.style.transform = `translateX(${restingPos.tg.x}px) translateY(${restingPos.tg.y}px) scale(1)`;
-        iconEmail.style.transform = `translateX(${restingPos.em.x}px) translateY(${restingPos.em.y}px) scale(1)`;
+        iconTelegram.style.transform = `translateX(${restingPos.tg.x}px) translateY(${restingPos.tg.y}px) translate(-50%, -50%) scale(1)`;
+        iconEmail.style.transform = `translateX(${restingPos.em.x}px) translateY(${restingPos.em.y}px) translate(-50%, -50%) scale(1)`;
     }
 
     function applyHover(){
-        iconTelegram.style.transform = `translateX(${targetPos.tg.x}px) translateY(${targetPos.tg.y}px) scale(${DST_SCALE})`;
-        iconEmail.style.transform = `translateX(${targetPos.em.x}px) translateY(${targetPos.em.y}px) scale(${DST_SCALE})`;
+        // Hover: translate from current resting center by delta, then scale
+        iconTelegram.style.transform =
+            `translateX(${restingPos.tg.x}px) translateY(${restingPos.tg.y}px) translate(-50%, -50%) translateX(${targetPos.tg.x}px) translateY(${targetPos.tg.y}px) scale(${DST_SCALE})`;
+        iconEmail.style.transform =
+            `translateX(${restingPos.em.x}px) translateY(${restingPos.em.y}px) translate(-50%, -50%) translateX(${targetPos.em.x}px) translateY(${targetPos.em.y}px) scale(${DST_SCALE})`;
     }
 
     // Compute on init + resize
