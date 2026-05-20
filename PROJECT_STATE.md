@@ -34,6 +34,10 @@ Ready to start Session 2: filling sections with content.
 ---
 
 ## Planned for Session 2
+- **Approach carousel implemented** — 6 cards with auto-play and navigation
+- About — short paragraph
+- Contacts — email / telegram (no form yet)
+- Articles — 2–3 placeholder cards
 
 Fill sections with content:
 1. About — short paragraph
