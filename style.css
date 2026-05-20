@@ -979,142 +979,248 @@ section[id] p{
     opacity:.5;
 }
 
-/* --- Cards --- */
-.contacts-card{
+/* --- Visit Card — blackened metal "Maestro" business card --- */
+.contacts-visit-card{
     position:relative;
-    display:flex;
-    align-items:center;
-    gap:20px;
-    padding:32px 36px;
-    background: rgba(17,17,17,.85);
-    border:1px solid rgba(255,107,26,.15);
-    border-radius:12px;
-    text-decoration:none;
-    color:var(--text);
-    cursor:pointer;
+    width:100%;
+    max-width:480px;
+    aspect-ratio:1.6;
+    border-radius:16px;
     overflow:hidden;
+    cursor:pointer;
+    /* Базовый фон — чернёный металл */
+    background:
+        linear-gradient(135deg, #0d0d0d 0%, #111 40%, #0a0a0a 100%);
+    box-shadow:
+        0 4px 30px rgba(0,0,0,.5),
+        inset 0 1px 0 rgba(255,255,255,.03);
     transition:
-        transform .4s cubic-bezier(.2,.8,.2,1),
-        box-shadow .5s cubic-bezier(.2,.8,.2,1),
-        border-color .4s ease;
+        box-shadow .5s cubic-bezier(.2,.8,.2,1);
     will-change:transform;
+    user-select:none;
 }
 
-/* Spotlight bg (follows cursor) */
-.contacts-card-bg{
+/* --- Bevel (фрезерованный срез) --- */
+.contacts-bevel{
     position:absolute;
     inset:0;
-    pointer-events:none;
     border-radius:inherit;
-    opacity:0;
-    transition:opacity .3s ease;
-    background: radial-gradient(
-        400px circle at var(--mouse-x,50%) var(--mouse-y,50%),
-        rgba(255,107,26,.08),
-        transparent 60%
-    );
-}
-.contacts-card:hover .contacts-card-bg{
-    opacity:1;
-}
-
-/* Animated gradient border via pseudo */
-.contacts-card::before{
-    content:'';
-    position:absolute;
-    inset:-1px;
-    border-radius:13px;
-    padding:1px;
-    background: conic-gradient(
-        from var(--angle,0deg),
-        transparent,
-        rgba(255,107,26,.25),
-        rgba(255,107,26,.08),
-        transparent,
-        rgba(255,107,26,.15),
-        transparent
+    padding:1.5px;
+    pointer-events:none;
+    z-index:2;
+    background: linear-gradient(
+        135deg,
+        rgba(200,200,210,.35),
+        rgba(160,160,170,.2) 30%,
+        rgba(200,200,210,.25) 50%,
+        rgba(140,140,150,.15) 70%,
+        rgba(200,200,210,.3) 100%
     );
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+    transition: opacity .5s ease;
+}
+.contacts-visit-card:hover .contacts-bevel{
+    background: linear-gradient(
+        135deg,
+        rgba(255,107,26,.5),
+        rgba(255,107,26,.2) 30%,
+        rgba(255,107,26,.35) 50%,
+        rgba(200,100,30,.15) 70%,
+        rgba(255,107,26,.4) 100%
+    );
+}
+
+/* --- Grain texture --- */
+.contacts-grain{
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
     pointer-events:none;
-    animation: borderSpin 6s linear infinite;
-}
-@property --angle{
-    syntax:'<angle>';
-    initial-value:0deg;
-    inherits:false;
-}
-@keyframes borderSpin{
-    to{ --angle:360deg; }
+    z-index:1;
+    opacity:.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:256px 256px;
 }
 
-/* Hover glow */
-.contacts-card:hover{
-    border-color:rgba(255,107,26,.35);
-    box-shadow:
-        0 0 40px rgba(255,107,26,.06),
-        0 0 80px rgba(255,107,26,.04);
+/* --- Wave animation (hover) --- */
+.contacts-wave{
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    z-index:3;
+    opacity:0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,107,26,.08) 20%,
+        rgba(255,107,26,.12) 30%,
+        rgba(255,107,26,.08) 40%,
+        transparent 60%
+    );
+    mix-blend-mode: screen;
+    transition: opacity .4s ease;
+}
+.contacts-visit-card:hover .contacts-wave{
+    opacity:1;
+    animation: waveSweep 1.2s ease-in-out forwards;
+}
+@keyframes waveSweep{
+    0%{ transform: translateX(-100%); }
+    50%{ transform: translateX(0%); }
+    100%{ transform: translateX(100%); }
+}
+/* Повтор волны при долгом hover */
+.contacts-visit-card:hover .contacts-wave{
+    animation:
+        waveSweep 1.2s ease-in-out forwards,
+        wavePause .8s 1.2s,
+        waveSweep 1.2s 2s ease-in-out forwards,
+        wavePause .8s 3.2s,
+        waveSweep 1.2s 4s ease-in-out forwards;
 }
 
-/* Active click pulse */
-.contacts-card:active{
-    transform:scale(.98);
-    box-shadow:
-        0 0 60px rgba(255,107,26,.12),
-        0 0 120px rgba(255,107,26,.08);
-    transition-duration:.12s;
-}
-
-/* Card content */
-.contacts-card-content{
+/* --- Resting content: Maestro + icons --- */
+.contacts-resting{
+    position:relative;
+    z-index:5;
     display:flex;
     flex-direction:column;
-    gap:6px;
-    position:relative;
-    z-index:1;
-    flex:1;
-    min-width:0;
+    align-items:center;
+    justify-content:center;
+    height:100%;
+    padding:24px;
+    transition:
+        opacity .5s ease,
+        transform .5s cubic-bezier(.2,.8,.2,1);
 }
 
-.contacts-card-label{
-    font-size:.75rem;
-    font-weight:500;
-    letter-spacing:2.5px;
-    text-transform:uppercase;
-    color:var(--accent);
+.contacts-name{
+    font-family: 'Cormorant Garamond', serif;
+    font-size:clamp(2rem, 4vw, 3.2rem);
+    font-weight:300;
+    font-style:italic;
+    letter-spacing:4px;
+    color:#d4d0cc;
+    background: linear-gradient(135deg, #e8e4e0 0%, #b8b4b0 50%, #e0dcd8 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:12px;
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+
+.contacts-icons-row{
+    display:flex;
+    gap:16px;
+    align-items:center;
+    justify-content:center;
+}
+
+.contacts-icon{
+    color:rgba(255,107,26,.45);
     transition:color .3s ease;
 }
-.contacts-card:hover .contacts-card-label{
+
+.contacts-visit-card:hover .contacts-resting{
+    opacity:0;
+    transform:translateY(-8px);
+}
+
+/* --- Hover content: clickable contacts --- */
+.contacts-hover-content{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+    padding:24px 32px;
+    opacity:0;
+    transition:
+        opacity .5s ease .15s,
+        transform .5s cubic-bezier(.2,.8,.2,1) .15s;
+    transform:translateY(8px);
+}
+
+.contacts-visit-card:hover .contacts-hover-content{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.contacts-contact-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:var(--text);
+    padding:8px 16px;
+    border-radius:8px;
+    transition:
+        background .3s ease,
+        transform .3s cubic-bezier(.2,.8,.2,1);
+    opacity:0;
+    transform:translateX(-10px);
+}
+.contacts-contact-row[data-index="0"]{
+    transition:
+        opacity .4s ease .25s,
+        transform .4s cubic-bezier(.2,.8,.2,1) .25s,
+        background .3s ease,
+        color .3s ease;
+}
+.contacts-contact-row[data-index="1"]{
+    transition:
+        opacity .4s ease .35s,
+        transform .4s cubic-bezier(.2,.8,.2,1) .35s,
+        background .3s ease,
+        color .3s ease;
+}
+.contacts-visit-card:hover .contacts-contact-row{
+    opacity:1;
+    transform:translateX(0);
+}
+
+.contacts-contact-row:hover{
+    background: rgba(255,107,26,.08);
+    transform:scale(1.02) !important;
+}
+
+.contacts-contact-icon{
+    color:var(--accent);
+    flex-shrink:0;
+    transition:color .3s ease;
+}
+
+.contacts-contact-row:hover .contacts-contact-icon{
     color:#ff8c4a;
 }
 
-.contacts-card-value{
-    font-size:1.15rem;
-    font-weight:500;
+.contacts-contact-text{
+    font-size:1rem;
+    font-weight:400;
     color:var(--text);
-    word-break:break-all;
+    white-space:nowrap;
     transition:color .3s ease;
 }
-.contacts-card:hover .contacts-card-value{
+
+.contacts-contact-row:hover .contacts-contact-text{
     color:#fff;
 }
 
-/* Arrow */
-.contacts-card-arrow{
-    font-size:1.5rem;
-    color:rgba(255,255,255,.4);
-    transition:
-        transform .35s cubic-bezier(.2,.8,.2,1),
-        color .3s ease;
-    position:relative;
-    z-index:1;
-    flex-shrink:0;
-}
-.contacts-card:hover .contacts-card-arrow{
-    transform:translateX(6px);
-    color:var(--accent);
+/* --- Hover glow (внешнее свечение) --- */
+.contacts-visit-card:hover{
+    box-shadow:
+        0 4px 40px rgba(0,0,0,.5),
+        0 0 60px rgba(255,107,26,.06),
+        0 0 120px rgba(255,107,26,.04),
+        inset 0 1px 0 rgba(255,255,255,.03);
 }
 
 /* --- Animation on appear (IntersectionObserver) --- */
@@ -1137,14 +1243,22 @@ section[id] p{
 .contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(3){ transition-delay:.3s; }
 .contacts-section.is-visible .contacts-response-line{ transition-delay:.35s; }
 .contacts-section.is-visible .contacts-confidential{ transition-delay:.4s; }
-.contacts-section.is-visible .contacts-cards-col .contacts-card:nth-child(1){ transition-delay:.15s; }
-.contacts-section.is-visible .contacts-cards-col .contacts-card:nth-child(2){ transition-delay:.3s; }
+.contacts-section.is-visible .contacts-cards-col .contacts-visit-card{ transition-delay:.15s; }
 
 /* --- Reduced motion --- */
 @media(prefers-reduced-motion:reduce){
     .contacts-bg-orb{ animation:none; }
-    .contacts-card::before{ animation:none; display:none; }
-    .contacts-card:hover .contacts-card-bg{ opacity:0; }
+    .contacts-wave{ display:none; }
+    .contacts-visit-card:hover .contacts-bevel{
+        background: linear-gradient(
+            135deg,
+            rgba(200,200,210,.35),
+            rgba(160,160,170,.2) 30%,
+            rgba(200,200,210,.25) 50%,
+            rgba(140,140,150,.15) 70%,
+            rgba(200,200,210,.3) 100%
+        );
+    }
     .contacts-status-dot{ animation:none; }
     .contacts-section .contacts-text-col > *,
     .contacts-section .contacts-cards-col > *{
@@ -1165,11 +1279,9 @@ section[id] p{
     .contacts-p{
         max-width:100%;
     }
-    .contacts-card{
-        padding:28px 24px;
-    }
-    .contacts-card-value{
-        font-size:1rem;
+    .contacts-visit-card{
+        max-width:100%;
+        aspect-ratio:1.5;
     }
 }
 
@@ -1181,12 +1293,23 @@ section[id] p{
         padding:0 20px;
         gap:36px;
     }
-    .contacts-card{
-        padding:24px 20px;
+    .contacts-visit-card{
+        aspect-ratio:1.4;
+        border-radius:12px;
     }
-    /* Disable magnetic on mobile */
-    .contacts-card:hover .contacts-card-bg{ opacity:0; }
-    .contacts-card::before{ animation:none; display:none; }
+    /* На mobile показываем контакты сразу */
+    .contacts-resting{ display:none; }
+    .contacts-wave{ display:none; }
+    .contacts-hover-content{
+        opacity:1;
+        transform:translateY(0);
+        position:relative;
+        height:100%;
+    }
+    .contacts-contact-row{
+        opacity:1;
+        transform:translateX(0);
+    }
 }
 
 /* --- APPROACH CAROUSEL --- */

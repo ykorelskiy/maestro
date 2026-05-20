@@ -384,31 +384,53 @@
             </div>
 
             <div class="contacts-cards-col">
-                <a href="https://t.me/Maaeesstro"
-                   target="_blank"
-                   rel="noopener"
-                   class="contacts-card"
-                   data-label="TELEGRAM"
-                   data-value="@Maaeesstro">
-                    <div class="contacts-card-bg" aria-hidden="true"></div>
-                    <div class="contacts-card-content">
-                        <span class="contacts-card-label">Telegram</span>
-                        <span class="contacts-card-value">@Maaeesstro</span>
-                    </div>
-                    <span class="contacts-card-arrow" aria-hidden="true">→</span>
-                </a>
+                <div class="contacts-visit-card" id="contactsVisitCard">
+                    <!-- Волна света при hover -->
+                    <div class="contacts-wave" aria-hidden="true"></div>
+                    <!-- Фрезерованный срез (рамка) -->
+                    <div class="contacts-bevel" aria-hidden="true"></div>
+                    <!-- Шум/текстура металла -->
+                    <div class="contacts-grain" aria-hidden="true"></div>
 
-                <a href="mailto:maestro.fisting@gmail.com"
-                   class="contacts-card"
-                   data-label="EMAIL"
-                   data-value="maestro.fisting@gmail.com">
-                    <div class="contacts-card-bg" aria-hidden="true"></div>
-                    <div class="contacts-card-content">
-                        <span class="contacts-card-label">Email</span>
-                        <span class="contacts-card-value">maestro.fisting@gmail.com</span>
+                    <!-- Содержимое в покое: Maestro + иконки -->
+                    <div class="contacts-resting" aria-hidden="false">
+                        <span class="contacts-name">Maestro</span>
+                        <div class="contacts-icons-row">
+                            <svg class="contacts-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2.5L2.5 10.5L10.5 13.5L13.5 21.5L21.5 2.5Z"/>
+                                <path d="M10.5 13.5L14.5 9.5"/>
+                            </svg>
+                            <svg class="contacts-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="M22 4L12 13L2 4"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span class="contacts-card-arrow" aria-hidden="true">→</span>
-                </a>
+
+                    <!-- Содержимое при hover: кликабельные контакты -->
+                    <div class="contacts-hover-content" aria-hidden="true">
+                        <a href="https://t.me/Maaeesstro"
+                           target="_blank"
+                           rel="noopener"
+                           class="contacts-contact-row"
+                           data-index="0">
+                            <svg class="contacts-contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2.5L2.5 10.5L10.5 13.5L13.5 21.5L21.5 2.5Z"/>
+                                <path d="M10.5 13.5L14.5 9.5"/>
+                            </svg>
+                            <span class="contacts-contact-text">@Maaeesstro</span>
+                        </a>
+                        <a href="mailto:maestro.fisting@gmail.com"
+                           class="contacts-contact-row"
+                           data-index="1">
+                            <svg class="contacts-contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="M22 4L12 13L2 4"/>
+                            </svg>
+                            <span class="contacts-contact-text">maestro.fisting@gmail.com</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
