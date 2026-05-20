@@ -1,6 +1,6 @@
 # Project State — Maestro
 
-**Last updated:** 2026-05-20 (end of Session 1)
+**Last updated:** 2026-05-20 (end of Session 2)
 
 ---
 
@@ -16,7 +16,7 @@ Ready to start Session 2: filling sections with content.
 1. **Header** — navigation menu (working, scrolls to sections)
 2. **Hero** — main screen
 3. **#about** — About me *(empty)*
-4. **#approach** — My approach *(empty)*
+4. **#approach** — My approach *(carousel with 6 cards)*
 5. **#articles** — Articles *(empty, no cards yet)*
 6. **#tools** — Tools *(empty)*
 7. **#contacts** — Contacts *(empty)*
@@ -30,6 +30,19 @@ Ready to start Session 2: filling sections with content.
 - Styled sections according to existing design system
 - Fixed navigation: menu links now point to correct section IDs
 - All committed and pushed to GitHub
+
+---
+
+## Done in Session 2
+- Implemented approach carousel with 6 cards
+- Added auto-play functionality (3 seconds interval)
+- Implemented keyboard navigation (left/right arrows)
+- Added cycle navigation (after last card - first, and vice versa)
+- Added pause on hover functionality
+- Added pause on user interaction functionality
+- Added slide indicators with active state
+- Fixed cycle navigation logic
+- Committed all changes with proper documentation
 
 ---
 
