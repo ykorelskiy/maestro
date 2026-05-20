@@ -189,6 +189,12 @@ rafScroll.subscribe((scrollY) => {
         }
     }
 
+    function getCenterOffset(index){
+        const carouselWidth = carousel.clientWidth;
+        const slideW = slides[0].offsetWidth;
+        return carouselWidth / 2 - slideW / 2 - index * slideWidth;
+    }
+
     function setActive(index){
         if(index < 0 || index >= total) return;
         currentIndex = index;
@@ -204,7 +210,7 @@ rafScroll.subscribe((scrollY) => {
         isTransitioning = true;
         setTimeout(() => { isTransitioning = false; }, 550);
         calcSlideWidth();
-        const offset = -index * slideWidth;
+        const offset = getCenterOffset(index);
         track.style.transform = `translateX(${offset}px)`;
         setActive(index);
     }
@@ -218,6 +224,28 @@ rafScroll.subscribe((scrollY) => {
         const prev = (currentIndex - 1 + total) % total;
         goToSlide(prev);
     }
+
+    // Wheel / тачпад MacBook
+    let wheelTimer = null;
+    carousel.addEventListener('wheel', (e) => {
+        // Не блокируем скролл страницы, если карусель не в зоне видимости
+        const rect = carousel.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        if(!isVisible) return;
+
+        // Throttle: одно срабатывание за 600 мс
+        if(wheelTimer) return;
+        wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
+
+        if(e.deltaY > 0){
+            stepForward();
+        } else {
+            stepBackward();
+        }
+        stopAuto();
+        setTimeout(startAuto, INTERVAL);
+        e.preventDefault();
+    }, { passive: false });
 
     // Drag handler (мышью)
     let isDragging = false;
@@ -317,13 +345,15 @@ rafScroll.subscribe((scrollY) => {
 
     // Init
     calcSlideWidth();
+    const initOffset = getCenterOffset(0);
+    track.style.transform = `translateX(${initOffset}px)`;
     setActive(0);
     startAuto();
 
     // Recalc on resize
     window.addEventListener('resize', () => {
         calcSlideWidth();
-        const offset = -currentIndex * slideWidth;
+        const offset = getCenterOffset(currentIndex);
         track.style.transform = `translateX(${offset}px)`;
     });
 })();
