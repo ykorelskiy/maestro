@@ -418,6 +418,9 @@ rafScroll.subscribe((scrollY) => {
 
     // ── Desktop: resting + hover positions ──
 
+    let restingPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
+    let targetPos = { tg: { x: 0, y: 0 }, em: { x: 0, y: 0 } };
+
     const ICON_SIZE = 24;
     const DST_SIZE = 16;
     const DST_SCALE = DST_SIZE / ICON_SIZE;
