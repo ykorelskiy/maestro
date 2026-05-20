@@ -839,40 +839,355 @@ section[id] p{
     max-width:600px;
 }
 
-/* --- Contact links --- */
+/* =========================================
+   CONTACTS — Premium redesign
+   ========================================= */
 
-.contacts-placeholder{
-    margin-top:30px;
+#contacts.contacts-section{
+    position:relative;
+    overflow:hidden;
+    padding:140px 0;
+    background: #08080a;
+}
+
+/* --- Background orbs --- */
+.contacts-bg-orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.15;
+    pointer-events:none;
+    will-change:transform;
+}
+.contacts-bg-orb--1{
+    width:600px; height:600px;
+    background: radial-gradient(circle, var(--accent), transparent 70%);
+    top:-100px; left:-100px;
+    animation: orbDrift1 25s ease-in-out infinite alternate;
+}
+.contacts-bg-orb--2{
+    width:500px; height:500px;
+    background: radial-gradient(circle, rgba(255,107,26,.5), transparent 70%);
+    bottom:-80px; right:-80px;
+    animation: orbDrift2 30s ease-in-out infinite alternate;
+}
+@keyframes orbDrift1{
+    0%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(80px,60px) scale(1.1); }
+    100%{ transform: translate(-40px,100px) scale(.95); }
+}
+@keyframes orbDrift2{
+    0%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(-60px,-40px) scale(1.08); }
+    100%{ transform: translate(40px,-80px) scale(.9); }
+}
+
+/* --- Layout --- */
+.contacts-inner{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 40px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:80px;
+    align-items:start;
+    position:relative;
+    z-index:2;
+}
+
+.contacts-text-col{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.contacts-cards-col{
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+}
+
+/* --- Title (override section[id] h2) --- */
+#contacts.contacts-section .contacts-title{
+    font-size:clamp(2.5rem, 5vw, 4rem);
+    font-weight:700;
+    color:var(--text);
+    letter-spacing:-2px;
+    line-height:1.1;
+    margin:0;
+    margin-bottom:0;
+}
+
+.contacts-title-word{
+    display:block;
+}
+
+/* --- Paragraphs (override section[id] p) --- */
+#contacts.contacts-section .contacts-paragraphs{
     display:flex;
     flex-direction:column;
     gap:16px;
 }
 
-.contact-link{
+#contacts.contacts-section .contacts-p{
+    color:var(--muted);
+    font-size:1rem;
+    line-height:1.7;
+    margin:0;
+    margin-bottom:0;
+    max-width:480px;
+}
+
+/* --- Response line --- */
+.contacts-response-line{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:8px;
+}
+
+.contacts-status-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--accent);
+    flex-shrink:0;
+    animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot{
+    0%,100%{ opacity:.6; transform:scale(.85); }
+    50%{ opacity:1; transform:scale(1.15); }
+}
+
+.contacts-response-text{
+    color:var(--muted);
+    font-size:.85rem;
+    letter-spacing:.3px;
+}
+
+/* --- Confidential --- */
+.contacts-confidential{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:rgba(139,139,139,.6);
+    font-size:.75rem;
+    letter-spacing:.5px;
+    margin-top:4px;
+}
+.contacts-lock-icon{
+    opacity:.5;
+}
+
+/* --- Cards --- */
+.contacts-card{
+    position:relative;
     display:flex;
     align-items:center;
     gap:20px;
-    padding:20px 28px;
-    background:var(--surface);
-    border:1px solid var(--border);
+    padding:32px 36px;
+    background: rgba(17,17,17,.85);
+    border:1px solid rgba(255,107,26,.15);
+    border-radius:12px;
     text-decoration:none;
-    color:var(--muted);
-    transition:var(--transition);
+    color:var(--text);
+    cursor:pointer;
+    overflow:hidden;
+    transition:
+        transform .4s cubic-bezier(.2,.8,.2,1),
+        box-shadow .5s cubic-bezier(.2,.8,.2,1),
+        border-color .4s ease;
+    will-change:transform;
 }
 
-.contact-label{
-    font-size:0.8rem;
-    letter-spacing:2px;
-    color:var(--accent);
+/* Spotlight bg (follows cursor) */
+.contacts-card-bg{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    border-radius:inherit;
+    opacity:0;
+    transition:opacity .3s ease;
+    background: radial-gradient(
+        400px circle at var(--mouse-x,50%) var(--mouse-y,50%),
+        rgba(255,107,26,.08),
+        transparent 60%
+    );
+}
+.contacts-card:hover .contacts-card-bg{
+    opacity:1;
+}
+
+/* Animated gradient border via pseudo */
+.contacts-card::before{
+    content:'';
+    position:absolute;
+    inset:-1px;
+    border-radius:13px;
+    padding:1px;
+    background: conic-gradient(
+        from var(--angle,0deg),
+        transparent,
+        rgba(255,107,26,.25),
+        rgba(255,107,26,.08),
+        transparent,
+        rgba(255,107,26,.15),
+        transparent
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+    animation: borderSpin 6s linear infinite;
+}
+@property --angle{
+    syntax:'<angle>';
+    initial-value:0deg;
+    inherits:false;
+}
+@keyframes borderSpin{
+    to{ --angle:360deg; }
+}
+
+/* Hover glow */
+.contacts-card:hover{
+    border-color:rgba(255,107,26,.35);
+    box-shadow:
+        0 0 40px rgba(255,107,26,.06),
+        0 0 80px rgba(255,107,26,.04);
+}
+
+/* Active click pulse */
+.contacts-card:active{
+    transform:scale(.98);
+    box-shadow:
+        0 0 60px rgba(255,107,26,.12),
+        0 0 120px rgba(255,107,26,.08);
+    transition-duration:.12s;
+}
+
+/* Card content */
+.contacts-card-content{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    position:relative;
+    z-index:1;
+    flex:1;
+    min-width:0;
+}
+
+.contacts-card-label{
+    font-size:.75rem;
+    font-weight:500;
+    letter-spacing:2.5px;
     text-transform:uppercase;
+    color:var(--accent);
+    transition:color .3s ease;
+}
+.contacts-card:hover .contacts-card-label{
+    color:#ff8c4a;
+}
+
+.contacts-card-value{
+    font-size:1.15rem;
+    font-weight:500;
+    color:var(--text);
+    word-break:break-all;
+    transition:color .3s ease;
+}
+.contacts-card:hover .contacts-card-value{
+    color:#fff;
+}
+
+/* Arrow */
+.contacts-card-arrow{
+    font-size:1.5rem;
+    color:rgba(255,255,255,.4);
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        color .3s ease;
+    position:relative;
+    z-index:1;
     flex-shrink:0;
 }
-
-.contact-value{
-    font-size:1rem;
-    color:var(--muted);
+.contacts-card:hover .contacts-card-arrow{
+    transform:translateX(6px);
+    color:var(--accent);
 }
 
+/* --- Animation on appear (IntersectionObserver) --- */
+.contacts-section .contacts-text-col > *,
+.contacts-section .contacts-cards-col > *{
+    opacity:0;
+    transform:translateY(30px);
+    transition:
+        opacity .7s ease,
+        transform .7s cubic-bezier(.2,.8,.2,1);
+}
+.contacts-section.is-visible .contacts-text-col > *,
+.contacts-section.is-visible .contacts-cards-col > *{
+    opacity:1;
+    transform:translateY(0);
+}
+/* Stagger */
+.contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(1){ transition-delay:.1s; }
+.contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(2){ transition-delay:.2s; }
+.contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(3){ transition-delay:.3s; }
+.contacts-section.is-visible .contacts-response-line{ transition-delay:.35s; }
+.contacts-section.is-visible .contacts-confidential{ transition-delay:.4s; }
+.contacts-section.is-visible .contacts-cards-col .contacts-card:nth-child(1){ transition-delay:.15s; }
+.contacts-section.is-visible .contacts-cards-col .contacts-card:nth-child(2){ transition-delay:.3s; }
+
+/* --- Reduced motion --- */
+@media(prefers-reduced-motion:reduce){
+    .contacts-bg-orb{ animation:none; }
+    .contacts-card::before{ animation:none; display:none; }
+    .contacts-card:hover .contacts-card-bg{ opacity:0; }
+    .contacts-status-dot{ animation:none; }
+    .contacts-section .contacts-text-col > *,
+    .contacts-section .contacts-cards-col > *{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* --- Tablet / Mobile --- */
+@media(max-width:1000px){
+    .contacts-inner{
+        grid-template-columns:1fr;
+        gap:48px;
+    }
+    .contacts-text-col{
+        max-width:100%;
+    }
+    .contacts-p{
+        max-width:100%;
+    }
+    .contacts-card{
+        padding:28px 24px;
+    }
+    .contacts-card-value{
+        font-size:1rem;
+    }
+}
+
+@media(max-width:600px){
+    .contacts-section{
+        padding:80px 0;
+    }
+    .contacts-inner{
+        padding:0 20px;
+        gap:36px;
+    }
+    .contacts-card{
+        padding:24px 20px;
+    }
+    /* Disable magnetic on mobile */
+    .contacts-card:hover .contacts-card-bg{ opacity:0; }
+    .contacts-card::before{ animation:none; display:none; }
+}
 
 /* --- APPROACH CAROUSEL --- */
 
@@ -1093,38 +1408,6 @@ section[id] p{
     margin-bottom:16px;
 }
 
-/* --- Contact link hover enhancement --- */
-
-.contact-link{
-    position:relative;
-    transition:
-        border-color 0.4s cubic-bezier(.2,.8,.2,1),
-        background 0.4s cubic-bezier(.2,.8,.2,1);
-}
-
-.contact-link:hover{
-    border-color:var(--accent);
-    background:rgba(255,107,26,.06);
-}
-
-.contact-link::after{
-    content:'→';
-    position:absolute;
-    right:24px;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:1.1rem;
-    color:var(--muted);
-    transition:
-        color 0.4s ease,
-        transform 0.4s ease;
-}
-
-.contact-link:hover::after{
-    color:var(--accent);
-    transform:translateY(-50%) translateX(4px);
-}
-
 /* --- Tools teaser highlights --- */
 
 .tools-teaser .text-accent{
@@ -1163,8 +1446,7 @@ section[id] p{
 @media(prefers-reduced-motion:reduce){
     .approach-track,
     .approach-slide,
-    .article-card,
-    .contact-link{
+    .article-card{
         transition:none;
     }
 
@@ -1176,12 +1458,7 @@ section[id] p{
         transform:none;
     }
 
-    .article-card:hover,
-    .contact-link:hover{
+    .article-card:hover{
         transform:none;
-    }
-
-    .contact-link::after{
-        display:none;
     }
 }

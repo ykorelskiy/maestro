@@ -351,3 +351,59 @@ rafScroll.subscribe((scrollY) => {
         track.style.transform = `translateX(${offset}px)`;
     });
 })();
+
+/* =========================================
+   CONTACTS — Premium interactivity
+   ========================================= */
+(function(){
+    const section = document.getElementById('contacts');
+    if(!section) return;
+
+    // --- IntersectionObserver for appear animations ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    observer.observe(section);
+
+    // --- Spotlight + magnetic hover on cards ---
+    const cards = section.querySelectorAll('.contacts-card');
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    cards.forEach(card => {
+        // Spotlight: track mouse position inside card
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mouse-x', x + '%');
+            card.style.setProperty('--mouse-y', y + '%');
+        });
+
+        // Magnetic tilt
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / rect.width;
+            const dy = (e.clientY - cy) / rect.height;
+            const rotateY = dx * 4;   // max ±4°
+            const rotateX = -dy * 4;  // max ±4°
+            const translateX = dx * 6;
+            const translateY = dy * 4;
+            card.style.transform =
+                `perspective(800px) ` +
+                `rotateY(${rotateY}deg) rotateX(${rotateX}deg) ` +
+                `translateX(${translateX}px) translateY(${translateY}px)`;
+        });
+
+        // Reset on mouse leave
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+})();
