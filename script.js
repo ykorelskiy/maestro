@@ -144,27 +144,20 @@ rafScroll.subscribe((scrollY) => {
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) closeManifest();
         });
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) {
-        closeManifest();
-    }
-    
-    // Keyboard navigation for carousel
-    if (e.key === 'ArrowRight') {
-        stepForward();
-        stopAuto();
-        setTimeout(startAuto, INTERVAL); // Используем переменную INTERVAL
-    }
-    if (e.key === 'ArrowLeft') {
-        stepBackward();
-        stopAuto();
-        setTimeout(startAuto, INTERVAL);
-    }
-});
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeManifest();
+            }
+        });
     })();
 
 /* =========================================
    APPROACH CAROUSEL (scroll-snap + auto-play + loop)
+   Исправлено:
+   - setActive вызывается ДО скролла — currentIndex всегда точен
+   - userInteracted флаг держится 600 мс (на всю длину smooth-анимации)
+   - Обработчик клавиш ПЕРЕНЕСЁН внутрь IIFE слайдера
+   - Интервал 3 секунды
 ========================================= */
 
 (function(){
@@ -188,7 +181,7 @@ document.addEventListener('keydown', function(e) {
     const dots = Array.from(dotsContainer.querySelectorAll('.approach-dot'));
 
     let autoTimer = null;
-    const INTERVAL = 5000;
+    const INTERVAL = 3000; // 3 секунды
     let currentIndex = 0;
     let userInteracted = false;
 
@@ -205,25 +198,29 @@ document.addEventListener('keydown', function(e) {
         return slides[index].offsetLeft + slides[index].offsetWidth / 2 - carousel.clientWidth / 2;
     }
 
-function goToSlide(index){
-    setActive(index); // Обновляем индекс ДО скролла
-    userInteracted = true;
-    setTimeout(() => { userInteracted = false; }, 100);
-    carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
-}
+    function goToSlide(index){
+        setActive(index); // Обновляем индекс ДО скролла
+        // Держим флаг 600 мс — на всю длину smooth-анимации
+        userInteracted = true;
+        if(window._userInteractedTimer) clearTimeout(window._userInteractedTimer);
+        window._userInteractedTimer = setTimeout(() => {
+            userInteracted = false;
+            window._userInteractedTimer = null;
+        }, 600);
+        carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
+    }
 
-function stepForward(){
-    const next = (currentIndex + 1) % total;
-    if(next === total) next = 0;
-    goToSlide(next);
-}
+    function stepForward(){
+        const next = (currentIndex + 1) % total;
+        goToSlide(next);
+    }
 
-function stepBackward(){
-    const prev = (currentIndex - 1 + total) % total;
-    goToSlide(prev);
-}
+    function stepBackward(){
+        const prev = (currentIndex - 1 + total) % total;
+        goToSlide(prev);
+    }
 
-    // Detect active slide on scroll
+    // Detect active slide on scroll (только если пользователь скроллит сам)
     carousel.addEventListener('scroll', () => {
         if(userInteracted) return;
         const cx = carousel.scrollLeft + carousel.clientWidth / 2;
@@ -246,6 +243,26 @@ function stepBackward(){
 
     carousel.addEventListener('mouseenter', stopAuto);
     carousel.addEventListener('mouseleave', startAuto);
+
+    // Keyboard navigation for carousel (перенесено из IIFE модального окна)
+    document.addEventListener('keydown', function(e) {
+        // Не реагируем, если открыто модальное окно
+        const overlay = document.getElementById('manifestOverlay');
+        if(overlay && overlay.classList.contains('active')) return;
+
+        if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            stepForward();
+            stopAuto();
+            setTimeout(startAuto, INTERVAL);
+        }
+        if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            stepBackward();
+            stopAuto();
+            setTimeout(startAuto, INTERVAL);
+        }
+    });
 
     // Init
     carousel.scrollLeft = getSnapX(0);
