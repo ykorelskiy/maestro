@@ -211,18 +211,10 @@ document.addEventListener('keydown', function(e) {
         carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
     }
 
-    function stepForward(){
-        const next = (currentIndex + 1) % total;
-        if(next === 0){
-            // Jump back to start instantly then animate
-            carousel.style.scrollBehavior = 'auto';
-            carousel.scrollLeft = getSnapX(0);
-            carousel.style.scrollBehavior = '';
-            setActive(0);
-        } else {
-            goToSlide(next);
-        }
-    }
+function stepForward(){
+    const next = (currentIndex + 1) % total;
+    goToSlide(next);
+}
 
     // Detect active slide on scroll
     carousel.addEventListener('scroll', () => {
