@@ -153,12 +153,12 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowRight') {
         stepForward();
         stopAuto();
-        setTimeout(startAuto, 3000);
+        setTimeout(startAuto, INTERVAL); // Используем переменную INTERVAL
     }
     if (e.key === 'ArrowLeft') {
         stepBackward();
         stopAuto();
-        setTimeout(startAuto, 3000);
+        setTimeout(startAuto, INTERVAL);
     }
 });
     })();
@@ -205,11 +205,12 @@ document.addEventListener('keydown', function(e) {
         return slides[index].offsetLeft + slides[index].offsetWidth / 2 - carousel.clientWidth / 2;
     }
 
-    function goToSlide(index){
-        userInteracted = true;
-        setTimeout(() => { userInteracted = false; }, 100);
-        carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
-    }
+function goToSlide(index){
+    setActive(index); // Обновляем индекс ДО скролла
+    userInteracted = true;
+    setTimeout(() => { userInteracted = false; }, 100);
+    carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
+}
 
 function stepForward(){
     const next = (currentIndex + 1) % total;
