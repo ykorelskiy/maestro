@@ -213,6 +213,7 @@ document.addEventListener('keydown', function(e) {
 
 function stepForward(){
     const next = (currentIndex + 1) % total;
+    if(next === total) next = 0;
     goToSlide(next);
 }
 
