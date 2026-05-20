@@ -877,26 +877,21 @@ section[id] p{
 /* --- APPROACH CAROUSEL --- */
 
 .approach-carousel{
-    overflow-x:auto;
-    overflow-y:hidden;
-    scroll-snap-type:x mandatory;
-    scroll-behavior:smooth;
+    overflow:hidden;
     width:100%;
     margin-top:20px;
-    scrollbar-width:none;
-    -ms-overflow-style:none;
 }
-
-.approach-carousel::-webkit-scrollbar{ display:none; }
 
 .approach-track{
     display:flex;
     gap:28px;
     padding:24px 0;
+    transition:
+        transform 0.5s cubic-bezier(.2,.8,.2,1);
+    will-change: transform;
 }
 
 .approach-slide{
-    scroll-snap-align:center;
     flex:0 0 50%;
     min-width:440px;
     background:var(--surface);

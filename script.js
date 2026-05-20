@@ -152,12 +152,9 @@ rafScroll.subscribe((scrollY) => {
     })();
 
 /* =========================================
-   APPROACH CAROUSEL (scroll-snap + auto-play + loop)
-   Исправлено:
-   - setActive вызывается ДО скролла — currentIndex всегда точен
-   - userInteracted флаг держится 600 мс (на всю длину smooth-анимации)
-   - Обработчик клавиш ПЕРЕНЕСЁН внутрь IIFE слайдера
-   - Интервал 3 секунды
+   APPROACH CAROUSEL
+   Полностью переписан на transform: translateX.
+   Никакого scroll-snap — полный контроль.
 ========================================= */
 
 (function(){
@@ -183,7 +180,14 @@ rafScroll.subscribe((scrollY) => {
     let autoTimer = null;
     const INTERVAL = 3000; // 3 секунды
     let currentIndex = 0;
-    let userInteracted = false;
+    let slideWidth = 0;
+
+    function calcSlideWidth(){
+        if(slides.length > 0){
+            const gap = 28;
+            slideWidth = slides[0].offsetWidth + gap;
+        }
+    }
 
     function setActive(index){
         if(index < 0 || index >= total) return;
@@ -194,20 +198,12 @@ rafScroll.subscribe((scrollY) => {
         if(dots[index]) dots[index].classList.add('is-active');
     }
 
-    function getSnapX(index){
-        return slides[index].offsetLeft + slides[index].offsetWidth / 2 - carousel.clientWidth / 2;
-    }
-
     function goToSlide(index){
-        setActive(index); // Обновляем индекс ДО скролла
-        // Держим флаг 600 мс — на всю длину smooth-анимации
-        userInteracted = true;
-        if(window._userInteractedTimer) clearTimeout(window._userInteractedTimer);
-        window._userInteractedTimer = setTimeout(() => {
-            userInteracted = false;
-            window._userInteractedTimer = null;
-        }, 600);
-        carousel.scrollTo({ left: getSnapX(index), behavior: 'smooth' });
+        if(index < 0 || index >= total) return;
+        calcSlideWidth();
+        const offset = -index * slideWidth;
+        track.style.transform = `translateX(${offset}px)`;
+        setActive(index);
     }
 
     function stepForward(){
@@ -220,16 +216,38 @@ rafScroll.subscribe((scrollY) => {
         goToSlide(prev);
     }
 
-    // Detect active slide on scroll (только если пользователь скроллит сам)
-    carousel.addEventListener('scroll', () => {
-        if(userInteracted) return;
-        const cx = carousel.scrollLeft + carousel.clientWidth / 2;
-        let best = 0, bestD = Infinity;
-        slides.forEach((s, i) => {
-            const d = Math.abs(cx - (s.offsetLeft + s.offsetWidth / 2));
-            if(d < bestD){ bestD = d; best = i; }
-        });
-        if(best !== currentIndex) setActive(best);
+    // Wheel handler (мышь колёсиком)
+    carousel.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if(e.deltaY > 0){
+            stepForward();
+        } else {
+            stepBackward();
+        }
+        stopAuto();
+        setTimeout(startAuto, INTERVAL);
+    }, { passive: false });
+
+    // Touch/swipe handler
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if(Math.abs(diff) > 30){
+            if(diff > 0){
+                stepForward();
+            } else {
+                stepBackward();
+            }
+            stopAuto();
+            setTimeout(startAuto, INTERVAL);
+        }
     }, { passive: true });
 
     function startAuto(){
@@ -244,9 +262,17 @@ rafScroll.subscribe((scrollY) => {
     carousel.addEventListener('mouseenter', stopAuto);
     carousel.addEventListener('mouseleave', startAuto);
 
-    // Keyboard navigation for carousel (перенесено из IIFE модального окна)
+    // Click on dots
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            goToSlide(i);
+            stopAuto();
+            setTimeout(startAuto, INTERVAL);
+        });
+    });
+
+    // Keyboard navigation
     document.addEventListener('keydown', function(e) {
-        // Не реагируем, если открыто модальное окно
         const overlay = document.getElementById('manifestOverlay');
         if(overlay && overlay.classList.contains('active')) return;
 
@@ -265,7 +291,14 @@ rafScroll.subscribe((scrollY) => {
     });
 
     // Init
-    carousel.scrollLeft = getSnapX(0);
+    calcSlideWidth();
     setActive(0);
     startAuto();
+
+    // Recalc on resize
+    window.addEventListener('resize', () => {
+        calcSlideWidth();
+        const offset = -currentIndex * slideWidth;
+        track.style.transform = `translateX(${offset}px)`;
+    });
 })();
