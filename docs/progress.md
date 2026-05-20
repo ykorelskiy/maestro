@@ -104,6 +104,9 @@
 
 ## 📅 План ближайших шагов
 
+### Фаза 0 — Инфраструктура
+- [x] **0.1** Инициализировать Git-репозиторий и сделать первый push. ✅ v0.1.3
+
 ### Фаза 1 — Стабилизация (текущая)
 - [x] **1.1** Вынести inline CSS/JS модалки во внешние файлы. ✅ v0.1.1
 - [x] **1.2** Объединить scroll-листенеры в единый rAF-engine. ✅ v0.1.2
@@ -132,6 +135,14 @@
 ---
 
 ## 📝 Журнал изменений
+
+### v0.1.3 — Git-инициализация и первый push
+- Инициализирован Git-репозиторий (`git init`).
+- Создан `.gitignore` (macOS, редакторы, логи, OS-файлы).
+- Первый коммит: `Initial commit: project structure and concept docs`.
+- Добавлен remote: `origin https://github.com/ykorelskiy/maestro.git`.
+- Выполнен push в ветку `main`.
+- Репозиторий на GitHub: https://github.com/ykorelskiy/maestro
 
 ### v0.1.2 — Scroll-engine (rafScroll)
 - Добавлен блок SCROLL ENGINE в начало script.js — IIFE с подпиской на единый scroll-listener через requestAnimationFrame.
