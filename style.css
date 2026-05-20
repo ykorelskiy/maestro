@@ -22,6 +22,10 @@
 
 html{
     scroll-behavior:smooth;
+    scroll-snap-type: y mandatory;
+}
+@media(max-width:768px){
+    html{ scroll-snap-type: none; }
 }
 
 body{
@@ -770,6 +774,15 @@ body{
 
 section[id]{
     padding:120px 0;
+    scroll-snap-align: start;
+}
+section.hero,
+section.transition-section,
+section.contacts-section{
+    scroll-snap-align: start;
+}
+#approach{
+    scroll-snap-align: none;
 }
 
 .section-container{
@@ -1372,12 +1385,36 @@ section[id] p{
     will-change: transform;
 }
 
+.approach-progress-bar{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:2px;
+    background:rgba(255,255,255,.06);
+    border-radius:0 0 12px 12px;
+    overflow:hidden;
+}
+.approach-progress-bar span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    border-radius:0 0 12px 12px;
+    transition:width 0ms linear;
+}
+.approach-slide.is-active .approach-progress-bar span{
+    transition:width 6000ms linear;
+    width:100%;
+}
+
 .approach-slide{
+    position:relative;
     flex:0 0 50%;
     min-width:440px;
     background:var(--surface);
     border:1px solid var(--border);
-    padding:48px 44px;
+    padding:48px 44px 54px;
     display:flex;
     flex-direction:column;
     opacity:.45;

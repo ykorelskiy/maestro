@@ -177,7 +177,9 @@ rafScroll.subscribe((scrollY) => {
     const dots = Array.from(dotsContainer.querySelectorAll('.approach-dot'));
 
     let autoTimer = null;
-    const INTERVAL = 3000;
+    let progressTimer = null;
+    let progressBar = null;
+    const INTERVAL = 6000;
     let currentIndex = 0;
     let slideWidth = 0;
     let isTransitioning = false;
@@ -195,6 +197,19 @@ rafScroll.subscribe((scrollY) => {
         return carouselWidth / 2 - slideW / 2 - index * slideWidth;
     }
 
+    function resetProgressBars(){
+        slides.forEach(slide => {
+            const bar = slide.querySelector('.approach-progress-bar span');
+            if(bar){
+                bar.style.transition = 'none';
+                bar.style.width = '0%';
+                // Force reflow
+                bar.offsetHeight;
+                bar.style.transition = '';
+            }
+        });
+    }
+
     function setActive(index){
         if(index < 0 || index >= total) return;
         currentIndex = index;
@@ -202,6 +217,7 @@ rafScroll.subscribe((scrollY) => {
         slides[index].classList.add('is-active');
         dots.forEach(el => el.classList.remove('is-active'));
         if(dots[index]) dots[index].classList.add('is-active');
+        resetProgressBars();
     }
 
     function goToSlide(index){
