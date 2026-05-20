@@ -417,84 +417,71 @@ rafScroll.subscribe((scrollY) => {
     if(!iconTelegram || !iconEmail || !anchorTelegram || !anchorEmail) return;
 
     // ── Desktop: resting + hover positions ──
+
+    const ICON_SIZE = 24;
+    const DST_SIZE = 16;
+    const DST_SCALE = DST_SIZE / ICON_SIZE;
+    const HALF = ICON_SIZE / 2;
+
+    function computePositions(){
+        const cr = card.getBoundingClientRect();
+
+        // Resting: use the resting container as reference for Y
+        const restingEl = card.querySelector('.contacts-resting');
+        // The name element's bottom gives us the Y for resting icons
+        const nameRect = nameEl.getBoundingClientRect();
+        const nameBottom = nameRect.bottom - cr.top;
+
+        const cx = cr.width / 2;
+        const spread = 22;
+        const restY = nameBottom + 12; // 12px gap below name
+
+        restingPos.tg = { x: cx - spread - HALF, y: restY - HALF };
+        restingPos.em = { x: cx + spread - HALF, y: restY - HALF };
+
+        // Target: anchor top-left in card coordinates
+        const aTg = anchorTelegram.getBoundingClientRect();
+        const aEm = anchorEmail.getBoundingClientRect();
+        targetPos.tg = { x: aTg.left - cr.left, y: aTg.top - cr.top };
+        targetPos.em = { x: aEm.left - cr.left, y: aEm.top - cr.top };
+
+        // Center scaled icon (16px) within anchor (24px)
+        const off = (aTg.width - DST_SIZE) / 2;
+        targetPos.tg.x += off;
+        targetPos.tg.y += off;
+        targetPos.em.x += off;
+        targetPos.em.y += off;
+
+        // Telegram optical tweak
+        targetPos.tg.y -= 2;
+    }
+
+    // Initial compute and apply resting WITHOUT transition
+    computePositions();
+    iconTelegram.style.transform = `translate(${restingPos.tg.x}px, ${restingPos.tg.y}px) scale(1)`;
+    iconEmail.style.transform = `translate(${restingPos.em.x}px, ${restingPos.em.y}px) scale(1)`;
+
+    // Force reflow, THEN set transition
+    void card.offsetWidth;
     const TRANSITION = 'transform .6s cubic-bezier(.22,1,.36,1)';
     iconTelegram.style.transition = TRANSITION;
     iconEmail.style.transition = TRANSITION;
-    iconTelegram.style.transformOrigin = 'center';
-    iconEmail.style.transformOrigin = 'center';
-
-    const ICON_SIZE = 24;         // resting size in px
-    const ICON_HALF = ICON_SIZE / 2;
-    const DST_SIZE = 16;           // hover target size
-    const DST_SCALE = DST_SIZE / ICON_SIZE;
-
-    // Vertical gap from bottom of resting name area to icon row
-    const REST_GAP = 32;           // px below the name
-
-    function computePositions(){
-        const cardRect = card.getBoundingClientRect();
-        const cr = cardRect;
-
-        // Resting: icons sit centered in a row below the name
-        // We use the approximate horizontal center of the card
-        const cx = cr.width / 2;
-        // vertical: we want icons ~32px below the bottom of the name area.
-        // The name is in .contacts-resting which is centered; the name itself
-        // sits roughly in the top half. A percentage is reliable enough:
-        const baseY = cr.height * 0.46;
-        // resting pos = center of each icon (so translate puts icon center here)
-        // Left icon (telegram) sits slightly left of center, right icon (email) slightly right
-        const spread = 22; // half-gap between icon centers
-        restingPos.tg = { x: cx - spread, y: baseY + REST_GAP };
-        restingPos.em = { x: cx + spread, y: baseY + REST_GAP };
-
-        // Target: align icon CENTER with anchor CENTER
-        const aTg = anchorTelegram.getBoundingClientRect();
-        const aEm = anchorEmail.getBoundingClientRect();
-
-        // Anchor center in card coordinates
-        const atgCx = aTg.left - cr.left + aTg.width / 2;
-        const atgCy = aTg.top - cr.top + aTg.height / 2;
-        const aemCx = aEm.left - cr.left + aEm.width / 2;
-        const aemCy = aEm.top - cr.top + aEm.height / 2;
-
-        // We want icon center to land on anchor center.
-        // Since we translate by (dx, dy) from origin at icon's own center,
-        // and transform-origin is center, then:
-        //   translate(dx, dy) moves icon's center by (dx, dy).
-        // So we need dx = anchorCenterX - iconCenterX (in card space).
-        // But restingPos is already the icon center in card space.
-        // So:
-        targetPos.tg = { x: atgCx - restingPos.tg.x, y: atgCy - restingPos.tg.y };
-        targetPos.em = { x: aemCx - restingPos.em.x, y: aemCy - restingPos.em.y };
-
-        // Apply optical correction for telegram: shift up slightly
-        targetPos.tg.y -= 1.5;
-    }
 
     function applyResting(){
-        iconTelegram.style.transform = `translateX(${restingPos.tg.x}px) translateY(${restingPos.tg.y}px) translate(-50%, -50%) scale(1)`;
-        iconEmail.style.transform = `translateX(${restingPos.em.x}px) translateY(${restingPos.em.y}px) translate(-50%, -50%) scale(1)`;
+        iconTelegram.style.transform = `translate(${restingPos.tg.x}px, ${restingPos.tg.y}px) scale(1)`;
+        iconEmail.style.transform = `translate(${restingPos.em.x}px, ${restingPos.em.y}px) scale(1)`;
     }
 
     function applyHover(){
-        // Hover: translate from current resting center by delta, then scale
-        iconTelegram.style.transform =
-            `translateX(${restingPos.tg.x}px) translateY(${restingPos.tg.y}px) translate(-50%, -50%) translateX(${targetPos.tg.x}px) translateY(${targetPos.tg.y}px) scale(${DST_SCALE})`;
-        iconEmail.style.transform =
-            `translateX(${restingPos.em.x}px) translateY(${restingPos.em.y}px) translate(-50%, -50%) translateX(${targetPos.em.x}px) translateY(${targetPos.em.y}px) scale(${DST_SCALE})`;
+        iconTelegram.style.transform = `translate(${targetPos.tg.x}px, ${targetPos.tg.y}px) scale(${DST_SCALE})`;
+        iconEmail.style.transform = `translate(${targetPos.em.x}px, ${targetPos.em.y}px) scale(${DST_SCALE})`;
     }
-
-    // Compute on init + resize
-    computePositions();
-    applyResting();
 
     let resizeTimer = null;
     const recalc = () => {
         if(resizeTimer) clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             computePositions();
-            // If not hovering, keep resting; if hovering, keep target
             if(!card._isHovering){
                 applyResting();
             } else {
@@ -504,7 +491,6 @@ rafScroll.subscribe((scrollY) => {
     };
     window.addEventListener('resize', recalc);
 
-    // ResizeObserver on card
     const ro = new ResizeObserver(() => recalc());
     ro.observe(card);
 
