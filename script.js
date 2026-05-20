@@ -228,11 +228,6 @@ rafScroll.subscribe((scrollY) => {
     // Wheel / тачпад MacBook
     let wheelTimer = null;
     carousel.addEventListener('wheel', (e) => {
-        // Не блокируем скролл страницы, если карусель не в зоне видимости
-        const rect = carousel.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if(!isVisible) return;
-
         // Throttle: одно срабатывание за 600 мс
         if(wheelTimer) return;
         wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
@@ -244,8 +239,7 @@ rafScroll.subscribe((scrollY) => {
         }
         stopAuto();
         setTimeout(startAuto, INTERVAL);
-        e.preventDefault();
-    }, { passive: false });
+    }, { passive: true });
 
     // Drag handler (мышью)
     let isDragging = false;
