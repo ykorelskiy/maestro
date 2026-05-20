@@ -1085,6 +1085,7 @@ section[id] p{
 }
 
 /* --- Resting content: Maestro + icons --- */
+/* Resting block — letters scatter via JS, no hover-hide */
 .contacts-resting{
     position:relative;
     z-index:5;
@@ -1094,38 +1095,53 @@ section[id] p{
     justify-content:center;
     height:100%;
     padding:24px;
-    transition:
-        opacity .5s ease,
-        transform .5s cubic-bezier(.2,.8,.2,1);
+    pointer-events:none;
 }
 
 .contacts-name{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:0;
     font-family: 'Inter', sans-serif;
     font-size:clamp(1.8rem, 3.5vw, 2.8rem);
     font-weight:700;
     letter-spacing:4px;
     color:var(--text);
     margin-bottom:12px;
+    position:relative;
 }
-.contacts-name-dot{
+
+.contacts-letter{
+    display:inline-block;
+    position:relative;
+    transition:
+        transform .6s cubic-bezier(.22,1,.36,1),
+        opacity .5s ease;
+    will-change:transform, opacity;
+}
+
+/* Dot inside letters gets accent color */
+.contacts-letter.is-dot{
     color:var(--accent);
+}
+
+/* Scatter state — individual transforms set via JS inline style */
+.contacts-name.is-scattered .contacts-letter{
+    opacity:0;
 }
 
 .contacts-icons-row{
     display:flex;
-    gap:16px;
+    gap:20px;
     align-items:center;
     justify-content:center;
+    margin-top:2px;
 }
 
 .contacts-icon{
-    color:rgba(255,107,26,.45);
+    color:rgba(255,107,26,.5);
     transition:color .3s ease;
-}
-
-.contacts-visit-card:hover .contacts-resting{
-    opacity:0;
-    transform:translateY(-8px);
 }
 
 /* --- Hover content: clickable contacts --- */

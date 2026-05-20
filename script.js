@@ -353,7 +353,7 @@ rafScroll.subscribe((scrollY) => {
 })();
 
 /* =========================================
-   CONTACTS — Visit card interactivity
+   CONTACTS — Visit card: letter scatter + tilt
    ========================================= */
 (function(){
     const section = document.getElementById('contacts');
@@ -370,15 +370,80 @@ rafScroll.subscribe((scrollY) => {
     }, { threshold: 0.15 });
     observer.observe(section);
 
-    // --- Tilt on visit card (desktop only, reduced-motion check) ---
     const card = document.getElementById('contactsVisitCard');
     if(!card) return;
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if(window.matchMedia('(max-width: 1000px)').matches) return;
 
-    let isTilting = false;
+    // --- Split MAESTRO. into letter spans ---
+    const nameEl = document.getElementById('contactsName');
+    if(nameEl){
+        const text = nameEl.textContent; // "MAESTRO."
+        nameEl.textContent = '';
+        const letters = text.split('');
+        const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isMobile = window.matchMedia('(max-width: 1000px)').matches;
+
+        // Predefined scatter vectors per letter index
+        const vectors = [
+            { x: 0, y: -90, r: -15 },   // M
+            { x: -70, y: -60, r: 25 },  // A
+            { x: 80, y: -50, r: -20 },  // E
+            { x: -40, y: 70, r: 35 },   // S
+            { x: 60, y: 65, r: -30 },   // T
+            { x: -80, y: -30, r: 20 },  // R
+            { x: 40, y: 80, r: 10 },    // O
+            { x: 0, y: 0, r: 0 },       // .
+        ];
+        // Scale vectors based on card size
+        function getScaledVector(index, baseWidth){
+            const scale = baseWidth / 480;
+            return {
+                x: (vectors[index]?.x || 0) * scale,
+                y: (vectors[index]?.y || 0) * scale,
+                r: (vectors[index]?.r || 0)
+            };
+        }
+
+        letters.forEach((ch, i) => {
+            const span = document.createElement('span');
+            span.className = 'contacts-letter';
+            span.textContent = ch === '.' ? '·' : ch;
+            if(ch === '.') span.classList.add('is-dot');
+            nameEl.appendChild(span);
+        });
+
+        // Store letters for hover
+        const letterSpans = nameEl.querySelectorAll('.contacts-letter');
+        let cardWidth = card.offsetWidth || 480;
+
+        // --- Hover scatter — only if not reduced motion and not mobile ---
+        if(!isReduced && !isMobile){
+            card.addEventListener('mouseenter', () => {
+                cardWidth = card.offsetWidth || 480;
+                nameEl.classList.add('is-scattered');
+                letterSpans.forEach((span, i) => {
+                    const v = getScaledVector(i, cardWidth);
+                    const delay = i * 30;
+                    span.style.transitionDelay = delay + 'ms';
+                    span.style.transform =
+                        `translateX(${v.x}px) translateY(${v.y}px) rotate(${v.r}deg)`;
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                nameEl.classList.remove('is-scattered');
+                letterSpans.forEach((span) => {
+                    span.style.transitionDelay = '';
+                    span.style.transform = '';
+                });
+            });
+        }
+    }
+
+    // --- Tilt (desktop only, no reduced motion) ---
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(isReduced || window.matchMedia('(max-width: 1000px)').matches) return;
+
     let tiltRAF = null;
-
     card.addEventListener('mousemove', (e) => {
         if(tiltRAF) cancelAnimationFrame(tiltRAF);
         tiltRAF = requestAnimationFrame(() => {
@@ -387,11 +452,9 @@ rafScroll.subscribe((scrollY) => {
             const cy = rect.top + rect.height / 2;
             const dx = (e.clientX - cx) / rect.width;
             const dy = (e.clientY - cy) / rect.height;
-            const rotateY = dx * 5;
-            const rotateX = -dy * 5;
             card.style.transform =
                 `perspective(1200px) ` +
-                `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+                `rotateY(${dx * 5}deg) rotateX(${-dy * 5}deg)`;
             tiltRAF = null;
         });
     });
