@@ -618,7 +618,7 @@ body.is-menu-open{
 
     text-decoration:none;
 
-    color:var(--text);
+    color:var(--muted);
 
     overflow:hidden;
 
@@ -634,12 +634,10 @@ body.is-menu-open{
 @media (hover: hover) and (pointer: fine) {
     .btn:hover{
         border-color:rgba(255,107,26,.35);
+        color:var(--text);
     }
 }
 
-.btn-secondary{
-    color:var(--muted);
-}
 
 /* =========================================
    FLOATING QUOTE
