@@ -72,8 +72,11 @@ hoverItems.forEach(item => {
     let currentShimmerTimeout = null;
     let isHovering = false;
 
-    // Добавляем класс shimmer-nav для более тонкого эффекта
-    navLinks.forEach(link => link.classList.add('shimmer', 'shimmer-nav'));
+    // Добавляем класс shimmer-nav + устанавливаем stagger-индекс для линии
+    navLinks.forEach((link, i) => {
+        link.classList.add('shimmer-nav');
+        link.style.setProperty('--i', i);
+    });
 
     // Отслеживаем hover на любом пункте
     navLinks.forEach(link => {

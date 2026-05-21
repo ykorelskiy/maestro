@@ -156,26 +156,42 @@ body{
     color:var(--text);
 }
 
+/* Верхнее подчёркивание (надчёркивание) при наведении + пассивная анимация */
 .nav-links a::after{
 
     content:'';
-
     position:absolute;
-
-    bottom:-8px;
+    top:-8px;
     left:0;
+    height:1px;
+    background:var(--accent);
+    transition:var(--transition);
+    pointer-events:none;
 
     width:0%;
-
-    height:1px;
-
-    background:var(--accent);
-
-    transition:var(--transition);
+    opacity:0;
+    animation:navLinePulse 12s ease-in-out infinite;
+    animation-delay:calc(var(--i, 0) * 2s);
 }
 
 .nav-links a:hover::after{
     width:100%;
+    opacity:1;
+    animation:none;
+}
+
+@keyframes navLinePulse{
+    0%,90%,100%{
+        width:0%;
+        opacity:0;
+    }
+    5%{
+        width:100%;
+        opacity:.4;
+    }
+    10%{
+        opacity:0;
+    }
 }
 
 /* =========================================
@@ -436,8 +452,12 @@ body{
     0%,100%{ transform:translateX(120%); }
 }
 
-/* Для навигации — более тонкий shimmer */
-.shimmer-nav::after{
+/* Для навигации — более тонкий shimmer (через ::before, чтобы не конфликтовать с ::after-линией) */
+.shimmer-nav::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    z-index:-1;
     background:linear-gradient(
         90deg,
         transparent 0%,
@@ -446,6 +466,27 @@ body{
         rgba(255,107,26,.05) 60%,
         transparent 100%
     );
+    pointer-events:none;
+    transform:translateX(-120%);
+    will-change:transform;
+    opacity:0;
+}
+
+.shimmer-nav.is-shimmer-active::before{
+    opacity:1;
+    animation:navShimmerWave 0.7s ease-out forwards;
+}
+
+@keyframes navShimmerWave{
+    0%{
+        transform:translateX(-120%);
+    }
+    60%{
+        transform:translateX(0%);
+    }
+    100%{
+        transform:translateX(120%);
+    }
 }
 
 /* =========================================
@@ -551,6 +592,8 @@ body{
     backdrop-filter:blur(14px);
 
     border:1px solid rgba(255,255,255,.08);
+
+    border-radius:var(--radius);
 
     z-index:5;
 }
