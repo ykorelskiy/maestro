@@ -468,10 +468,13 @@ rafScroll.subscribe((scrollY) => {
 
         const modal = overlay.querySelector('.approach-modal');
 
-        // Скрываем колоду мгновенно — пока overlay + модалка ещё закрывают экран
+        // Отменяем WAAPI-анимации и скрываем колоду мгновенно
+        // (WAAPI fill:'forwards' может вернуть плитки в позицию колоды,
+        // поэтому сначала отменяем все анимации, потом ставим inline-стили)
         tiles.forEach(t => {
+            t.getAnimations().forEach(anim => anim.cancel());
             t.style.opacity = '0';
-            t.style.transform = '';
+            t.style.transform = 'none';
             t.classList.add('is-animating');
             t.classList.remove('is-visible');
         });
