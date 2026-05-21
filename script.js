@@ -28,6 +28,46 @@ const rafScroll = (() => {
 })();
 
 /* =========================================
+   NAV ACTIVE LINK — подсветка текущего раздела при скролле
+   ========================================= */
+(function(){
+    const links = document.querySelectorAll('.nav-links a');
+    if(!links.length) return;
+
+    // Собираем секции по href-ссылкам
+    const sections = [];
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        if(href && href.startsWith('#')){
+            const section = document.querySelector(href);
+            if(section) sections.push({ link, section });
+        }
+    });
+    if(!sections.length) return;
+
+    function updateActiveLink(){
+        let current = sections[0];
+        sections.forEach(({ link, section }) => {
+            const rect = section.getBoundingClientRect();
+            const center = rect.top + rect.height / 2;
+            if(center >= 0 && center <= window.innerHeight){
+                current = { link, section };
+            }
+        });
+
+        sections.forEach(({ link }) => {
+            link.classList.toggle('is-current', link === current.link);
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+        requestAnimationFrame(updateActiveLink);
+    }, { passive: true });
+
+    updateActiveLink();
+})();
+
+/* =========================================
    NAV SHIMMER — случайная волна по пунктам меню
 ========================================= */
 

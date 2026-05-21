@@ -132,9 +132,17 @@ body{
     opacity:0;
 }
 
+.nav-links a.is-current{
+    color:var(--accent);
+}
+
 @media (hover: hover) and (pointer: fine) {
     .nav-links a:hover{
         color:var(--text);
+    }
+
+    .nav-links a.is-current:hover{
+        color:var(--accent);
     }
 
     .nav-links a::after{
