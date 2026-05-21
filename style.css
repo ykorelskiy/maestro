@@ -160,6 +160,110 @@ body{
 }
 
 /* =========================================
+   BURGER — мобильное меню (скрыт на десктопе)
+========================================= */
+
+.nav-toggle{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+    width:32px;
+    height:32px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    z-index:201;
+    padding:0;
+    position:relative;
+}
+
+.nav-toggle span{
+    display:block;
+    width:24px;
+    height:2px;
+    background:var(--accent);
+    border-radius:1px;
+    transition:transform .3s ease, opacity .3s ease;
+}
+
+.nav-toggle.is-active span:nth-child(1){
+    transform:rotate(45deg) translate(5px, 5px);
+}
+
+.nav-toggle.is-active span:nth-child(2){
+    opacity:0;
+}
+
+.nav-toggle.is-active span:nth-child(3){
+    transform:rotate(-45deg) translate(5px, -5px);
+}
+
+/* Оверлей-меню */
+
+.nav-menu-overlay{
+    position:fixed;
+    inset:0;
+    z-index:150;
+    background:rgba(0,0,0,.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease;
+}
+
+.nav-menu-overlay.is-active{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.nav-menu-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:28px;
+}
+
+.nav-menu-inner a{
+    color:var(--text);
+    text-decoration:none;
+    font-size:1.3rem;
+    letter-spacing:2px;
+    padding:8px 0;
+    transform:translateY(-20px);
+    opacity:0;
+    transition:transform .4s ease, opacity .4s ease;
+    transition-delay:0s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nav-menu-inner a:hover{
+        color:var(--accent);
+    }
+}
+
+.nav-menu-overlay.is-active .nav-menu-inner a{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(1){ transition-delay:50ms; }
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(2){ transition-delay:100ms; }
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(3){ transition-delay:150ms; }
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(4){ transition-delay:200ms; }
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(5){ transition-delay:250ms; }
+.nav-menu-overlay.is-active .nav-menu-inner a:nth-child(6){ transition-delay:300ms; }
+
+body.is-menu-open{
+    overflow:hidden;
+}
+
+/* =========================================
    HERO
 ========================================= */
 
@@ -718,26 +822,34 @@ body{
 }
 
 /* =========================================
-   MOBILE
+   MOBILE — ≤900px: бургер-меню + hero адаптация
 ========================================= */
 
-@media(max-width:1000px){
+@media(max-width:900px){
 
     .nav{
-
-        padding:24px;
+        padding:20px 24px;
     }
 
     .nav-links{
         display:none;
     }
 
+    .nav-toggle{
+        display:flex;
+    }
+
     .hero{
-        padding:0 24px;
+        align-items:flex-start;
+        padding-top:120px;
+        padding-left:24px;
+        padding-right:24px;
+        min-height:100vh;
+        min-height:100dvh;
+        height:auto;
     }
 
     .hero-title{
-
         letter-spacing:-4px;
     }
 
@@ -745,18 +857,48 @@ body{
         display:none;
     }
 
-    .floating-quote{
+    .hero-content{
+        max-width:100%;
+    }
 
-        width:calc(100% - 48px);
-
-        right:24px;
-
-        bottom:24px;
+    .hero-text{
+        max-width:100%;
     }
 
     .hero-buttons{
-
         flex-direction:column;
+        gap:16px;
+    }
+
+    .btn{
+        width:100%;
+        text-align:center;
+    }
+
+    .floating-quote{
+        position:relative;
+        right:auto;
+        bottom:auto;
+        width:100%;
+        max-width:100%;
+        margin-top:40px;
+        margin-bottom:60px;
+    }
+}
+
+@media(max-width:480px){
+    .hero-title{
+        font-size:clamp(48px, 14vw, 72px);
+        letter-spacing:-3px;
+    }
+
+    .hero-label{
+        font-size:10px;
+        letter-spacing:2px;
+    }
+
+    .hero-text{
+        font-size:17px;
     }
 }
 

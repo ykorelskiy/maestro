@@ -563,6 +563,58 @@ rafScroll.subscribe((scrollY) => {
 })();
 
 /* =========================================
+   NAV MOBILE — бургер-меню (независимо от approach/манифест)
+   ========================================= */
+(function(){
+    const toggle = document.getElementById('navToggle');
+    const overlay = document.getElementById('navMenuOverlay');
+    if(!toggle || !overlay) return;
+
+    const links = overlay.querySelectorAll('a');
+
+    function openMenu(){
+        overlay.classList.add('is-active');
+        toggle.classList.add('is-active');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('is-menu-open');
+    }
+
+    function closeMenu(){
+        overlay.classList.remove('is-active');
+        toggle.classList.remove('is-active');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('is-menu-open');
+    }
+
+    toggle.addEventListener('click', () => {
+        const isOpen = overlay.classList.contains('is-active');
+        isOpen ? closeMenu() : openMenu();
+    });
+
+    links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if(href && href.startsWith('#')){
+                e.preventDefault();
+                closeMenu();
+                const target = document.querySelector(href);
+                if(target) target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    overlay.addEventListener('click', (e) => {
+        if(e.target === overlay) closeMenu();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && overlay.classList.contains('is-active')){
+            closeMenu();
+        }
+    });
+})();
+
+/* =========================================
    CONTACTS — Visit card: letter scatter + crossfade (no JS icon positioning)
    ========================================= */
 (function(){
