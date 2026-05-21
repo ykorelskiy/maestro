@@ -566,10 +566,9 @@ rafScroll.subscribe((scrollY) => {
    ABOUT — Snap Stack: reveal, hover, auto-repeat, dots
    ========================================= */
 (function(){
-    const viewport = document.getElementById('aboutViewport');
     const section = document.getElementById('about');
     const nav = document.getElementById('aboutNav');
-    if(!viewport || !section || !nav) return;
+    if(!section || !nav) return;
 
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -696,9 +695,9 @@ rafScroll.subscribe((scrollY) => {
         });
     }
 
-    // Обновляем точки при скролле (throttled через raf)
+    // Обновляем точки при скролле страницы
     let tickingDots = false;
-    viewport.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () => {
         if(!tickingDots){
             requestAnimationFrame(() => {
                 updateActiveDot();
@@ -706,7 +705,7 @@ rafScroll.subscribe((scrollY) => {
             });
             tickingDots = true;
         }
-    });
+    }, { passive: true });
 
     // Клик по точке
     dots.forEach(dot => {

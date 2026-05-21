@@ -26,6 +26,8 @@
 
 html{
     scroll-behavior:smooth;
+    scroll-padding-top:var(--header-height, 80px);
+    scroll-snap-type:y proximity;
 }
 
 body{
@@ -1608,19 +1610,8 @@ section[id] p{
 
 .about-stack{
     position:relative;
-    scroll-snap-type:y mandatory;
-    overflow-y:auto;
-    height:calc(100vh - var(--header-height, 80px));
-    scroll-behavior:smooth;
-    scroll-padding-top:var(--header-height, 80px);
 }
 
-.about-stack__viewport{
-    display:flex;
-    flex-direction:column;
-}
-
-/* Перед плашками не должно быть `section[id] padding:120px 0` */
 section#about.about-stack{
     padding:0;
 }
@@ -1635,9 +1626,9 @@ section#about.about-stack{
 
 .about-card{
     position:relative;
-    height:calc(100vh - var(--header-height, 80px));
     min-height:calc(100vh - var(--header-height, 80px));
     scroll-snap-align:start;
+    scroll-snap-stop:always;
     display:flex;
     align-items:center;
     justify-content:center;
