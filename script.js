@@ -459,11 +459,6 @@ rafScroll.subscribe((scrollY) => {
     // Закрытие модалки — строгая последовательность
     // =============================================
 
-    /** Вспомогательный Promise с setTimeout */
-    function delay(ms){
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     function closeModal(){
         if(modalAnimating || !isModalOpen) return;
         modalAnimating = true;
@@ -473,7 +468,15 @@ rafScroll.subscribe((scrollY) => {
 
         const modal = overlay.querySelector('.approach-modal');
 
-        // === Шаг 1: модалка исчезает (400ms) ===
+        // Скрываем колоду мгновенно — пока overlay + модалка ещё закрывают экран
+        tiles.forEach(t => {
+            t.style.opacity = '0';
+            t.style.transform = '';
+            t.classList.add('is-animating');
+            t.classList.remove('is-visible');
+        });
+
+        // Модалка исчезает (fade + scale)
         modal.animate([
             { transform: 'scale(1)', opacity: 1 },
             { transform: 'scale(0.95)', opacity: 0 }
@@ -481,8 +484,8 @@ rafScroll.subscribe((scrollY) => {
             duration: 450,
             easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             fill: 'forwards'
-        }).finished.then(async () => {
-            // === Шаг 2: убираем overlay — видна колода в центре сетки ===
+        }).finished.then(() => {
+            // Убираем overlay — ни колоды, ни плиток не видно
             overlay.classList.remove('is-active');
 
             if(useSimpleAnim){
@@ -491,25 +494,7 @@ rafScroll.subscribe((scrollY) => {
                 return;
             }
 
-            // === Шаг 3: пауза 150ms, чтобы пользователь увидел колоду ===
-            await delay(150);
-
-            // === Шаг 4: колода исчезает (fade out, 250ms) ===
-            const fadeOuts = tiles.map(t => {
-                t.classList.add('is-animating');
-                t.classList.remove('is-visible');
-                return t.animate([
-                    { opacity: 1 },
-                    { opacity: 0 }
-                ], {
-                    duration: 250,
-                    easing: 'ease',
-                    fill: 'forwards'
-                }).finished;
-            });
-            await Promise.all(fadeOuts);
-
-            // === Шаг 5: плитки разлетаются из центра на свои места (stagger) ===
+            // Сразу запускаем появление плиток
             tiles.forEach((t, i) => {
                 const ownCenter = getTileCenter(t);
                 const dx = center.x - ownCenter.x;
@@ -537,7 +522,6 @@ rafScroll.subscribe((scrollY) => {
                 }, i * 80);
             });
 
-            // Дожидаемся завершения
             const totalDuration = tiles.length * 80 + 450;
             setTimeout(() => {
                 modalAnimating = false;
