@@ -10,6 +10,8 @@
 
     --border:#1d1d1d;
 
+    --radius:16px;
+
     --transition:
     400ms cubic-bezier(.2,.8,.2,1);
 }
@@ -373,6 +375,97 @@ body{
 }
 
 /* =========================================
+   SHIMMER — общий эффект для всех элементов
+========================================= */
+
+.shimmer{
+    position:relative;
+    overflow:hidden;
+}
+
+.shimmer::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:15%;
+    right:15%;
+    bottom:0;
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,107,26,.07) 30%,
+        rgba(255,107,26,.10) 45%,
+        rgba(255,107,26,.07) 60%,
+        transparent 100%
+    );
+    pointer-events:none;
+    transform:translateX(-120%);
+    will-change:transform;
+    opacity:0;
+}
+
+.shimmer:hover::after,
+.shimmer.is-shimmer-active::after{
+    opacity:1;
+    animation:shimmerWave 0.7s ease-out forwards;
+}
+
+@keyframes shimmerWave{
+    0%{
+        transform:translateX(-120%);
+    }
+    60%{
+        transform:translateX(0%);
+    }
+    100%{
+        transform:translateX(120%);
+    }
+}
+
+/* Повтор волны при долгом hover */
+.shimmer:hover::after{
+    animation:
+        shimmerWave 0.7s ease-out forwards,
+        shimmerPause 2.3s 0.7s,
+        shimmerWave 0.7s 3s ease-out forwards,
+        shimmerPause 2.3s 3.7s,
+        shimmerWave 0.7s 6s ease-out forwards;
+}
+
+@keyframes shimmerPause{
+    0%,100%{ transform:translateX(120%); }
+}
+
+/* Для навигации — более тонкий shimmer */
+.shimmer-nav::after{
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,107,26,.05) 30%,
+        rgba(255,107,26,.08) 45%,
+        rgba(255,107,26,.05) 60%,
+        transparent 100%
+    );
+}
+
+/* =========================================
+   FRAME — общий стиль для всех карточек
+========================================= */
+
+.frame{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    transition:
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        background 0.4s ease;
+}
+
+.frame:hover{
+    border-color:rgba(255,107,26,.35);
+}
+
+/* =========================================
    BUTTONS
 ========================================= */
 
@@ -404,6 +497,8 @@ body{
     letter-spacing:2px;
 
     font-size:13px;
+
+    border-radius:var(--radius);
 }
 
 .btn::before{
@@ -1806,6 +1901,14 @@ section[id] p{
         transition:none !important;
     }
 
+    .shimmer::after{
+        display:none !important;
+    }
+
+    .shimmer{
+        overflow:visible;
+    }
+
     .article-card{
         transition:none;
     }
@@ -1826,5 +1929,9 @@ section[id] p{
 
     .approach-flash{
         display:none !important;
+    }
+
+    .frame:hover{
+        border-color:var(--border);
     }
 }

@@ -61,6 +61,45 @@ hoverItems.forEach(item => {
 });
 
 /* =========================================
+   NAV SHIMMER — случайная волна по пунктам меню
+========================================= */
+
+(function(){
+    const navLinks = document.querySelectorAll('.nav-links a');
+    if(!navLinks.length) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let currentShimmerTimeout = null;
+    let isHovering = false;
+
+    // Добавляем класс shimmer-nav для более тонкого эффекта
+    navLinks.forEach(link => link.classList.add('shimmer', 'shimmer-nav'));
+
+    // Отслеживаем hover на любом пункте
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => { isHovering = true; });
+        link.addEventListener('mouseleave', () => { isHovering = false; });
+    });
+
+    function scheduleShimmer(){
+        const delay = 8000 + Math.random() * 7000; // 8–15 секунд
+        currentShimmerTimeout = setTimeout(() => {
+            if(!isHovering){
+                const idx = Math.floor(Math.random() * navLinks.length);
+                const link = navLinks[idx];
+                link.classList.add('is-shimmer-active');
+                setTimeout(() => {
+                    link.classList.remove('is-shimmer-active');
+                }, 700);
+            }
+            scheduleShimmer();
+        }, delay);
+    }
+
+    scheduleShimmer();
+})();
+
+/* =========================================
    REVEAL ON SCROLL
 ========================================= */
 
