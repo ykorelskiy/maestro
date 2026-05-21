@@ -477,15 +477,6 @@ rafScroll.subscribe((scrollY) => {
 
         const modal = overlay.querySelector('.approach-modal');
 
-        // Отменяем WAAPI-анимации и скрываем колоду мгновенно
-        tiles.forEach(t => {
-            t.getAnimations().forEach(anim => anim.cancel());
-            t.style.opacity = '0';
-            t.style.transform = 'none';
-            t.classList.add('is-animating');
-            t.classList.remove('is-visible');
-        });
-
         // Модалка исчезает (fade + scale)
         modal.animate([
             { transform: 'scale(1)', opacity: 1 },
@@ -502,6 +493,15 @@ rafScroll.subscribe((scrollY) => {
                 isModalOpen = false;
                 return;
             }
+
+            // Отменяем WAAPI-анимации и скрываем колоду мгновенно
+            tiles.forEach(t => {
+                t.getAnimations().forEach(anim => anim.cancel());
+                t.style.opacity = '0';
+                t.style.transform = 'none';
+                t.classList.add('is-animating');
+                t.classList.remove('is-visible');
+            });
 
             // Сразу запускаем появление плиток
             tiles.forEach((t, i) => {
