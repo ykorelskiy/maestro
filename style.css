@@ -631,30 +631,9 @@ body.is-menu-open{
     border-radius:var(--radius);
 }
 
-.btn::before{
-
-    content:'';
-
-    position:absolute;
-
-    inset:0;
-
-    background:var(--accent);
-
-    transform:translateY(100%);
-
-    transition:var(--transition);
-
-    z-index:-1;
-}
-
 @media (hover: hover) and (pointer: fine) {
-    .btn:hover::before{
-        transform:translateY(0%);
-    }
-
     .btn:hover{
-        border-color:var(--accent);
+        border-color:rgba(255,107,26,.35);
     }
 }
 
