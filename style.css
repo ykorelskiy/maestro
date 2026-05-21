@@ -52,46 +52,6 @@ body{
 }
 
 /* =========================================
-   CURSOR
-========================================= */
-
-.cursor{
-
-    width:20px;
-    height:20px;
-
-    border:1px solid rgba(255,255,255,.4);
-
-    border-radius:50%;
-
-    position:fixed;
-
-    left:0;
-    top:0;
-
-    transform:translate(-50%,-50%);
-
-    pointer-events:none;
-
-    z-index:1000;
-
-    transition:
-    width .2s ease,
-    height .2s ease,
-    background .2s ease;
-}
-
-.cursor.active{
-
-    width:60px;
-    height:60px;
-
-    background:rgba(255,107,26,.08);
-
-    border-color:var(--accent);
-}
-
-/* =========================================
    NAV
 ========================================= */
 
@@ -152,11 +112,7 @@ body{
     position:relative;
 }
 
-.nav-links a:hover{
-    color:var(--text);
-}
-
-/* Верхнее подчёркивание (надчёркивание) при наведении + пассивная анимация */
+/* Верхнее подчёркивание (надчёркивание) — дефолтное состояние (без анимации на тач) */
 .nav-links a::after{
 
     content:'';
@@ -170,14 +126,23 @@ body{
 
     width:0%;
     opacity:0;
-    animation:navLinePulse 12s ease-in-out infinite;
-    animation-delay:calc(var(--i, 0) * 2s);
 }
 
-.nav-links a:hover::after{
-    width:100%;
-    opacity:1;
-    animation:none;
+@media (hover: hover) and (pointer: fine) {
+    .nav-links a:hover{
+        color:var(--text);
+    }
+
+    .nav-links a::after{
+        animation:navLinePulse 12s ease-in-out infinite;
+        animation-delay:calc(var(--i, 0) * 2s);
+    }
+
+    .nav-links a:hover::after{
+        width:100%;
+        opacity:1;
+        animation:none;
+    }
 }
 
 @keyframes navLinePulse{
@@ -256,9 +221,10 @@ body{
     transition:1.5s ease;
 }
 
-.hero:hover .bg-base{
-
-    filter:grayscale(0%);
+@media (hover: hover) and (pointer: fine) {
+    .hero:hover .bg-base{
+        filter:grayscale(0%);
+    }
 }
 
 /* SMOKE */
@@ -420,12 +386,6 @@ body{
     opacity:0;
 }
 
-.shimmer:hover::after,
-.shimmer.is-shimmer-active::after{
-    opacity:1;
-    animation:shimmerWave 0.7s ease-out forwards;
-}
-
 @keyframes shimmerWave{
     0%{
         transform:translateX(-120%);
@@ -438,21 +398,32 @@ body{
     }
 }
 
-/* Повтор волны при долгом hover */
-.shimmer:hover::after{
-    animation:
-        shimmerWave 0.7s ease-out forwards,
-        shimmerPause 2.3s 0.7s,
-        shimmerWave 0.7s 3s ease-out forwards,
-        shimmerPause 2.3s 3.7s,
-        shimmerWave 0.7s 6s ease-out forwards;
-}
-
 @keyframes shimmerPause{
     0%,100%{ transform:translateX(120%); }
 }
 
-/* Для навигации — более тонкий shimmer (через ::before, чтобы не конфликтовать с ::after-линией) */
+@media (hover: hover) and (pointer: fine) {
+    .shimmer:hover::after{
+        opacity:1;
+        animation:shimmerWave 0.7s ease-out forwards;
+    }
+
+    .shimmer:hover::after{
+        animation:
+            shimmerWave 0.7s ease-out forwards,
+            shimmerPause 2.3s 0.7s,
+            shimmerWave 0.7s 3s ease-out forwards,
+            shimmerPause 2.3s 3.7s,
+            shimmerWave 0.7s 6s ease-out forwards;
+    }
+}
+
+.shimmer.is-shimmer-active::after{
+    opacity:1;
+    animation:shimmerWave 0.7s ease-out forwards;
+}
+
+/* Для навигации — более тонкий shimmer */
 .shimmer-nav::before{
     content:'';
     position:absolute;
@@ -490,7 +461,7 @@ body{
 }
 
 /* =========================================
-   FRAME — общий стиль для всех карточек
+   FRAME — общий стиль для карточек
 ========================================= */
 
 .frame{
@@ -502,8 +473,10 @@ body{
         background 0.4s ease;
 }
 
-.frame:hover{
-    border-color:rgba(255,107,26,.35);
+@media (hover: hover) and (pointer: fine) {
+    .frame:hover{
+        border-color:rgba(255,107,26,.35);
+    }
 }
 
 /* =========================================
@@ -559,12 +532,14 @@ body{
     z-index:-1;
 }
 
-.btn:hover::before{
-    transform:translateY(0%);
-}
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover::before{
+        transform:translateY(0%);
+    }
 
-.btn:hover{
-    border-color:var(--accent);
+    .btn:hover{
+        border-color:var(--accent);
+    }
 }
 
 .btn-secondary{
@@ -789,7 +764,6 @@ body{
    MANIFEST MODAL
    ======================================== */
 
-        /* Манифест — модальное окно */
         .manifest-overlay {
             position: fixed;
             inset: 0;
@@ -904,8 +878,6 @@ body{
 
 /* ============ SESSION 1: NEW SECTIONS ============ */
 
-/* --- Section defaults --- */
-
 section[id]{
     padding:120px 0;
 }
@@ -928,8 +900,6 @@ section[id] p{
     color:var(--muted);
     margin-bottom:1.5em;
 }
-
-/* --- Article cards --- */
 
 .article-card{
     background:var(--surface);
@@ -964,13 +934,13 @@ section[id] p{
     transition:var(--transition);
 }
 
-.btn-all-articles:hover{
-    border-color:var(--accent);
-    background:var(--accent);
-    color:#0e0e10;
+@media (hover: hover) and (pointer: fine) {
+    .btn-all-articles:hover{
+        border-color:var(--accent);
+        background:var(--accent);
+        color:#0e0e10;
+    }
 }
-
-/* --- Tools teaser --- */
 
 .tools-teaser{
     font-size:1.2rem;
@@ -988,7 +958,6 @@ section[id] p{
     background: #08080a;
 }
 
-/* --- Background orbs --- */
 .contacts-bg-orb{
     position:absolute;
     border-radius:50%;
@@ -1020,7 +989,6 @@ section[id] p{
     100%{ transform: translate(40px,-80px) scale(.9); }
 }
 
-/* --- Layout --- */
 .contacts-inner{
     max-width:1200px;
     margin:0 auto;
@@ -1045,7 +1013,6 @@ section[id] p{
     gap:28px;
 }
 
-/* --- Title (override section[id] h2) --- */
 #contacts.contacts-section .contacts-title{
     font-size:clamp(2.5rem, 5vw, 4rem);
     font-weight:700;
@@ -1060,7 +1027,6 @@ section[id] p{
     display:block;
 }
 
-/* --- Paragraphs (override section[id] p) --- */
 #contacts.contacts-section .contacts-paragraphs{
     display:flex;
     flex-direction:column;
@@ -1076,7 +1042,6 @@ section[id] p{
     max-width:480px;
 }
 
-/* --- Response line --- */
 .contacts-response-line{
     display:flex;
     align-items:center;
@@ -1103,7 +1068,6 @@ section[id] p{
     letter-spacing:.3px;
 }
 
-/* --- Confidential --- */
 .contacts-confidential{
     display:flex;
     align-items:center;
@@ -1117,7 +1081,7 @@ section[id] p{
     opacity:.5;
 }
 
-/* --- Visit Card — blackened metal "Maestro" business card --- */
+/* --- Visit Card — иконки видны всегда, hover меняет их отображение --- */
 .contacts-visit-card{
     position:relative;
     width:100%;
@@ -1126,7 +1090,6 @@ section[id] p{
     border-radius:16px;
     overflow:hidden;
     cursor:pointer;
-    /* Базовый фон — чернёный металл */
     background:
         linear-gradient(135deg, #0d0d0d 0%, #111 40%, #0a0a0a 100%);
     box-shadow:
@@ -1138,7 +1101,6 @@ section[id] p{
     user-select:none;
 }
 
-/* --- Bevel (фрезерованный срез) --- */
 .contacts-bevel{
     position:absolute;
     inset:0;
@@ -1160,18 +1122,7 @@ section[id] p{
     mask-composite: exclude;
     transition: opacity .5s ease;
 }
-.contacts-visit-card:hover .contacts-bevel{
-    background: linear-gradient(
-        135deg,
-        rgba(255,107,26,.5),
-        rgba(255,107,26,.2) 30%,
-        rgba(255,107,26,.35) 50%,
-        rgba(200,100,30,.15) 70%,
-        rgba(255,107,26,.4) 100%
-    );
-}
 
-/* --- Grain texture --- */
 .contacts-grain{
     position:absolute;
     inset:0;
@@ -1184,7 +1135,7 @@ section[id] p{
     background-size:256px 256px;
 }
 
-/* --- Wave animation (hover) --- */
+/* Волна — только на устройствах с hover */
 .contacts-wave{
     position:absolute;
     inset:0;
@@ -1203,27 +1154,41 @@ section[id] p{
     mix-blend-mode: screen;
     transition: opacity .4s ease;
 }
-.contacts-visit-card:hover .contacts-wave{
-    opacity:1;
-    animation: waveSweep 1.2s ease-in-out forwards;
-}
 @keyframes waveSweep{
     0%{ transform: translateX(-100%); }
     50%{ transform: translateX(0%); }
     100%{ transform: translateX(100%); }
 }
-/* Повтор волны при долгом hover */
-.contacts-visit-card:hover .contacts-wave{
-    animation:
-        waveSweep 1.2s ease-in-out forwards,
-        wavePause .8s 1.2s,
-        waveSweep 1.2s 2s ease-in-out forwards,
-        wavePause .8s 3.2s,
-        waveSweep 1.2s 4s ease-in-out forwards;
+@keyframes wavePause{
+    0%,100%{ opacity:1; }
 }
 
-/* --- Resting content: Maestro + icons --- */
-/* Resting block — letters scatter via JS, no hover-hide */
+@media (hover: hover) and (pointer: fine) {
+    .contacts-visit-card:hover .contacts-bevel{
+        background: linear-gradient(
+            135deg,
+            rgba(255,107,26,.5),
+            rgba(255,107,26,.2) 30%,
+            rgba(255,107,26,.35) 50%,
+            rgba(200,100,30,.15) 70%,
+            rgba(255,107,26,.4) 100%
+        );
+    }
+
+    .contacts-wave{
+        opacity:0;
+    }
+
+    .contacts-visit-card:hover .contacts-wave{
+        opacity:1;
+        animation: waveSweep 1.2s ease-in-out forwards,
+                   wavePause .8s 1.2s,
+                   waveSweep 1.2s 2s ease-in-out forwards,
+                   wavePause .8s 3.2s,
+                   waveSweep 1.2s 4s ease-in-out forwards;
+    }
+}
+
 .contacts-resting{
     position:relative;
     z-index:5;
@@ -1259,17 +1224,15 @@ section[id] p{
     will-change:transform, opacity;
 }
 
-/* Dot inside letters gets accent color */
 .contacts-letter.is-dot{
     color:var(--accent);
 }
 
-/* Scatter state — individual transforms set via JS inline style */
 .contacts-name.is-scattered .contacts-letter{
     opacity:0;
 }
 
-/* === КОМПЛЕКТ A — крупные иконки в покое (flex, под MAESTRO.) === */
+/* Иконки визитки — видны всегда (дефолт) */
 .contacts-icons-rest{
     display:flex;
     justify-content:center;
@@ -1278,10 +1241,6 @@ section[id] p{
     transition:
         opacity .35s ease,
         transform .35s ease;
-}
-.contacts-visit-card:hover .contacts-icons-rest{
-    opacity:0;
-    transform:translateY(6px);
 }
 
 .contacts-icon-big{
@@ -1292,7 +1251,6 @@ section[id] p{
     flex-shrink:0;
 }
 
-/* === КОМПЛЕКТ B — иконки внутри строк контактов === */
 .contacts-contact-icon-wrap{
     display:inline-flex;
     align-items:center;
@@ -1301,18 +1259,10 @@ section[id] p{
     height:24px;
     flex-shrink:0;
     color:var(--accent);
-    opacity:0;
-    transform:translateX(-8px);
-    transition:
-        opacity .35s ease .2s,
-        transform .35s ease .2s;
-}
-.contacts-visit-card:hover .contacts-contact-icon-wrap{
-    opacity:1;
+    opacity:1; /* всегда видны на тач */
     transform:translateX(0);
 }
 
-/* --- Hover content: clickable contacts --- */
 .contacts-hover-content{
     position:absolute;
     inset:0;
@@ -1323,15 +1273,7 @@ section[id] p{
     justify-content:center;
     gap:20px;
     padding:24px 32px;
-    opacity:0;
-    transition:
-        opacity .5s ease .15s,
-        transform .5s cubic-bezier(.2,.8,.2,1) .15s;
-    transform:translateY(8px);
-}
-
-.contacts-visit-card:hover .contacts-hover-content{
-    opacity:1;
+    opacity:1; /* всегда видны на тач */
     transform:translateY(0);
 }
 
@@ -1346,31 +1288,85 @@ section[id] p{
     transition:
         background .3s ease,
         transform .3s cubic-bezier(.2,.8,.2,1);
-    opacity:0;
-    transform:translateX(-10px);
-}
-.contacts-contact-row[data-index="0"]{
-    transition:
-        opacity .4s ease .25s,
-        transform .4s cubic-bezier(.2,.8,.2,1) .25s,
-        background .3s ease,
-        color .3s ease;
-}
-.contacts-contact-row[data-index="1"]{
-    transition:
-        opacity .4s ease .35s,
-        transform .4s cubic-bezier(.2,.8,.2,1) .35s,
-        background .3s ease,
-        color .3s ease;
-}
-.contacts-visit-card:hover .contacts-contact-row{
-    opacity:1;
+    opacity:1; /* всегда видны на тач */
     transform:translateX(0);
 }
 
-.contacts-contact-row:hover{
-    background: rgba(255,107,26,.08);
-    transform:scale(1.02) !important;
+/* На устройствах с hover — иконки скрыты, показываются по наведению */
+@media (hover: hover) and (pointer: fine) {
+    .contacts-visit-card:hover{
+        box-shadow:
+            0 4px 40px rgba(0,0,0,.5),
+            0 0 60px rgba(255,107,26,.06),
+            0 0 120px rgba(255,107,26,.04),
+            inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    .contacts-icons-rest{
+        opacity:1;
+    }
+
+    .contacts-visit-card:hover .contacts-icons-rest{
+        opacity:0;
+        transform:translateY(6px);
+    }
+
+    .contacts-contact-icon-wrap{
+        opacity:0;
+        transform:translateX(-8px);
+        transition:
+            opacity .35s ease .2s,
+            transform .35s ease .2s;
+    }
+
+    .contacts-visit-card:hover .contacts-contact-icon-wrap{
+        opacity:1;
+        transform:translateX(0);
+    }
+
+    .contacts-hover-content{
+        opacity:0;
+        transform:translateY(8px);
+        transition:
+            opacity .5s ease .15s,
+            transform .5s cubic-bezier(.2,.8,.2,1) .15s;
+    }
+
+    .contacts-visit-card:hover .contacts-hover-content{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+    .contacts-contact-row{
+        opacity:0;
+        transform:translateX(-10px);
+    }
+
+    .contacts-contact-row[data-row="0"]{
+        transition:
+            opacity .4s ease .25s,
+            transform .4s cubic-bezier(.2,.8,.2,1) .25s,
+            background .3s ease,
+            color .3s ease;
+    }
+
+    .contacts-contact-row[data-row="1"]{
+        transition:
+            opacity .4s ease .35s,
+            transform .4s cubic-bezier(.2,.8,.2,1) .35s,
+            background .3s ease,
+            color .3s ease;
+    }
+
+    .contacts-visit-card:hover .contacts-contact-row{
+        opacity:1;
+        transform:translateX(0);
+    }
+
+    .contacts-contact-row:hover{
+        background: rgba(255,107,26,.08);
+        transform:scale(1.02) !important;
+    }
 }
 
 .contacts-contact-icon{
@@ -1379,29 +1375,12 @@ section[id] p{
     transition:color .3s ease;
 }
 
-.contacts-contact-row:hover .contacts-contact-icon{
-    color:#ff8c4a;
-}
-
 .contacts-contact-text{
     font-size:1rem;
     font-weight:400;
     color:var(--text);
     white-space:nowrap;
     transition:color .3s ease;
-}
-
-.contacts-contact-row:hover .contacts-contact-text{
-    color:#fff;
-}
-
-/* --- Hover glow (внешнее свечение) --- */
-.contacts-visit-card:hover{
-    box-shadow:
-        0 4px 40px rgba(0,0,0,.5),
-        0 0 60px rgba(255,107,26,.06),
-        0 0 120px rgba(255,107,26,.04),
-        inset 0 1px 0 rgba(255,255,255,.03);
 }
 
 /* --- Animation on appear (IntersectionObserver) --- */
@@ -1418,7 +1397,6 @@ section[id] p{
     opacity:1;
     transform:translateY(0);
 }
-/* Stagger */
 .contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(1){ transition-delay:.1s; }
 .contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(2){ transition-delay:.2s; }
 .contacts-section.is-visible .contacts-paragraphs .contacts-p:nth-child(3){ transition-delay:.3s; }
@@ -1426,20 +1404,9 @@ section[id] p{
 .contacts-section.is-visible .contacts-confidential{ transition-delay:.4s; }
 .contacts-section.is-visible .contacts-cards-col .contacts-visit-card{ transition-delay:.15s; }
 
-/* --- Reduced motion --- */
-@media(prefers-reduced-motion:reduce){
+@media (prefers-reduced-motion:reduce){
     .contacts-bg-orb{ animation:none; }
     .contacts-wave{ display:none; }
-    .contacts-visit-card:hover .contacts-bevel{
-        background: linear-gradient(
-            135deg,
-            rgba(200,200,210,.35),
-            rgba(160,160,170,.2) 30%,
-            rgba(200,200,210,.25) 50%,
-            rgba(140,140,150,.15) 70%,
-            rgba(200,200,210,.3) 100%
-        );
-    }
     .contacts-status-dot{ animation:none; }
     .contacts-section .contacts-text-col > *,
     .contacts-section .contacts-cards-col > *{
@@ -1448,7 +1415,6 @@ section[id] p{
     }
 }
 
-/* --- Tablet / Mobile --- */
 @media(max-width:1000px){
     .contacts-inner{
         grid-template-columns:1fr;
@@ -1478,7 +1444,6 @@ section[id] p{
         aspect-ratio:1.4;
         border-radius:12px;
     }
-    /* На mobile показываем контакты сразу */
     .contacts-resting{ display:none; }
     .contacts-wave{ display:none; }
     .contacts-hover-content{
@@ -1519,7 +1484,6 @@ section[id] p{
     user-select:none;
     border-radius:16px;
     overflow:hidden;
-    /* Начальное состояние для скролл-анимации */
     opacity:0;
     transform:translateY(30px);
     transition:
@@ -1528,7 +1492,6 @@ section[id] p{
         border-color 0.4s ease,
         background 0.4s ease;
     will-change:transform, opacity;
-    /* Фоновая пульсация (idle) */
     animation:tileBreathe 4s ease-in-out infinite;
 }
 
@@ -1544,7 +1507,7 @@ section[id] p{
     }
 }
 
-/* Псевдоэлемент для hover-волны (оранжевый блик) */
+/* Shimmer на плитках — всегда (через ::after) */
 .approach-tile::after{
     content:'';
     position:absolute;
@@ -1566,11 +1529,6 @@ section[id] p{
     opacity:0;
 }
 
-.approach-tile:hover::after{
-    opacity:1;
-    animation:tileWave 0.7s ease-out forwards;
-}
-
 @keyframes tileWave{
     0%{
         transform:translateX(-120%);
@@ -1583,32 +1541,33 @@ section[id] p{
     }
 }
 
-/* Повтор волны при долгом hover */
-.approach-tile:hover::after{
-    animation:
-        tileWave 0.7s ease-out forwards,
-        tileWavePause 2.3s 0.7s,
-        tileWave 0.7s 3s ease-out forwards,
-        tileWavePause 2.3s 3.7s,
-        tileWave 0.7s 6s ease-out forwards;
-}
-
 @keyframes tileWavePause{
     0%,100%{ transform:translateX(120%); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .approach-tile:hover::after{
+        opacity:1;
+        animation:tileWave 0.7s ease-out forwards,
+                   tileWavePause 2.3s 0.7s,
+                   tileWave 0.7s 3s ease-out forwards,
+                   tileWavePause 2.3s 3.7s,
+                   tileWave 0.7s 6s ease-out forwards;
+    }
+
+    .approach-tile:hover{
+        border-color:rgba(255,107,26,.35);
+        background:rgba(255,107,26,.02);
+        animation:none;
+        box-shadow:
+            0 8px 30px rgba(255,107,26,.08),
+            0 0 40px rgba(255,107,26,.04);
+    }
 }
 
 .approach-tile.is-visible{
     opacity:1;
     transform:translateY(0);
-}
-
-.approach-tile:hover{
-    border-color:rgba(255,107,26,.35);
-    background:rgba(255,107,26,.02);
-    animation:none;
-    box-shadow:
-        0 8px 30px rgba(255,107,26,.08),
-        0 0 40px rgba(255,107,26,.04);
 }
 
 .approach-tile:active{
@@ -1647,11 +1606,12 @@ section[id] p{
     z-index:1;
 }
 
-.approach-tile:hover .approach-tile-hint{
-    opacity:0.6;
+@media (hover: hover) and (pointer: fine) {
+    .approach-tile:hover .approach-tile-hint{
+        opacity:0.6;
+    }
 }
 
-/* viewed state */
 .approach-tile.is-viewed{
     border-color:rgba(255,107,26,.15);
 }
@@ -1659,7 +1619,6 @@ section[id] p{
     color:rgba(255,107,26,.5);
 }
 
-/* Состояние анимации колоды */
 .approach-tile.is-animating{
     transition:none;
 }
@@ -1718,8 +1677,10 @@ section[id] p{
     z-index:2;
 }
 
-.approach-modal-close:hover{
-    color:#fff;
+@media (hover: hover) and (pointer: fine) {
+    .approach-modal-close:hover{
+        color:#fff;
+    }
 }
 
 .approach-modal-number{
@@ -1754,7 +1715,6 @@ section[id] p{
     margin-bottom:0;
 }
 
-/* Вспышка при сборке/разборке колоды */
 .approach-flash{
     position:fixed;
     pointer-events:none;
@@ -1801,8 +1761,6 @@ section[id] p{
     line-height:1.7;
 }
 
-/* --- Articles subtitle --- */
-
 .articles-subtitle{
     font-size:1.1rem;
     color:var(--muted);
@@ -1811,8 +1769,6 @@ section[id] p{
 }
 
 /* ============ SESSION 3: VISUAL ENHANCEMENTS ============ */
-
-/* --- Text highlight classes --- */
 
 .text-white{
     color:var(--text);
@@ -1829,8 +1785,6 @@ section[id] p{
     font-weight:300;
 }
 
-/* --- Article card hover --- */
-
 .article-card{
     transition:
         transform 0.5s cubic-bezier(.2,.8,.2,1),
@@ -1838,13 +1792,13 @@ section[id] p{
         box-shadow 0.5s cubic-bezier(.2,.8,.2,1);
 }
 
-.article-card:hover{
-    transform:translateY(-2px);
-    border-color:rgba(255,107,26,.25);
-    box-shadow:0 8px 30px rgba(255,107,26,.05);
+@media (hover: hover) and (pointer: fine) {
+    .article-card:hover{
+        transform:translateY(-2px);
+        border-color:rgba(255,107,26,.25);
+        box-shadow:0 8px 30px rgba(255,107,26,.05);
+    }
 }
-
-/* --- Requests list 2-column --- */
 
 .requests-list{
     display:grid;
@@ -1864,8 +1818,6 @@ section[id] p{
     opacity:.7;
 }
 
-/* --- Requests not box --- */
-
 .requests-not-box{
     background:var(--surface);
     border:1px solid var(--border);
@@ -1878,13 +1830,11 @@ section[id] p{
     margin-bottom:16px;
 }
 
-/* --- Tools teaser highlights --- */
-
 .tools-teaser .text-accent{
     font-weight:500;
 }
 
-/* --- Mobile adjustments for approach grid --- */
+/* --- Mobile adjustments --- */
 
 @media(max-width:768px){
     .approach-grid{
@@ -1904,17 +1854,6 @@ section[id] p{
 
     .approach-tile h3{
         font-size:1rem;
-    }
-
-    .approach-tile:hover{
-        animation:none;
-        border-color:var(--border);
-        box-shadow:none;
-        background:var(--surface);
-    }
-
-    .approach-tile:hover::after{
-        display:none;
     }
 
     .approach-modal{
@@ -1956,10 +1895,6 @@ section[id] p{
         transition:none;
     }
 
-    .article-card:hover{
-        transform:none;
-    }
-
     .approach-modal-overlay{
         transition:opacity 0.2s ease;
     }
@@ -1972,9 +1907,5 @@ section[id] p{
 
     .approach-flash{
         display:none !important;
-    }
-
-    .frame:hover{
-        border-color:var(--border);
     }
 }

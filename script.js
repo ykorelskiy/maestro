@@ -28,39 +28,6 @@ const rafScroll = (() => {
 })();
 
 /* =========================================
-   CUSTOM CURSOR
-========================================= */
-
-const cursor = document.querySelector('.cursor');
-
-window.addEventListener('mousemove', e => {
-
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-
-});
-
-const hoverItems = document.querySelectorAll(
-    'a, .btn, .floating-quote'
-);
-
-hoverItems.forEach(item => {
-
-    item.addEventListener('mouseenter', () => {
-
-        cursor.classList.add('active');
-
-    });
-
-    item.addEventListener('mouseleave', () => {
-
-        cursor.classList.remove('active');
-
-    });
-
-});
-
-/* =========================================
    NAV SHIMMER — случайная волна по пунктам меню
 ========================================= */
 
@@ -511,8 +478,6 @@ rafScroll.subscribe((scrollY) => {
         const modal = overlay.querySelector('.approach-modal');
 
         // Отменяем WAAPI-анимации и скрываем колоду мгновенно
-        // (WAAPI fill:'forwards' может вернуть плитки в позицию колоды,
-        // поэтому сначала отменяем все анимации, потом ставим inline-стили)
         tiles.forEach(t => {
             t.getAnimations().forEach(anim => anim.cancel());
             t.style.opacity = '0';
@@ -530,7 +495,6 @@ rafScroll.subscribe((scrollY) => {
             easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             fill: 'forwards'
         }).finished.then(() => {
-            // Убираем overlay — ни колоды, ни плиток не видно
             overlay.classList.remove('is-active');
 
             if(useSimpleAnim){
@@ -587,7 +551,6 @@ rafScroll.subscribe((scrollY) => {
     });
 
     // Если плитки уже видны при загрузке (например, якорь #approach)
-    // Проверяем через небольшую задержку
     setTimeout(() => {
         if(!hasRevealed){
             const rect = grid.getBoundingClientRect();
