@@ -1355,134 +1355,188 @@ section[id] p{
     }
 }
 
-/* --- APPROACH CAROUSEL --- */
+/* --- APPROACH GRID --- */
 
-.approach-carousel{
-    overflow:hidden;
-    width:100%;
-    margin-top:20px;
-}
-
-.approach-track{
-    display:flex;
-    gap:28px;
-    padding:24px 0;
-    transition:
-        transform 0.7s cubic-bezier(.2,.8,.2,1);
-    will-change: transform;
+.approach-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    max-width:1100px;
+    margin:40px auto 0;
+    padding:0 40px;
 }
 
-.approach-progress-bar{
-    position:absolute;
-    bottom:0;
-    left:0;
-    right:0;
-    height:2px;
-    background:rgba(255,255,255,.06);
-    border-radius:0 0 12px 12px;
-    overflow:hidden;
-}
-.approach-progress-bar span{
-    display:block;
-    height:100%;
-    width:0%;
-    background:var(--accent);
-    border-radius:0 0 12px 12px;
-    transition:width 0ms linear;
-}
-.approach-slide.is-active .approach-progress-bar span{
-    transition:width 6000ms linear;
-    width:100%;
-}
-
-.approach-slide{
+.approach-tile{
     position:relative;
-    flex:0 0 50%;
-    min-width:440px;
     background:var(--surface);
     border:1px solid var(--border);
-    padding:48px 44px 54px;
+    padding:36px 32px;
+    cursor:pointer;
     display:flex;
     flex-direction:column;
-    opacity:.45;
-    transform:scale(.9);
-    filter:brightness(.5);
+    align-items:center;
+    justify-content:center;
+    min-height:200px;
+    user-select:none;
+    opacity:0;
+    transform:translateY(30px);
     transition:
         opacity 0.6s ease,
         transform 0.6s cubic-bezier(.2,.8,.2,1),
-        filter 0.6s ease,
-        border-color 0.6s ease,
-        box-shadow 0.6s ease;
-    user-select:none;
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        background 0.4s ease;
 }
 
-.approach-slide.is-active{
+.approach-tile.is-visible{
     opacity:1;
-    transform:scale(1);
-    filter:brightness(1);
-    border-color:rgba(255,107,26,.3);
-    box-shadow:
-        0 12px 40px rgba(255,107,26,.08),
-        0 0 60px rgba(255,107,26,.04);
+    transform:translateY(0);
 }
 
-.approach-number{
-    font-size:1rem;
+.approach-tile:hover{
+    border-color:rgba(255,107,26,.4);
+    box-shadow:
+        0 8px 30px rgba(255,107,26,.08),
+        0 0 40px rgba(255,107,26,.04);
+    background:rgba(255,107,26,.02);
+}
+
+.approach-tile:active{
+    transform:translateY(0) scale(.98);
+}
+
+.approach-tile .approach-number{
+    font-size:1.1rem;
     color:var(--accent);
     letter-spacing:2px;
-    margin-bottom:22px;
+    margin-bottom:12px;
+    transition:margin-bottom 0.4s ease;
 }
 
-.approach-slide h3{
+.approach-tile h3{
+    font-size:1.2rem;
+    color:var(--text);
+    letter-spacing:-0.3px;
+    text-align:center;
+    line-height:1.3;
+    transition:opacity 0.4s ease;
+}
+
+.approach-tile .approach-tile-hint{
+    position:absolute;
+    bottom:16px;
+    font-size:0.7rem;
+    color:var(--muted);
+    letter-spacing:1px;
+    opacity:0;
+    transition:opacity 0.4s ease;
+}
+
+.approach-tile:hover .approach-tile-hint{
+    opacity:0.6;
+}
+
+/* viewed state */
+.approach-tile.is-viewed{
+    border-color:rgba(255,107,26,.15);
+}
+.approach-tile.is-viewed .approach-number{
+    color:rgba(255,107,26,.5);
+}
+
+/* --- Approach modal --- */
+
+.approach-modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.4s ease;
+    z-index:1000;
+    padding:20px;
+}
+
+.approach-modal-overlay.is-active{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.approach-modal{
+    position:relative;
+    background:var(--surface);
+    color:var(--text);
+    max-width:640px;
+    width:100%;
+    padding:50px 48px 44px;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 40px 100px rgba(0,0,0,.6);
+    transform:translateY(40px) scale(.96);
+    opacity:0;
+    transition:
+        transform 0.5s cubic-bezier(.2,.8,.3,1),
+        opacity 0.4s ease;
+}
+
+.approach-modal-overlay.is-active .approach-modal{
+    transform:translateY(0) scale(1);
+    opacity:1;
+}
+
+.approach-modal-close{
+    position:absolute;
+    top:16px;
+    right:20px;
+    background:transparent;
+    border:none;
+    color:rgba(255,255,255,.4);
+    font-size:24px;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    line-height:1;
+    padding:4px 8px;
+    transition:color 0.25s;
+}
+
+.approach-modal-close:hover{
+    color:#fff;
+}
+
+.approach-modal-number{
+    display:block;
+    font-size:0.85rem;
+    color:var(--accent);
+    letter-spacing:2px;
+    margin-bottom:16px;
+}
+
+.approach-modal h3{
     font-size:1.6rem;
-    margin-bottom:20px;
+    margin-bottom:24px;
     color:var(--text);
     letter-spacing:-0.5px;
     line-height:1.3;
 }
 
-.approach-slide p{
-    font-size:1.1rem;
+.approach-modal-body{
+    font-size:1.05rem;
     line-height:1.8;
     color:var(--muted);
+}
+
+.approach-modal-body p{
+    margin-bottom:1em;
+    color:var(--muted);
+    line-height:1.8;
+}
+
+.approach-modal-body p:last-child{
     margin-bottom:0;
-}
-
-.approach-slide p + p{
-    margin-top:1.2em;
-}
-
-/* --- Approach dots --- */
-
-.approach-dots{
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin-top:32px;
-}
-
-.approach-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    border:1px solid var(--border);
-    background:transparent;
-    cursor:pointer;
-    padding:0;
-    transition:
-        background 0.4s ease,
-        border-color 0.4s ease,
-        transform 0.3s ease;
-}
-
-.approach-dot.is-active{
-    background:var(--accent);
-    border-color:var(--accent);
-    transform:scale(1.3);
-}
-
-.approach-dot:hover{
-    border-color:var(--accent);
 }
 
 /* --- REQUESTS --- */
@@ -1604,51 +1658,56 @@ section[id] p{
     font-weight:500;
 }
 
-/* --- Mobile adjustments for carousel and grid --- */
+/* --- Mobile adjustments for approach grid --- */
 
 @media(max-width:1000px){
     .requests-list{
         grid-template-columns:1fr;
     }
 
-    .approach-carousel{
+    .approach-grid{
+        grid-template-columns:1fr;
         padding:0 20px;
-        margin-top:10px;
+        gap:16px;
     }
 
-    .approach-slide{
-        flex:0 0 75%;
-        min-width:260px;
-        padding:32px 28px;
+    .approach-tile{
+        min-height:140px;
+        padding:28px 24px;
     }
 
-    .approach-slide h3{
-        font-size:1.25rem;
+    .approach-tile h3{
+        font-size:1.05rem;
     }
 
-    .approach-slide p{
-        font-size:0.95rem;
+    .approach-modal{
+        padding:36px 24px 32px;
+    }
+
+    .approach-modal h3{
+        font-size:1.3rem;
     }
 }
 
 /* --- Reduced motion --- */
 
 @media(prefers-reduced-motion:reduce){
-    .approach-track,
-    .approach-slide,
+    .approach-tile{
+        transition:none;
+        opacity:1;
+        transform:none;
+    }
+
     .article-card{
         transition:none;
     }
 
-    .approach-slide.is-active{
-        transform:none;
-    }
-
-    .approach-slide.is-side{
-        transform:none;
-    }
-
     .article-card:hover{
         transform:none;
+    }
+
+    .approach-modal,
+    .approach-modal-overlay{
+        transition:none;
     }
 }

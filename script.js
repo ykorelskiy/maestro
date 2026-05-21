@@ -152,222 +152,132 @@ rafScroll.subscribe((scrollY) => {
     })();
 
 /* =========================================
-   APPROACH CAROUSEL
-   transform: translateX — цикл + drag + throttle
+    APPROACH GRID — плитки + модалка
 ========================================= */
 
 (function(){
-    const carousel = document.getElementById('approachCarousel');
-    const track = document.getElementById('approachTrack');
-    const dotsContainer = document.getElementById('approachDots');
-    if(!carousel || !track || !dotsContainer) return;
+    const grid = document.getElementById('approachGrid');
+    const overlay = document.getElementById('approachModalOverlay');
+    const modalClose = document.getElementById('approachModalClose');
+    const modalNumber = document.getElementById('approachModalNumber');
+    const modalTitle = document.getElementById('approachModalTitle');
+    const modalBody = document.getElementById('approachModalBody');
+    if(!grid || !overlay || !modalClose) return;
 
-    const slides = Array.from(track.querySelectorAll('.approach-slide'));
-    const total = slides.length;
-    if(total < 2) return;
-
-    // --- Create dots ---
-    slides.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.className = 'approach-dot';
-        dot.setAttribute('aria-label', `Перейти к карточке ${i + 1}`);
-        dot.addEventListener('click', () => goToSlide(i));
-        dotsContainer.appendChild(dot);
-    });
-    const dots = Array.from(dotsContainer.querySelectorAll('.approach-dot'));
-
-    let autoTimer = null;
-    let progressTimer = null;
-    let progressBar = null;
-    const INTERVAL = 6000;
-    let currentIndex = 0;
-    let slideWidth = 0;
-    let isTransitioning = false;
-
-    function calcSlideWidth(){
-        if(slides.length > 0){
-            const gap = 28;
-            slideWidth = slides[0].offsetWidth + gap;
+    // Данные карточек
+    const cards = [
+        {
+            num: '01',
+            title: 'Без морализаторства',
+            html: `<p>Я не работаю из позиции «нормально» или «ненормально». Меня интересует другое: что именно происходит, почему это важно для человека, какую функцию выполняет <span class="text-accent">желание</span> и к каким последствиям может привести действие.</p>`
+        },
+        {
+            num: '02',
+            title: 'Структура вместо хаоса',
+            html: `<p>В сложных темах почти всегда есть место, где что-то не сходится. Противоречие, повторяющийся сценарий, внутренний запрет, неосознанная выгода, <span class="text-accent">страх</span> или <span class="text-accent">стыд</span>. Обычно именно там находится точка входа.</p>`
+        },
+        {
+            num: '03',
+            title: 'Сексуальность как часть психики',
+            html: `<p>Сексуальность не существует отдельно от личности. В ней проявляются <span class="text-accent">власть</span>, уязвимость, потребность в признании, <span class="text-accent">страх близости</span>, <span class="text-accent">желание контроля</span>, опыт боли и способы защиты.</p>`
+        },
+        {
+            num: '04',
+            title: 'Честный разговор',
+            html: `<p>Со мной можно <span class="text-white">говорить прямо</span>. Без необходимости подбирать «приличные» формулировки и объяснять, почему тема вообще имеет значение. Если это важно для вас — этого достаточно, чтобы об этом говорить.</p>`
+        },
+        {
+            num: '05',
+            title: 'Ответственность за <span class="text-accent">выбор</span>',
+            html: `<p>Я не уговариваю, не спасаю и не решаю за человека. Моя задача — помочь увидеть структуру ситуации, возможные последствия и цену каждого варианта. <span class="text-accent">Выбор остаётся за вами.</span></p>`
+        },
+        {
+            num: '06',
+            title: 'Конфиденциальность',
+            html: `<p>Всё, о чём мы говорим, остаётся между нами. <span class="text-white">Фантазии, желания, сомнения, стыд, страхи</span> и сложные мысли — это материал нашей работы, а не повод для оценки.</p><p>Я не адвокат и не врач, поэтому не могу обещать адвокатскую или врачебную тайну. Но я понимаю <span class="text-accent">ответственность за конфиденциальность</span> и отношусь к ней серьёзно.</p>`
         }
+    ];
+
+    // Создаём плитки
+    const tiles = [];
+    cards.forEach((card, i) => {
+        const tile = document.createElement('div');
+        tile.className = 'approach-tile';
+        tile.dataset.index = i;
+
+        const numSpan = document.createElement('span');
+        numSpan.className = 'approach-number';
+        numSpan.textContent = card.num;
+
+        const titleEl = document.createElement('h3');
+        titleEl.innerHTML = card.title;
+
+        const hint = document.createElement('span');
+        hint.className = 'approach-tile-hint';
+        hint.textContent = 'Нажмите, чтобы прочитать';
+
+        tile.appendChild(numSpan);
+        tile.appendChild(titleEl);
+        tile.appendChild(hint);
+
+        // Восстанавливаем "просмотрено" из sessionStorage
+        const viewedKey = 'approach_viewed_' + i;
+        if(sessionStorage.getItem(viewedKey) === 'true'){
+            tile.classList.add('is-viewed');
+        }
+
+        tile.addEventListener('click', () => {
+            // Заполняем модалку
+            modalNumber.textContent = card.num;
+            modalTitle.textContent = card.title.replace(/<[^>]*>/g, '');
+            modalBody.innerHTML = card.html;
+
+            // Отмечаем просмотренным
+            tile.classList.add('is-viewed');
+            sessionStorage.setItem(viewedKey, 'true');
+
+            // Открываем
+            overlay.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        grid.appendChild(tile);
+        tiles.push(tile);
+    });
+
+    // Закрытие модалки
+    function closeModal(){
+        overlay.classList.remove('is-active');
+        document.body.style.overflow = '';
     }
 
-    function getCenterOffset(index){
-        const carouselWidth = carousel.clientWidth;
-        const slideW = slides[0].offsetWidth;
-        return carouselWidth / 2 - slideW / 2 - index * slideWidth;
-    }
+    modalClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if(e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && overlay.classList.contains('is-active')){
+            closeModal();
+        }
+    });
 
-    function resetProgressBars(){
-        slides.forEach(slide => {
-            const bar = slide.querySelector('.approach-progress-bar span');
-            if(bar){
-                bar.style.transition = 'none';
-                bar.style.width = '0%';
-                // Force reflow
-                bar.offsetHeight;
-                bar.style.transition = '';
+    // IntersectionObserver — stagger-появление
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                const idx = parseInt(entry.target.dataset.index);
+                // Задержка: первый ряд (0,1) без задержки, второй ряд (2,3) — 150ms, третий ряд (4,5) — 300ms
+                const row = Math.floor(idx / 2);
+                const delay = row * 150;
+                setTimeout(() => {
+                    entry.target.classList.add('is-visible');
+                }, delay);
+                observer.unobserve(entry.target);
             }
         });
-    }
+    }, { threshold: 0.2 });
 
-    function setActive(index){
-        if(index < 0 || index >= total) return;
-        currentIndex = index;
-        slides.forEach(el => el.classList.remove('is-active'));
-        slides[index].classList.add('is-active');
-        dots.forEach(el => el.classList.remove('is-active'));
-        if(dots[index]) dots[index].classList.add('is-active');
-        resetProgressBars();
-    }
-
-    function goToSlide(index){
-        if(index < 0 || index >= total) return;
-        if(isTransitioning) return;
-        isTransitioning = true;
-        setTimeout(() => { isTransitioning = false; }, 550);
-        calcSlideWidth();
-        const offset = getCenterOffset(index);
-        track.style.transform = `translateX(${offset}px)`;
-        setActive(index);
-    }
-
-    function stepForward(){
-        const next = (currentIndex + 1) % total;
-        goToSlide(next);
-    }
-
-    function stepBackward(){
-        const prev = (currentIndex - 1 + total) % total;
-        goToSlide(prev);
-    }
-
-    // Wheel / тачпад MacBook
-    let wheelTimer = null;
-    carousel.addEventListener('wheel', (e) => {
-        // Блокируем вертикальный скролл и переключаем карусель
-        e.preventDefault();
-        // Throttle: одно срабатывание за 600 мс (больше для тачпада)
-        if(wheelTimer) return;
-        wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
-
-        if(e.deltaY > 0){
-            stepForward();
-        } else {
-            stepBackward();
-        }
-        stopAuto();
-        setTimeout(startAuto, INTERVAL);
-    }, { passive: false });
-
-    // Drag handler (мышью)
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragStartTrack = 0;
-
-    carousel.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        dragStartX = e.clientX;
-        dragStartTrack = currentIndex;
-        carousel.style.cursor = 'grabbing';
-        e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if(!isDragging) return;
-        const diff = e.clientX - dragStartX;
-        if(Math.abs(diff) > slideWidth * 0.3){
-            isDragging = false;
-            carousel.style.cursor = '';
-            if(diff < 0){
-                stepForward();
-            } else {
-                stepBackward();
-            }
-            stopAuto();
-            setTimeout(startAuto, INTERVAL);
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        if(isDragging){
-            isDragging = false;
-            carousel.style.cursor = '';
-        }
-    });
-
-    // Touch/swipe handler
-    let touchStartX = 0;
-
-    carousel.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', (e) => {
-        const diff = touchStartX - e.changedTouches[0].screenX;
-        if(Math.abs(diff) > 30){
-            if(diff > 0){
-                stepForward();
-            } else {
-                stepBackward();
-            }
-            stopAuto();
-            setTimeout(startAuto, INTERVAL);
-        }
-    }, { passive: true });
-
-    function startAuto(){
-        stopAuto();
-        autoTimer = setInterval(stepForward, INTERVAL);
-    }
-
-    function stopAuto(){
-        if(autoTimer){ clearInterval(autoTimer); autoTimer = null; }
-    }
-
-    carousel.addEventListener('mouseenter', stopAuto);
-    carousel.addEventListener('mouseleave', startAuto);
-
-    // Dots
-    dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-            goToSlide(i);
-            stopAuto();
-            setTimeout(startAuto, INTERVAL);
-        });
-    });
-
-    // Keyboard
-    document.addEventListener('keydown', function(e) {
-        const overlay = document.getElementById('manifestOverlay');
-        if(overlay && overlay.classList.contains('active')) return;
-
-        if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            stepForward();
-            stopAuto();
-            setTimeout(startAuto, INTERVAL);
-        }
-        if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            stepBackward();
-            stopAuto();
-            setTimeout(startAuto, INTERVAL);
-        }
-    });
-
-    // Init
-    calcSlideWidth();
-    const initOffset = getCenterOffset(0);
-    track.style.transform = `translateX(${initOffset}px)`;
-    setActive(0);
-    startAuto();
-
-    // Recalc on resize
-    window.addEventListener('resize', () => {
-        calcSlideWidth();
-        const offset = getCenterOffset(currentIndex);
-        track.style.transform = `translateX(${offset}px)`;
-    });
+    tiles.forEach(tile => observer.observe(tile));
 })();
 
 /* =========================================

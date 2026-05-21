@@ -191,82 +191,17 @@
         <div class="section-container">
             <h2>Мой подход</h2>
         </div>
-        <div class="approach-carousel" id="approachCarousel">
-            <div class="approach-track" id="approachTrack">
+        <div class="approach-grid" id="approachGrid"></div>
 
-                <div class="approach-slide" data-index="0">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">01</span>
-                    <h3>Без морализаторства</h3>
-                    <p>
-                        Я не работаю из позиции «нормально» или «ненормально». Меня интересует
-                        другое: что именно происходит, почему это важно для человека, какую
-                        функцию выполняет <span class="text-accent">желание</span> и к каким последствиям может привести действие.
-                    </p>
-                </div>
-
-                <div class="approach-slide" data-index="1">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">02</span>
-                    <h3>Структура вместо хаоса</h3>
-                    <p>
-                        В сложных темах почти всегда есть место, где что-то не сходится.
-                        Противоречие, повторяющийся сценарий, внутренний запрет, неосознанная
-                        выгода, <span class="text-accent">страх</span> или <span class="text-accent">стыд</span>. Обычно именно там находится точка входа.
-                    </p>
-                </div>
-
-                <div class="approach-slide" data-index="2">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">03</span>
-                    <h3>Сексуальность как часть психики</h3>
-                    <p>
-                        Сексуальность не существует отдельно от личности. В ней проявляются
-                        <span class="text-accent">власть</span>, уязвимость, потребность в признании, <span class="text-accent">страх близости</span>, <span class="text-accent">желание
-                        контроля</span>, опыт боли и способы защиты.
-                    </p>
-                </div>
-
-                <div class="approach-slide" data-index="3">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">04</span>
-                    <h3>Честный разговор</h3>
-                    <p>
-                        Со мной можно <span class="text-white">говорить прямо</span>. Без необходимости подбирать «приличные»
-                        формулировки и объяснять, почему тема вообще имеет значение. Если это
-                        важно для вас — этого достаточно, чтобы об этом говорить.
-                    </p>
-                </div>
-
-                <div class="approach-slide" data-index="4">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">05</span>
-                    <h3>Ответственность за <span class="text-accent">выбор</span></h3>
-                    <p>
-                        Я не уговариваю, не спасаю и не решаю за человека. Моя задача — помочь
-                        увидеть структуру ситуации, возможные последствия и цену каждого
-                        варианта. <span class="text-accent">Выбор остаётся за вами.</span>
-                    </p>
-                </div>
-
-                <div class="approach-slide" data-index="5">
-                    <div class="approach-progress-bar"><span></span></div>
-                    <span class="approach-number">06</span>
-                    <h3>Конфиденциальность</h3>
-                    <p>
-                        Всё, о чём мы говорим, остаётся между нами. <span class="text-white">Фантазии, желания, сомнения,
-                        стыд, страхи</span> и сложные мысли — это материал нашей работы, а не повод для оценки.
-                    </p>
-                    <p>
-                        Я не адвокат и не врач, поэтому не могу обещать адвокатскую или врачебную
-                        тайну. Но я понимаю <span class="text-accent">ответственность за конфиденциальность</span> и отношусь
-                        к ней серьёзно.
-                    </p>
-                </div>
-
+        <!-- Модальное окно для плиток -->
+        <div class="approach-modal-overlay" id="approachModalOverlay">
+            <div class="approach-modal">
+                <button class="approach-modal-close" id="approachModalClose" aria-label="Закрыть">×</button>
+                <span class="approach-modal-number" id="approachModalNumber"></span>
+                <h3 id="approachModalTitle"></h3>
+                <div class="approach-modal-body" id="approachModalBody"></div>
             </div>
         </div>
-        <div class="approach-dots" id="approachDots"></div>
     </section>
 
     <!-- REQUESTS -->
