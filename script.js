@@ -446,7 +446,7 @@ rafScroll.subscribe((scrollY) => {
         // === Полноценная анимация колоды ===
         const center = getGridCenter();
 
-        // 1. Собираем плитки в центр
+        // 1. Собираем плитки в центр (замедленная анимация ~950ms)
         const anims = tiles.map((t, i) => {
             const ownCenter = getTileCenter(t);
             const dx = center.x - ownCenter.x;
@@ -460,7 +460,7 @@ rafScroll.subscribe((scrollY) => {
                 { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
                 { transform: `translate(${dx + stackOffsetX}px, ${dy + stackOffsetY}px) scale(0.6) rotate(${stackRotate}deg)`, opacity: 0.9 }
             ], {
-                duration: 400,
+                duration: 950,
                 easing: 'cubic-bezier(.2,.8,.2,1)',
                 fill: 'forwards'
             }).finished;
