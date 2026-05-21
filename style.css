@@ -1606,7 +1606,7 @@ section[id] p{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:20px;
-    max-width:1100px;
+    max-width:800px;
     margin:40px auto 0;
     padding:0 40px;
     position:relative;
