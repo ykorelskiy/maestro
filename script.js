@@ -425,6 +425,15 @@ rafScroll.subscribe((scrollY) => {
         });
 
         Promise.all(anims).then(() => {
+            // Колода собрана — фиксируем её стили (opacity 1, не затемняем)
+            tiles.forEach(t => {
+                t.style.opacity = '1';
+                // transform уже установлен WAAPI fill:'forwards', но фиксируем через getComputedStyle
+                const cs = getComputedStyle(t);
+                t.style.transform = cs.transform;
+                t.style.opacity = '1';
+            });
+
             // 2. Вспышка
             const flash = createFlash(center.x, center.y);
             animateFlash(flash, 250).then(() => {
@@ -450,6 +459,11 @@ rafScroll.subscribe((scrollY) => {
     // Закрытие модалки — строгая последовательность
     // =============================================
 
+    /** Вспомогательный Promise с setTimeout */
+    function delay(ms){
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     function closeModal(){
         if(modalAnimating || !isModalOpen) return;
         modalAnimating = true;
@@ -459,24 +473,16 @@ rafScroll.subscribe((scrollY) => {
 
         const modal = overlay.querySelector('.approach-modal');
 
-        // Шаг 1: сначала прячем все плитки (чтобы не было артефакта «колода + плитки одновременно»)
-        tiles.forEach(t => {
-            t.style.opacity = '0';
-            t.style.transform = '';
-            t.classList.add('is-animating');
-            t.classList.remove('is-visible');
-        });
-
-        // Шаг 2: модалка исчезает (обратная анимация к появлению)
+        // === Шаг 1: модалка исчезает (400ms) ===
         modal.animate([
             { transform: 'scale(1)', opacity: 1 },
             { transform: 'scale(0.95)', opacity: 0 }
         ], {
-            duration: 500,
+            duration: 450,
             easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             fill: 'forwards'
-        }).finished.then(() => {
-            // Шаг 3: убираем overlay — теперь видна только пустая сетка
+        }).finished.then(async () => {
+            // === Шаг 2: убираем overlay — видна колода в центре сетки ===
             overlay.classList.remove('is-active');
 
             if(useSimpleAnim){
@@ -485,44 +491,58 @@ rafScroll.subscribe((scrollY) => {
                 return;
             }
 
-            // Шаг 4: вспышка в центре
-            const flash = createFlash(center.x, center.y);
-            animateFlash(flash, 250).then(() => {
-                // Шаг 5: плитки разлетаются из центра (все одновременно, stagger по 80ms)
-                tiles.forEach((t, i) => {
-                    const ownCenter = getTileCenter(t);
-                    const dx = center.x - ownCenter.x;
-                    const dy = center.y - ownCenter.y;
+            // === Шаг 3: пауза 150ms, чтобы пользователь увидел колоду ===
+            await delay(150);
 
-                    setTimeout(() => {
-                        t.style.transform = `translate(${dx}px, ${dy}px) scale(0.6)`;
-                        t.style.opacity = '0.9';
-
-                        requestAnimationFrame(() => {
-                            t.animate([
-                                { transform: `translate(${dx}px, ${dy}px) scale(0.6)`, opacity: 0.9 },
-                                { transform: 'translate(0, 0) scale(1)', opacity: 1 }
-                            ], {
-                                duration: 400,
-                                easing: 'cubic-bezier(.2,.8,.2,1)',
-                                fill: 'forwards'
-                            }).finished.then(() => {
-                                t.style.transform = '';
-                                t.style.opacity = '';
-                                t.classList.remove('is-animating');
-                                t.classList.add('is-visible');
-                            });
-                        });
-                    }, i * 80);
-                });
-
-                // Дожидаемся завершения
-                const totalDuration = tiles.length * 80 + 450;
-                setTimeout(() => {
-                    modalAnimating = false;
-                    isModalOpen = false;
-                }, totalDuration);
+            // === Шаг 4: колода исчезает (fade out, 250ms) ===
+            const fadeOuts = tiles.map(t => {
+                t.classList.add('is-animating');
+                t.classList.remove('is-visible');
+                return t.animate([
+                    { opacity: 1 },
+                    { opacity: 0 }
+                ], {
+                    duration: 250,
+                    easing: 'ease',
+                    fill: 'forwards'
+                }).finished;
             });
+            await Promise.all(fadeOuts);
+
+            // === Шаг 5: плитки разлетаются из центра на свои места (stagger) ===
+            tiles.forEach((t, i) => {
+                const ownCenter = getTileCenter(t);
+                const dx = center.x - ownCenter.x;
+                const dy = center.y - ownCenter.y;
+
+                setTimeout(() => {
+                    t.style.transform = `translate(${dx}px, ${dy}px) scale(0.6)`;
+                    t.style.opacity = '0.9';
+
+                    requestAnimationFrame(() => {
+                        t.animate([
+                            { transform: `translate(${dx}px, ${dy}px) scale(0.6)`, opacity: 0.9 },
+                            { transform: 'translate(0, 0) scale(1)', opacity: 1 }
+                        ], {
+                            duration: 400,
+                            easing: 'cubic-bezier(.2,.8,.2,1)',
+                            fill: 'forwards'
+                        }).finished.then(() => {
+                            t.style.transform = '';
+                            t.style.opacity = '';
+                            t.classList.remove('is-animating');
+                            t.classList.add('is-visible');
+                        });
+                    });
+                }, i * 80);
+            });
+
+            // Дожидаемся завершения
+            const totalDuration = tiles.length * 80 + 450;
+            setTimeout(() => {
+                modalAnimating = false;
+                isModalOpen = false;
+            }, totalDuration);
         });
     }
 
