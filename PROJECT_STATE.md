@@ -1,6 +1,6 @@
 # Project State — Maestro
 
-**Last updated:** 2026-05-20 (end of Session 2)
+**Last updated:** 2026-05-21 (Session 3)
 
 ---
 
@@ -16,7 +16,7 @@ Ready to start Session 2: filling sections with content.
 1. **Header** — navigation menu (working, scrolls to sections)
 2. **Hero** — main screen
 3. **#about** — About me *(empty)*
-4. **#approach** — My approach *(carousel with 6 cards)*
+4. **#approach** — My approach *(2×3 tile grid with modal)*
 5. **#articles** — Articles *(empty, no cards yet)*
 6. **#tools** — Tools *(empty)*
 7. **#contacts** — Contacts *(empty)*
@@ -45,6 +45,15 @@ Ready to start Session 2: filling sections with content.
 - Fixed scroll handler conflict during animation
 - Fixed keyboard navigation scope issues
 - Set correct 3-second interval
+
+## Done in Session 3
+- Replaced approach carousel with 2×3 tile grid
+- Added hover effects (border glow, box-shadow, background tint)
+- Added stagger reveal animation via IntersectionObserver (rows delayed)
+- Added modal overlay on tile click (close via ×/overlay/Esc)
+- Added sessionStorage tracking for "viewed" tiles
+- Added mobile single-column fallback for grid
+- Committed: `d771d54`
 
 ---
 
