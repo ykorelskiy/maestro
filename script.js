@@ -563,6 +563,192 @@ rafScroll.subscribe((scrollY) => {
 })();
 
 /* =========================================
+   ABOUT — Snap Stack: reveal, hover, auto-repeat, dots
+   ========================================= */
+(function(){
+    const viewport = document.getElementById('aboutViewport');
+    const section = document.getElementById('about');
+    const nav = document.getElementById('aboutNav');
+    if(!viewport || !section || !nav) return;
+
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hasHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    const cards = section.querySelectorAll('.about-card');
+    const dots = nav.querySelectorAll('.about-nav__dot');
+    if(!cards.length) return;
+
+    // Отключаем всё на reduced-motion — не запускаем JS-анимации
+    if(isReduced) return;
+
+    // =============================================
+    // Хранилище таймеров для каждой карты
+    // =============================================
+
+    const timers = new Map(); // cardIndex -> timeoutID
+
+    function clearCardTimer(idx){
+        if(timers.has(idx)){
+            clearTimeout(timers.get(idx));
+            timers.delete(idx);
+        }
+    }
+
+    // =============================================
+    // Запуск проявления (reveal)
+    // =============================================
+
+    function revealCard(card){
+        if(!card || card.hasAttribute('data-revealing')) return;
+        card.setAttribute('data-revealing', '');
+        card.classList.add('is-revealing');
+
+        // Для card 4: staggered-анимация трёх символов
+        if(card.dataset.card === '4'){
+            const symbols = card.querySelectorAll('.about-symbol');
+            symbols.forEach((sym, i) => {
+                sym.style.transitionDelay = (i * 200) + 'ms';
+                sym.style.opacity = '1';
+            });
+        }
+
+        // Снимаем класс после завершения анимации
+        setTimeout(() => {
+            card.classList.remove('is-revealing');
+            card.removeAttribute('data-revealing');
+        }, 2000);
+    }
+
+    // =============================================
+    // IntersectionObserver — reveal при входе в viewport
+    // =============================================
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const card = entry.target;
+            if(entry.isIntersecting){
+                // Первый reveal
+                if(!card.hasAttribute('data-has-revealed')){
+                    card.setAttribute('data-has-revealed', '');
+                    revealCard(card);
+                }
+
+                // Запускаем автоповтор — только не на мобилке
+                if(!isMobile){
+                    scheduleAutoReveal(card);
+                }
+            } else {
+                // Плашка ушла — останавливаем таймер
+                const idx = Array.from(cards).indexOf(card);
+                clearCardTimer(idx);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    cards.forEach(card => observer.observe(card));
+
+    // =============================================
+    // Автоповтор 8–10 секунд
+    // =============================================
+
+    function scheduleAutoReveal(card){
+        const delay = 8000 + Math.random() * 2000;
+        const idx = Array.from(cards).indexOf(card);
+        clearCardTimer(idx);
+
+        const tid = setTimeout(() => {
+            revealCard(card);
+            // Перепланируем
+            scheduleAutoReveal(card);
+        }, delay);
+        timers.set(idx, tid);
+    }
+
+    // =============================================
+    // Hover — только на устройствах с hover
+    // =============================================
+
+    if(hasHover){
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                revealCard(card);
+            });
+        });
+    }
+
+    // =============================================
+    // Точки навигации
+    // =============================================
+
+    function updateActiveDot(){
+        let activeIdx = 0;
+        cards.forEach((card, i) => {
+            const rect = card.getBoundingClientRect();
+            const center = rect.top + rect.height / 2;
+            if(center >= 0 && center <= window.innerHeight){
+                activeIdx = i;
+            }
+        });
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('is-active', i === activeIdx);
+        });
+    }
+
+    // Обновляем точки при скролле (throttled через raf)
+    let tickingDots = false;
+    viewport.addEventListener('scroll', () => {
+        if(!tickingDots){
+            requestAnimationFrame(() => {
+                updateActiveDot();
+                tickingDots = false;
+            });
+            tickingDots = true;
+        }
+    });
+
+    // Клик по точке
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const target = dot.getAttribute('data-target');
+            const targetCard = section.querySelector(`.about-card[data-card="${target}"]`);
+            if(targetCard){
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // reveal по клику
+                revealCard(targetCard);
+            }
+        });
+    });
+
+    // =============================================
+    // Скрытие точек при открытых модалках
+    // =============================================
+
+    function toggleNavVisibility(){
+        const hasActiveModal = document.querySelector(
+            '.approach-modal-overlay.is-active, .manifest-overlay.active, .nav-menu-overlay.is-active'
+        );
+        nav.classList.toggle('is-hidden', !!hasActiveModal);
+    }
+
+    // Слушаем на документах появление/исчезновение модалок
+    const modalObserver = new MutationObserver(toggleNavVisibility);
+    document.querySelectorAll('.approach-modal-overlay, .manifest-overlay, .nav-menu-overlay').forEach(el => {
+        if(el) modalObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // =============================================
+    // Инициализация: активная точка
+    // =============================================
+
+    updateActiveDot();
+
+    // Обновить точки после первой прокрутки (страница может загрузиться не с top)
+    setTimeout(updateActiveDot, 300);
+})();
+
+/* =========================================
    NAV MOBILE — бургер-меню (независимо от approach/манифест)
    ========================================= */
 (function(){

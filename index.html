@@ -173,32 +173,192 @@
 
     <!-- ============ SESSION 1: NEW SECTIONS ============ -->
 
-    <!-- ABOUT -->
+    <!-- ABOUT — SNAP STACK -->
 
-    <section id="about">
-        <div class="section-container">
-            <h2>Обо мне</h2>
-            <p>
-                Меня знают под <span class="text-white">псевдонимом Маэстро</span> — это моё рабочее имя. Под ним я веду
-                консультации, пишу разборы и говорю с людьми о том, о чём обычно говорят
-                <span class="serif-accent">вполголоса</span>.
-            </p>
-            <p>
-                Я живу и работаю в Санкт-Петербурге. В обычной жизни я <span class="text-white">руководитель</span>, много лет
-                работающий с людьми, решениями, конфликтами, <span class="text-accent">властью</span> и последствиями выбора.
-            </p>
-            <p>
-                Моё основание — <span class="text-white">математическое образование</span>, <span class="text-white">философская подготовка</span> и
-                <span class="text-white">психологическая база</span>. Математика дала мне привычку видеть <span class="text-accent">структуру</span> и находить
-                <span class="text-accent">противоречия</span>. Философия — способность смотреть шире частного случая. Психология —
-                язык, на котором можно говорить о внутреннем устройстве человека.
-            </p>
-            <p>
-                Я не клинический психолог и не врач. Я не ставлю диагнозы и не назначаю лечение.
-                Моя область — человеческая <span class="text-accent">сексуальность</span>, отношения, <span class="text-accent">желания</span>,
-                <span class="text-accent">власть, контроль, стыд, фантазии</span> и внутренние конфликты, которые вокруг этого возникают.
-            </p>
-        </div>
+    <section id="about" class="about-stack">
+
+        <!-- Scroll-snap container -->
+        <div class="about-stack__viewport" id="aboutViewport">
+
+            <!-- ===== CARD 1 ===== -->
+            <article class="about-card" data-card="1">
+                <div class="about-card__bg"></div>
+                <div class="about-card__graphic" aria-hidden="true">
+                    <!-- Нотный стан: 5 линий + скрипичный ключ + несколько нот -->
+                    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 5 линий стана -->
+                        <line x1="80" y1="120" x2="520" y2="110" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+                        <line x1="80" y1="150" x2="520" y2="140" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+                        <line x1="80" y1="180" x2="520" y2="170" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+                        <line x1="80" y1="210" x2="520" y2="200" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+                        <line x1="80" y1="240" x2="520" y2="230" stroke="currentColor" stroke-width="1.2" opacity="0.25"/>
+                        <!-- Скрипичный ключ (упрощённый силуэт) -->
+                        <path d="M130 120 C130 80 170 60 190 90 C210 120 180 180 160 200 C140 220 120 200 130 180 C140 160 160 170 155 190 C150 210 140 230 145 245 C150 260 165 255 170 240 C175 225 165 210 155 215 C145 220 140 210 145 200" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
+                        <!-- Несколько нот -->
+                        <g opacity="0.3">
+                            <ellipse cx="260" cy="165" rx="10" ry="7" transform="rotate(-15 260 165)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <line x1="270" y1="165" x2="270" y2="110" stroke="currentColor" stroke-width="1.2"/>
+                            <ellipse cx="340" cy="195" rx="10" ry="7" transform="rotate(-15 340 195)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <line x1="350" y1="195" x2="350" y2="140" stroke="currentColor" stroke-width="1.2"/>
+                            <ellipse cx="410" cy="155" rx="10" ry="7" transform="rotate(-15 410 155)" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <line x1="420" y1="155" x2="420" y2="100" stroke="currentColor" stroke-width="1.2"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="about-card__mask"></div>
+                <div class="about-card__content">
+                    <p>Меня знают под именем <strong>Маэстро</strong> — уже больше двадцати лет.</p>
+                    <p>Имя пришло из простой мысли: нижняя — это инструмент, верхний — музыкант. И от музыканта зависит, прозвучит ли из инструмента прекрасная мелодия — или какофония.</p>
+                </div>
+            </article>
+
+            <!-- ===== CARD 2 ===== -->
+            <article class="about-card" data-card="2">
+                <div class="about-card__bg"></div>
+                <div class="about-card__graphic" aria-hidden="true">
+                    <!-- Силуэт Петербурга по нижней кромке -->
+                    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- Петропавловская крепость (шпиль + стена) -->
+                            <path d="M120 350 L120 280 L130 280 L130 270 L140 270 L140 260 L145 220 L145 260 L150 260 L150 270 L160 270 L160 280 L170 280 L170 350"/>
+                            <path d="M145 220 L145 200 L150 200 L150 220"/>
+                            <!-- Исаакиевский собор (купол + колокольня) -->
+                            <path d="M270 350 L270 300 L280 300 L280 280 L290 280 Q300 260 310 280 L320 280 L320 300 L330 300 L330 350"/>
+                            <path d="M295 270 Q300 250 305 270"/>
+                            <path d="M300 250 L300 240"/>
+                            <!-- Адмиралтейство (шпиль + арка) -->
+                            <path d="M440 350 L440 320 L450 320 L450 310 L460 310 L460 300 L465 270 L465 300 L475 300 L475 310 L485 310 L485 320 L495 320 L495 350"/>
+                            <path d="M465 270 L465 260 L470 260 L470 270"/>
+                            <!-- Базовая городская линия -->
+                            <path d="M50 350 L50 340 L100 340 L100 330 L200 330 L200 340 L230 340 L230 330 L370 330 L370 340 L400 340 L400 330 L530 330 L530 340 L550 340 L550 350" stroke-width="1" opacity="0.4"/>
+                            <!-- Река / отражение -->
+                            <path d="M50 360 L550 360" stroke-width="0.8" opacity="0.15"/>
+                            <path d="M50 370 L550 370" stroke-width="0.8" opacity="0.1"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="about-card__mask"></div>
+                <div class="about-card__content">
+                    <p>Днём — Петербург, кабинет, люди, решения, тяжесть чужих ошибок на собственных плечах. Ночью — другое. То, ради чего сделан этот сайт.</p>
+                    <p>И помимо доминирования у меня есть другая работа — работа <strong>проводника</strong>. Я помогаю найти себя. Найти дорогу — либо к себе, либо к согласию с собой. Сто нижних личностей воспитать я не могу: на это не хватит ни меня, ни жизни. А сказать нужное слово, дать опору, поставить в ситуацию, в которой человек увидит себя яснее, — могу. Для этого и сделан этот сайт.</p>
+                </div>
+            </article>
+
+            <!-- ===== CARD 3 ===== -->
+            <article class="about-card" data-card="3">
+                <div class="about-card__bg"></div>
+                <div class="about-card__graphic" aria-hidden="true">
+                    <!-- Строки текста, часть зачёркнута -->
+                    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3" stroke="currentColor" stroke-linecap="round">
+                            <!-- Строки разной длины -->
+                            <line x1="120" y1="100" x2="480" y2="100" stroke-width="1.2" opacity="0.4"/>
+                            <line x1="100" y1="130" x2="500" y2="130" stroke-width="1.2" opacity="0.4"/>
+                            <!-- Зачёркнутая строка -->
+                            <rect x="90" y="155" width="420" height="6" rx="1" fill="currentColor" opacity="0.5"/>
+                            <line x1="95" y1="158" x2="505" y2="158" stroke-width="1.5" opacity="0.25"/>
+                            <line x1="100" y1="170" x2="490" y2="170" stroke-width="1.2" opacity="0.4"/>
+                            <line x1="110" y1="200" x2="470" y2="200" stroke-width="1.2" opacity="0.4"/>
+                            <line x1="90" y1="230" x2="510" y2="230" stroke-width="1.2" opacity="0.4"/>
+                            <!-- Ещё одна зачёркнутая -->
+                            <rect x="95" y="255" width="390" height="6" rx="1" fill="currentColor" opacity="0.5"/>
+                            <line x1="100" y1="258" x2="480" y2="258" stroke-width="1.5" opacity="0.25"/>
+                            <line x1="105" y1="280" x2="485" y2="280" stroke-width="1.2" opacity="0.4"/>
+                            <line x1="130" y1="310" x2="450" y2="310" stroke-width="1.2" opacity="0.4"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="about-card__mask"></div>
+                <div class="about-card__content">
+                    <p>В конце нулевых, когда тема в русском интернете ещё только начинала появляться, я написал заметку — «10 мифов о фистинге». Тогда казалось — короткий текст, для своих. Получилось иначе: заметку растащили по площадкам, по форумам, по личным сайтам. Тогда я вёл активную социальную жизнь и общался на разных площадках — где впоследствии был заблокирован. Но привычка осталась — объяснять то, что объяснять не принято.</p>
+                </div>
+            </article>
+
+            <!-- ===== CARD 4 ===== -->
+            <article class="about-card" data-card="4">
+                <div class="about-card__bg"></div>
+                <div class="about-card__graphic" aria-hidden="true">
+                    <!-- Три символа: формула, колонна, профиль -->
+                    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- Символ 1: Математический интеграл (стилизованный) -->
+                            <g class="about-symbol about-symbol--1">
+                                <path d="M130 120 Q150 100 170 130 Q190 160 200 180 Q210 200 190 230 Q170 260 160 280 Q150 300 160 310" stroke-width="2.5"/>
+                                <text x="90" y="230" font-family="serif" font-size="14" fill="currentColor" stroke="none" opacity="0.5">E=mc²</text>
+                                <text x="210" y="270" font-family="serif" font-size="12" fill="currentColor" stroke="none" opacity="0.4">∫</text>
+                            </g>
+                            <!-- Символ 2: Античная колонна (ионическая) -->
+                            <g class="about-symbol about-symbol--2">
+                                <rect x="265" y="130" width="10" height="150" opacity="0.8"/>
+                                <!-- База -->
+                                <rect x="255" y="280" width="30" height="6" rx="1" opacity="0.8"/>
+                                <rect x="258" y="276" width="24" height="4" rx="1" opacity="0.8"/>
+                                <!-- Капитель (завитки) -->
+                                <path d="M250 130 Q260 110 270 130 Q280 110 290 130" stroke-width="2"/>
+                                <path d="M252 136 Q262 120 270 136 Q278 120 288 136" stroke-width="1.5"/>
+                                <!-- Каннелюр (вертикальные линии) -->
+                                <line x1="268" y1="140" x2="268" y2="275" stroke-width="0.6" opacity="0.4"/>
+                                <line x1="272" y1="140" x2="272" y2="275" stroke-width="0.6" opacity="0.4"/>
+                            </g>
+                            <!-- Символ 3: Силуэт человеческого профиля -->
+                            <g class="about-symbol about-symbol--3">
+                                <path d="M420 300 C420 280 430 260 440 250 C450 240 455 230 450 220 C445 210 430 205 420 210 C410 215 405 230 410 240 C415 250 410 255 400 260 C390 265 390 275 395 280 C400 285 400 295 400 300" stroke-width="2"/>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <div class="about-card__mask"></div>
+                <div class="about-card__content">
+                    <p>Образование дало мне три опоры. Математика — чёткость структуры и логику. Философия — широту: благодаря ей я могу видеть людей, которые на меня совсем не похожи, и тех, кто мне внутренне чужд, не сводя их к ярлыку. Психология — это про взаимодействие: и мыслей внутри одной головы, и людей друг с другом. Без неё всё остальное остаётся теорией.</p>
+                    <p>И двадцать с лишним лет в самой теме — достаточный срок, чтобы набраться опыта и уверенности в своих силах.</p>
+                </div>
+            </article>
+
+            <!-- ===== CARD 5 ===== -->
+            <article class="about-card" data-card="5">
+                <div class="about-card__bg"></div>
+                <!-- Нет графического слоя и маски -->
+                <div class="about-card__content about-card__content--center">
+                    <p class="about-quote"><span class="text-accent">«</span>Не навреди<span class="text-accent">»</span>.</p>
+                    <p class="about-quote"><span class="text-accent">«</span>Мы в ответе за тех, кого приручили<span class="text-accent">»</span>.</p>
+                </div>
+            </article>
+
+            <!-- ===== CARD 6 ===== -->
+            <article class="about-card" data-card="6">
+                <div class="about-card__bg"></div>
+                <div class="about-card__graphic" aria-hidden="true">
+                    <!-- Две руки тянутся друг к другу -->
+                    <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- Левая рука (слева, пальцы раскрыты, тянутся вправо) -->
+                            <path d="M80 200 C100 180 120 190 140 210 C150 220 160 235 170 240 C180 245 185 240 190 230 C195 220 190 205 200 195 C210 185 225 190 230 200 C235 210 225 225 220 235 C215 245 220 255 230 260 C240 265 250 255 250 245 C250 235 245 225 255 215 C265 205 280 210 280 220"/>
+                            <!-- Правая рука (справа, тянутся влево) -->
+                            <path d="M520 200 C500 180 480 190 460 210 C450 220 440 235 430 240 C420 245 415 240 410 230 C405 220 410 205 400 195 C390 185 375 190 370 200 C365 210 375 225 380 235 C385 245 380 255 370 260 C360 265 350 255 350 245 C350 235 355 225 345 215 C335 205 320 210 320 220"/>
+                            <!-- Расстояние между ладонями (не соприкасаются) — пустое пространство -->
+                        </g>
+                    </svg>
+                </div>
+                <div class="about-card__mask"></div>
+                <div class="about-card__content">
+                    <p>Со мной выходят на контакт по-разному. Кто-то приходит за разговором — разобраться в себе, в желаниях, в том, что мешает или зовёт. Это разговор без оценок и без снисхождения.</p>
+                    <p>Сексуальные отношения — это другое. Это не разговор и не консультация, это тонкий психофизиологический контакт. И поэтому здесь — только женщины.</p>
+                    <p>При этом я не клинический психолог и не врач. Не ставлю диагнозов, не выписываю рецептов, не лечу. Если речь о травме, о психиатрии, о теле, которому нужна медицина, — это не сюда, и я первый об этом скажу.</p>
+                </div>
+            </article>
+
+        </div><!-- /about-stack__viewport -->
+
+        <!-- Точки навигации -->
+        <nav class="about-nav" id="aboutNav" aria-label="Секции обо мне">
+            <button class="about-nav__dot is-active" data-target="1" aria-label="Плашка 1"></button>
+            <button class="about-nav__dot" data-target="2" aria-label="Плашка 2"></button>
+            <button class="about-nav__dot" data-target="3" aria-label="Плашка 3"></button>
+            <button class="about-nav__dot" data-target="4" aria-label="Плашка 4"></button>
+            <button class="about-nav__dot" data-target="5" aria-label="Плашка 5"></button>
+            <button class="about-nav__dot" data-target="6" aria-label="Плашка 6"></button>
+        </nav>
+
     </section>
 
     <!-- APPROACH -->
