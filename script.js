@@ -354,7 +354,7 @@ rafScroll.subscribe((scrollY) => {
     revealObserver.observe(grid);
 
     // =============================================
-    // Открытие модалки
+    // Открытие модалки — fade + scale(0.95→1)
     // =============================================
 
     let currentTileIndex = -1;
@@ -379,16 +379,20 @@ rafScroll.subscribe((scrollY) => {
         scrollPos = window.scrollY;
         document.body.style.overflow = 'hidden';
 
+        const modal = overlay.querySelector('.approach-modal');
+        // Сброс transform/opacity на случай, если остались от предыдущего закрытия
+        modal.style.transform = 'scale(0.95)';
+        modal.style.opacity = '0';
+
         if(useSimpleAnim){
             // Простое открытие — WAAPI
             overlay.classList.add('is-active');
-            const modal = overlay.querySelector('.approach-modal');
             modal.animate([
-                { transform: 'scale(0.3) translateY(20px)', opacity: 0 },
-                { transform: 'scale(1) translateY(0)', opacity: 1 }
+                { transform: 'scale(0.95)', opacity: 0 },
+                { transform: 'scale(1)', opacity: 1 }
             ], {
-                duration: 400,
-                easing: 'cubic-bezier(.2,.8,.2,1)',
+                duration: 550,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
                 fill: 'forwards'
             }).finished.then(() => {
                 modalAnimating = false;
@@ -424,19 +428,17 @@ rafScroll.subscribe((scrollY) => {
             // 2. Вспышка
             const flash = createFlash(center.x, center.y);
             animateFlash(flash, 250).then(() => {
-                // 3. Показываем модалку
+                // 3. Показываем модалку — fade + scale(0.95→1)
                 overlay.classList.add('is-active');
-                const modal = overlay.querySelector('.approach-modal');
-                // Анимация модалки: scale из маленького → полный
                 modal.animate([
-                    { transform: 'scale(0.3) translateY(0)', opacity: 0 },
-                    { transform: 'scale(0.8) translateY(-10px)', opacity: 0.7, offset: 0.5 },
-                    { transform: 'scale(1) translateY(0)', opacity: 1 }
+                    { transform: 'scale(0.95)', opacity: 0 },
+                    { transform: 'scale(1)', opacity: 1 }
                 ], {
-                    duration: 400,
-                    easing: 'cubic-bezier(.2,.8,.2,1)',
+                    duration: 550,
+                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
                     fill: 'forwards'
                 }).finished.then(() => {
+                    modal.style.transform = '';
                     modalAnimating = false;
                     isModalOpen = true;
                 });
@@ -445,53 +447,57 @@ rafScroll.subscribe((scrollY) => {
     }
 
     // =============================================
-    // Закрытие модалки
+    // Закрытие модалки — строгая последовательность
     // =============================================
 
     function closeModal(){
         if(modalAnimating || !isModalOpen) return;
         modalAnimating = true;
 
-        // Захватываем центр ДО того, как вернём скролл
         const center = getGridCenter();
         document.body.style.overflow = '';
 
         const modal = overlay.querySelector('.approach-modal');
 
-        // 1. Модалка сжимается
+        // Шаг 1: сначала прячем все плитки (чтобы не было артефакта «колода + плитки одновременно»)
+        tiles.forEach(t => {
+            t.style.opacity = '0';
+            t.style.transform = '';
+            t.classList.add('is-animating');
+            t.classList.remove('is-visible');
+        });
+
+        // Шаг 2: модалка исчезает (обратная анимация к появлению)
         modal.animate([
-            { transform: 'scale(1) translateY(0)', opacity: 1 },
-            { transform: 'scale(0.3) translateY(0)', opacity: 0 }
+            { transform: 'scale(1)', opacity: 1 },
+            { transform: 'scale(0.95)', opacity: 0 }
         ], {
-            duration: 350,
-            easing: 'cubic-bezier(.2,.8,.2,1)',
+            duration: 500,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
             fill: 'forwards'
         }).finished.then(() => {
+            // Шаг 3: убираем overlay — теперь видна только пустая сетка
             overlay.classList.remove('is-active');
 
             if(useSimpleAnim){
-                // Простое закрытие — без колоды
                 modalAnimating = false;
                 isModalOpen = false;
                 return;
             }
 
-            // 2. Вспышка
+            // Шаг 4: вспышка в центре
             const flash = createFlash(center.x, center.y);
             animateFlash(flash, 250).then(() => {
-                // 3. Плитки разлетаются из центра
+                // Шаг 5: плитки разлетаются из центра (все одновременно, stagger по 80ms)
                 tiles.forEach((t, i) => {
-                    t.classList.remove('is-animating');
+                    const ownCenter = getTileCenter(t);
+                    const dx = center.x - ownCenter.x;
+                    const dy = center.y - ownCenter.y;
+
                     setTimeout(() => {
-                        t.classList.add('is-animating');
-                        // Сбрасываем transform в центр
-                        const ownCenter = getTileCenter(t);
-                        const dx = center.x - ownCenter.x;
-                        const dy = center.y - ownCenter.y;
                         t.style.transform = `translate(${dx}px, ${dy}px) scale(0.6)`;
                         t.style.opacity = '0.9';
 
-                        // Анимация: из центра на своё место
                         requestAnimationFrame(() => {
                             t.animate([
                                 { transform: `translate(${dx}px, ${dy}px) scale(0.6)`, opacity: 0.9 },
@@ -511,10 +517,11 @@ rafScroll.subscribe((scrollY) => {
                 });
 
                 // Дожидаемся завершения
+                const totalDuration = tiles.length * 80 + 450;
                 setTimeout(() => {
                     modalAnimating = false;
                     isModalOpen = false;
-                }, tiles.length * 80 + 450);
+                }, totalDuration);
             });
         });
     }
