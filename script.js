@@ -603,15 +603,6 @@ rafScroll.subscribe((scrollY) => {
         card.setAttribute('data-revealing', '');
         card.classList.add('is-revealing');
 
-        // Для card 4: staggered-анимация трёх символов
-        if(card.dataset.card === '4'){
-            const symbols = card.querySelectorAll('.about-symbol');
-            symbols.forEach((sym, i) => {
-                sym.style.transitionDelay = (i * 200) + 'ms';
-                sym.style.opacity = '1';
-            });
-        }
-
         // Снимаем класс после завершения анимации
         setTimeout(() => {
             card.classList.remove('is-revealing');

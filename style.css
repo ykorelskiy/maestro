@@ -1646,165 +1646,86 @@ section#about.about-stack{
 
 .about-card__graphic{
     position:absolute;
-    inset:24px;
+    bottom:24px;
+    right:24px;
+    width:300px;
+    height:200px;
     border-radius:var(--radius);
     display:flex;
-    align-items:center;
-    justify-content:center;
+    align-items:flex-end;
+    justify-content:flex-end;
     overflow:hidden;
     pointer-events:none;
+    z-index:4;
 }
 
 .about-card__graphic svg{
     width:100%;
     height:100%;
-    max-width:600px;
-    max-height:400px;
-    color:var(--muted);
-    transition:filter .5s ease, opacity .4s ease;
+    color:rgba(139,139,139,.15);
+    transition:filter .8s ease, color .8s ease;
+}
+
+.about-card__graphic svg line,
+.about-card__graphic svg path,
+.about-card__graphic svg rect,
+.about-card__graphic svg ellipse{
+    transition:stroke .6s ease, stroke-width .6s ease, filter .6s ease;
 }
 
 .about-card__graphic svg .about-symbol{
-    transition:opacity .6s ease;
+    transition:opacity .8s ease, filter .8s ease;
 }
 
-/* Маска — анимированный градиент */
-.about-card__mask{
-    position:absolute;
-    inset:24px;
-    border-radius:var(--radius);
-    pointer-events:none;
-    z-index:3;
-    opacity:0;
-    mix-blend-mode:screen;
-    transition:opacity .3s ease;
-}
+/* ===== Pulse animation — все линии загораются ===== */
 
-.about-card.is-revealing .about-card__mask{
-    opacity:1;
-}
-
-/* ===== Направления масок ===== */
-
-/* Card 1: слева направо */
-.about-card[data-card="1"] .about-card__mask{
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255,107,26,.12) 30%,
-        rgba(255,107,26,.20) 45%,
-        rgba(255,107,26,.12) 60%,
-        transparent 100%
-    );
-    transform:translateX(-100%);
-    will-change:transform;
-}
-
-.about-card[data-card="1"].is-revealing .about-card__mask{
-    animation:maskLR 1.6s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-/* Card 2: сверху вниз */
-.about-card[data-card="2"] .about-card__mask{
-    background: linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(255,107,26,.12) 30%,
-        rgba(255,107,26,.20) 45%,
-        rgba(255,107,26,.12) 60%,
-        transparent 100%
-    );
-    transform:translateY(-100%);
-    will-change:transform;
-}
-
-.about-card[data-card="2"].is-revealing .about-card__mask{
-    animation:maskTB 1.6s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-/* Card 3: слева направо (как card 1) */
-.about-card[data-card="3"] .about-card__mask{
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255,107,26,.12) 30%,
-        rgba(255,107,26,.20) 45%,
-        rgba(255,107,26,.12) 60%,
-        transparent 100%
-    );
-    transform:translateX(-100%);
-    will-change:transform;
-}
-
-.about-card[data-card="3"].is-revealing .about-card__mask{
-    animation:maskLR 1.6s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-/* Card 4: слева направо со staggered-задержками для трёх символов */
-.about-card[data-card="4"] .about-card__mask{
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255,107,26,.12) 30%,
-        rgba(255,107,26,.20) 45%,
-        rgba(255,107,26,.12) 60%,
-        transparent 100%
-    );
-    transform:translateX(-100%);
-    will-change:transform;
-}
-
-.about-card[data-card="4"].is-revealing .about-card__mask{
-    animation:maskLR 1.8s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-/* Card 6: от краёв к центру */
-.about-card[data-card="6"] .about-card__mask{
-    background: radial-gradient(
-        circle at 50% 50%,
-        transparent 0%,
-        rgba(255,107,26,.12) 30%,
-        rgba(255,107,26,.20) 45%,
-        rgba(255,107,26,.12) 60%,
-        transparent 100%
-    );
-    transform:scale(0);
-    will-change:transform;
-}
-
-.about-card[data-card="6"].is-revealing .about-card__mask{
-    animation:maskCenter 1.6s cubic-bezier(.2,.8,.2,1) forwards;
-}
-
-/* Keyframes */
-@keyframes maskLR{
-    0%{ transform:translateX(-100%); opacity:1; }
-    60%{ transform:translateX(0%); opacity:1; }
-    100%{ transform:translateX(100%); opacity:0; }
-}
-
-@keyframes maskTB{
-    0%{ transform:translateY(-100%); opacity:1; }
-    60%{ transform:translateY(0%); opacity:1; }
-    100%{ transform:translateY(100%); opacity:0; }
-}
-
-@keyframes maskCenter{
-    0%{ transform:scale(0); opacity:1; }
-    40%{ transform:scale(1.2); opacity:1; }
-    100%{ transform:scale(2.5); opacity:0; }
-}
-
-/* Свечение графики во время проявления маски */
 .about-card.is-revealing .about-card__graphic svg{
-    filter:drop-shadow(0 0 12px rgba(255,107,26,.4)) brightness(1.3);
-    opacity:0.9;
-    transition:filter 0.5s ease, opacity 0.5s ease;
+    color:rgba(255,107,26,.5);
+    filter:drop-shadow(0 0 10px rgba(255,107,26,.35));
 }
 
-.about-card:hover .about-card__graphic svg{
-    filter:drop-shadow(0 0 8px rgba(255,107,26,.25)) brightness(1.15);
-    opacity:0.7;
+.about-card.is-revealing .about-card__graphic svg line,
+.about-card.is-revealing .about-card__graphic svg path,
+.about-card.is-revealing .about-card__graphic svg rect,
+.about-card.is-revealing .about-card__graphic svg ellipse{
+    animation:svgPulse 1.6s ease-in-out forwards;
+}
+
+@keyframes svgPulse{
+    0%{ stroke:var(--accent); stroke-width:2.5; filter:drop-shadow(0 0 6px var(--accent)); }
+    40%{ stroke:var(--accent); stroke-width:3; filter:drop-shadow(0 0 14px var(--accent)); }
+    100%{ stroke:currentColor; stroke-width:inherit; filter:drop-shadow(0 0 4px rgba(255,107,26,.2)); }
+}
+
+/* ===== Running fire (card 1 — ноты, card 6 — руки) ===== */
+
+.about-card[data-card="1"].is-revealing .about-card__graphic svg{
+    animation:fireSweepLR 1.6s ease-in-out forwards;
+}
+
+@keyframes fireSweepLR{
+    0%{ -webkit-mask-image:linear-gradient(90deg, transparent 0%, transparent 100%); mask-image:linear-gradient(90deg, transparent 0%, transparent 100%); }
+    30%{ -webkit-mask-image:linear-gradient(90deg, var(--accent) 0%, transparent 60%); mask-image:linear-gradient(90deg, var(--accent) 0%, transparent 60%); }
+    60%{ -webkit-mask-image:linear-gradient(90deg, var(--accent) 30%, transparent 100%); mask-image:linear-gradient(90deg, var(--accent) 30%, transparent 100%); }
+    100%{ -webkit-mask-image:linear-gradient(90deg, var(--accent) 80%, transparent 100%); mask-image:linear-gradient(90deg, var(--accent) 80%, transparent 100%); }
+}
+
+.about-card[data-card="6"].is-revealing .about-card__graphic svg{
+    animation:fireSweepCenter 1.6s ease-in-out forwards;
+}
+
+@keyframes fireSweepCenter{
+    0%{ -webkit-mask-image:radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%); mask-image:radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%); }
+    40%{ -webkit-mask-image:radial-gradient(circle at 50% 50%, var(--accent) 0%, transparent 50%); mask-image:radial-gradient(circle at 50% 50%, var(--accent) 0%, transparent 50%); }
+    100%{ -webkit-mask-image:radial-gradient(circle at 50% 50%, var(--accent) 30%, transparent 70%); mask-image:radial-gradient(circle at 50% 50%, var(--accent) 30%, transparent 70%); }
+}
+
+/* Hover на графике — приглушённое свечение */
+@media (hover: hover) and (pointer: fine) {
+    .about-card:hover .about-card__graphic svg{
+        color:rgba(255,107,26,.3);
+        filter:drop-shadow(0 0 6px rgba(255,107,26,.2));
+    }
 }
 
 /* --- Content (текст) --- */
@@ -1900,8 +1821,7 @@ section#about.about-stack{
     }
 
     .about-card__bg,
-    .about-card__graphic,
-    .about-card__mask{
+    .about-card__graphic{
         inset:16px;
     }
 }
@@ -1932,8 +1852,7 @@ section#about.about-stack{
     }
 
     .about-card__bg,
-    .about-card__graphic,
-    .about-card__mask{
+    .about-card__graphic{
         inset:12px;
     }
 
@@ -1948,10 +1867,6 @@ section#about.about-stack{
 
 /* --- Reduced motion --- */
 @media(prefers-reduced-motion:reduce){
-    .about-card .about-card__mask{
-        display:none !important;
-    }
-
     .about-card .about-card__graphic svg{
         filter:drop-shadow(0 0 8px rgba(255,107,26,.2)) brightness(1.1);
         opacity:0.6;
