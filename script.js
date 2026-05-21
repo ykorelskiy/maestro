@@ -729,6 +729,17 @@ rafScroll.subscribe((scrollY) => {
     });
 
     // =============================================
+    // Показывать точки только когда #about в viewport
+    // =============================================
+
+    const aboutObserver = new IntersectionObserver((entries) => {
+        const visible = entries.some(e => e.isIntersecting);
+        nav.classList.toggle('is-hidden', !visible);
+    }, { threshold: 0 });
+
+    aboutObserver.observe(section);
+
+    // =============================================
     // Инициализация: активная точка
     // =============================================
 
