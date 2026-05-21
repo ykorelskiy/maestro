@@ -1648,8 +1648,8 @@ section#about.about-stack{
     position:absolute;
     bottom:24px;
     right:24px;
-    width:300px;
-    height:200px;
+    width:600px;
+    height:400px;
     border-radius:var(--radius);
     display:flex;
     align-items:flex-end;
@@ -1670,6 +1670,7 @@ section#about.about-stack{
 .about-card__graphic svg path,
 .about-card__graphic svg rect,
 .about-card__graphic svg ellipse{
+    stroke-width:2.5;
     transition:stroke .6s ease, stroke-width .6s ease, filter .6s ease;
 }
 
@@ -1692,8 +1693,8 @@ section#about.about-stack{
 }
 
 @keyframes svgPulse{
-    0%{ stroke:var(--accent); stroke-width:2.5; filter:drop-shadow(0 0 6px var(--accent)); }
-    40%{ stroke:var(--accent); stroke-width:3; filter:drop-shadow(0 0 14px var(--accent)); }
+    0%{ stroke:var(--accent); stroke-width:4; filter:drop-shadow(0 0 6px var(--accent)); }
+    40%{ stroke:var(--accent); stroke-width:5; filter:drop-shadow(0 0 14px var(--accent)); }
     100%{ stroke:currentColor; stroke-width:inherit; filter:drop-shadow(0 0 4px rgba(255,107,26,.2)); }
 }
 
