@@ -1616,13 +1616,13 @@ section[id] p{
     position:relative;
     background:var(--surface);
     border:1px solid var(--border);
-    padding:44px 36px;
+    padding:32px 24px;
     cursor:pointer;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    min-height:260px;
+    min-height:180px;
     user-select:none;
     border-radius:16px;
     overflow:hidden;
@@ -1986,8 +1986,8 @@ section[id] p{
     }
 
     .approach-tile{
-        min-height:140px;
-        padding:28px 24px;
+        min-height:100px;
+        padding:20px 16px;
     }
 
     .approach-tile .approach-number{
