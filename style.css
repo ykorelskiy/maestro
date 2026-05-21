@@ -14,6 +14,8 @@
 
     --transition:
     400ms cubic-bezier(.2,.8,.2,1);
+
+    --header-height:80px;
 }
 
 *{
@@ -1608,8 +1610,9 @@ section[id] p{
     position:relative;
     scroll-snap-type:y mandatory;
     overflow-y:auto;
-    height:100vh;
+    height:calc(100vh - var(--header-height, 80px));
     scroll-behavior:smooth;
+    scroll-padding-top:var(--header-height, 80px);
 }
 
 .about-stack__viewport{
@@ -1622,14 +1625,19 @@ section#about.about-stack{
     padding:0;
 }
 
+@media(max-width:900px){
+    :root{
+        --header-height:64px;
+    }
+}
+
 /* --- Card --- */
 
 .about-card{
     position:relative;
-    height:100vh;
-    min-height:100vh;
-    min-height:100dvh;
-    scroll-snap-align:center;
+    height:calc(100vh - var(--header-height, 80px));
+    min-height:calc(100vh - var(--header-height, 80px));
+    scroll-snap-align:start;
     display:flex;
     align-items:center;
     justify-content:center;
