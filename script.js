@@ -152,7 +152,7 @@ rafScroll.subscribe((scrollY) => {
     })();
 
 /* =========================================
-    APPROACH GRID — плитки + модалка
+    APPROACH GRID — плитки + модалка + анимации колоды
 ========================================= */
 
 (function(){
@@ -198,8 +198,12 @@ rafScroll.subscribe((scrollY) => {
         }
     ];
 
-    // Создаём плитки
     const tiles = [];
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const useSimpleAnim = isMobile || isReduced;
+
+    // Создаём плитки
     cards.forEach((card, i) => {
         const tile = document.createElement('div');
         tile.className = 'approach-tile';
@@ -226,31 +230,296 @@ rafScroll.subscribe((scrollY) => {
             tile.classList.add('is-viewed');
         }
 
-        tile.addEventListener('click', () => {
-            // Заполняем модалку
-            modalNumber.textContent = card.num;
-            modalTitle.textContent = card.title.replace(/<[^>]*>/g, '');
-            modalBody.innerHTML = card.html;
-
-            // Отмечаем просмотренным
-            tile.classList.add('is-viewed');
-            sessionStorage.setItem(viewedKey, 'true');
-
-            // Открываем
-            overlay.classList.add('is-active');
-            document.body.style.overflow = 'hidden';
-        });
-
+        tile.addEventListener('click', () => openModalForTile(i));
         grid.appendChild(tile);
         tiles.push(tile);
     });
 
-    // Закрытие модалки
-    function closeModal(){
-        overlay.classList.remove('is-active');
-        document.body.style.overflow = '';
+    // Переменные состояния
+    let isModalOpen = false;
+    let modalAnimating = false;
+    let scrollPos = 0;
+    const APPROACH_INTERVAL = 3000;
+
+    // =============================================
+    // Утилиты
+    // =============================================
+
+    /** Получить центр сетки относительно viewport */
+    function getGridCenter(){
+        const rect = grid.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
     }
 
+    /** Получить центр плитки относительно viewport */
+    function getTileCenter(el){
+        const rect = el.getBoundingClientRect();
+        return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+        };
+    }
+
+    /** Создать элемент вспышки */
+    function createFlash(cx, cy){
+        const flash = document.createElement('div');
+        flash.className = 'approach-flash';
+        const size = 200;
+        flash.style.left = (cx - size/2) + 'px';
+        flash.style.top = (cy - size/2) + 'px';
+        flash.style.width = size + 'px';
+        flash.style.height = size + 'px';
+        document.body.appendChild(flash);
+        return flash;
+    }
+
+    /** WAAPI анимация вспышки */
+    function animateFlash(flash, duration = 250){
+        return flash.animate([
+            { opacity: 0, transform: 'scale(0.3)' },
+            { opacity: 1, transform: 'scale(1.2)', offset: 0.4 },
+            { opacity: 0, transform: 'scale(1.5)' }
+        ], {
+            duration,
+            easing: 'ease-out',
+            fill: 'forwards'
+        }).finished.then(() => {
+            flash.remove();
+        });
+    }
+
+    // =============================================
+    // Анимация появления при скролле
+    // =============================================
+
+    let hasRevealed = false;
+
+    function revealTiles(){
+        if(hasRevealed) return;
+        hasRevealed = true;
+
+        if(useSimpleAnim){
+            // Простой fadeIn + translateY, stagger по рядам
+            tiles.forEach((tile, i) => {
+                const row = Math.floor(i / 2);
+                setTimeout(() => {
+                    tile.classList.add('is-visible');
+                }, row * 150);
+            });
+            return;
+        }
+
+        // Полноценная анимация: колода → раскладка
+        // Сначала прячем плитки, устанавливаем их в центр
+        const center = getGridCenter();
+
+        tiles.forEach((tile) => {
+            tile.classList.add('is-animating');
+            const ownCenter = getTileCenter(tile);
+            const dx = center.x - ownCenter.x;
+            const dy = center.y - ownCenter.y;
+            // Стартовая позиция — центр сетки
+            tile.style.transform = `translate(${dx}px, ${dy}px) scale(0.5)`;
+            tile.style.opacity = '0';
+        });
+
+        // Небольшая задержка перед началом раскладки
+        setTimeout(() => {
+            // Раскладываем по очереди
+            tiles.forEach((tile, i) => {
+                setTimeout(() => {
+                    // Отменяем transform → своя естественная позиция
+                    tile.style.transform = '';
+                    tile.style.opacity = '';
+                    tile.classList.remove('is-animating');
+                    tile.classList.add('is-visible');
+                }, i * 120);
+            });
+        }, 300);
+    }
+
+    // IntersectionObserver для триггера появления
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting && !hasRevealed){
+                revealTiles();
+                revealObserver.unobserve(grid);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    revealObserver.observe(grid);
+
+    // =============================================
+    // Открытие модалки
+    // =============================================
+
+    let currentTileIndex = -1;
+
+    function openModalForTile(idx){
+        if(modalAnimating || isModalOpen) return;
+        modalAnimating = true;
+        currentTileIndex = idx;
+
+        // Заполняем контент
+        const card = cards[idx];
+        modalNumber.textContent = card.num;
+        modalTitle.textContent = card.title.replace(/<[^>]*>/g, '');
+        modalBody.innerHTML = card.html;
+
+        // Отмечаем просмотренным
+        const tile = tiles[idx];
+        tile.classList.add('is-viewed');
+        sessionStorage.setItem('approach_viewed_' + idx, 'true');
+
+        // Блокируем скролл страницы
+        scrollPos = window.scrollY;
+        document.body.style.overflow = 'hidden';
+
+        if(useSimpleAnim){
+            // Простое открытие — WAAPI
+            overlay.classList.add('is-active');
+            const modal = overlay.querySelector('.approach-modal');
+            modal.animate([
+                { transform: 'scale(0.3) translateY(20px)', opacity: 0 },
+                { transform: 'scale(1) translateY(0)', opacity: 1 }
+            ], {
+                duration: 400,
+                easing: 'cubic-bezier(.2,.8,.2,1)',
+                fill: 'forwards'
+            }).finished.then(() => {
+                modalAnimating = false;
+                isModalOpen = true;
+            });
+            return;
+        }
+
+        // === Полноценная анимация колоды ===
+        const center = getGridCenter();
+
+        // 1. Собираем плитки в центр
+        const anims = tiles.map((t, i) => {
+            const ownCenter = getTileCenter(t);
+            const dx = center.x - ownCenter.x;
+            const dy = center.y - ownCenter.y;
+            // Смещение для имитации колоды (каждая следующая чуть сдвинута)
+            const stackOffsetX = (i - 2.5) * 3;
+            const stackOffsetY = (i - 2.5) * 2;
+            const stackRotate = (i - 2.5) * 1.5;
+            t.classList.add('is-animating');
+            return t.animate([
+                { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
+                { transform: `translate(${dx + stackOffsetX}px, ${dy + stackOffsetY}px) scale(0.6) rotate(${stackRotate}deg)`, opacity: 0.9 }
+            ], {
+                duration: 400,
+                easing: 'cubic-bezier(.2,.8,.2,1)',
+                fill: 'forwards'
+            }).finished;
+        });
+
+        Promise.all(anims).then(() => {
+            // 2. Вспышка
+            const flash = createFlash(center.x, center.y);
+            animateFlash(flash, 250).then(() => {
+                // 3. Показываем модалку
+                overlay.classList.add('is-active');
+                const modal = overlay.querySelector('.approach-modal');
+                // Анимация модалки: scale из маленького → полный
+                modal.animate([
+                    { transform: 'scale(0.3) translateY(0)', opacity: 0 },
+                    { transform: 'scale(0.8) translateY(-10px)', opacity: 0.7, offset: 0.5 },
+                    { transform: 'scale(1) translateY(0)', opacity: 1 }
+                ], {
+                    duration: 400,
+                    easing: 'cubic-bezier(.2,.8,.2,1)',
+                    fill: 'forwards'
+                }).finished.then(() => {
+                    modalAnimating = false;
+                    isModalOpen = true;
+                });
+            });
+        });
+    }
+
+    // =============================================
+    // Закрытие модалки
+    // =============================================
+
+    function closeModal(){
+        if(modalAnimating || !isModalOpen) return;
+        modalAnimating = true;
+
+        // Захватываем центр ДО того, как вернём скролл
+        const center = getGridCenter();
+        document.body.style.overflow = '';
+
+        const modal = overlay.querySelector('.approach-modal');
+
+        // 1. Модалка сжимается
+        modal.animate([
+            { transform: 'scale(1) translateY(0)', opacity: 1 },
+            { transform: 'scale(0.3) translateY(0)', opacity: 0 }
+        ], {
+            duration: 350,
+            easing: 'cubic-bezier(.2,.8,.2,1)',
+            fill: 'forwards'
+        }).finished.then(() => {
+            overlay.classList.remove('is-active');
+
+            if(useSimpleAnim){
+                // Простое закрытие — без колоды
+                modalAnimating = false;
+                isModalOpen = false;
+                return;
+            }
+
+            // 2. Вспышка
+            const flash = createFlash(center.x, center.y);
+            animateFlash(flash, 250).then(() => {
+                // 3. Плитки разлетаются из центра
+                tiles.forEach((t, i) => {
+                    t.classList.remove('is-animating');
+                    setTimeout(() => {
+                        t.classList.add('is-animating');
+                        // Сбрасываем transform в центр
+                        const ownCenter = getTileCenter(t);
+                        const dx = center.x - ownCenter.x;
+                        const dy = center.y - ownCenter.y;
+                        t.style.transform = `translate(${dx}px, ${dy}px) scale(0.6)`;
+                        t.style.opacity = '0.9';
+
+                        // Анимация: из центра на своё место
+                        requestAnimationFrame(() => {
+                            t.animate([
+                                { transform: `translate(${dx}px, ${dy}px) scale(0.6)`, opacity: 0.9 },
+                                { transform: 'translate(0, 0) scale(1)', opacity: 1 }
+                            ], {
+                                duration: 400,
+                                easing: 'cubic-bezier(.2,.8,.2,1)',
+                                fill: 'forwards'
+                            }).finished.then(() => {
+                                t.style.transform = '';
+                                t.style.opacity = '';
+                                t.classList.remove('is-animating');
+                                t.classList.add('is-visible');
+                            });
+                        });
+                    }, i * 80);
+                });
+
+                // Дожидаемся завершения
+                setTimeout(() => {
+                    modalAnimating = false;
+                    isModalOpen = false;
+                }, tiles.length * 80 + 450);
+            });
+        });
+    }
+
+    // Обработчики закрытия
     modalClose.addEventListener('click', closeModal);
     overlay.addEventListener('click', (e) => {
         if(e.target === overlay) closeModal();
@@ -261,23 +530,17 @@ rafScroll.subscribe((scrollY) => {
         }
     });
 
-    // IntersectionObserver — stagger-появление
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting){
-                const idx = parseInt(entry.target.dataset.index);
-                // Задержка: первый ряд (0,1) без задержки, второй ряд (2,3) — 150ms, третий ряд (4,5) — 300ms
-                const row = Math.floor(idx / 2);
-                const delay = row * 150;
-                setTimeout(() => {
-                    entry.target.classList.add('is-visible');
-                }, delay);
-                observer.unobserve(entry.target);
+    // Если плитки уже видны при загрузке (например, якорь #approach)
+    // Проверяем через небольшую задержку
+    setTimeout(() => {
+        if(!hasRevealed){
+            const rect = grid.getBoundingClientRect();
+            if(rect.top < window.innerHeight && rect.bottom > 0){
+                revealTiles();
+                revealObserver.unobserve(grid);
             }
-        });
-    }, { threshold: 0.2 });
-
-    tiles.forEach(tile => observer.observe(tile));
+        }
+    }, 200);
 })();
 
 /* =========================================

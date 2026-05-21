@@ -1364,28 +1364,99 @@ section[id] p{
     max-width:1100px;
     margin:40px auto 0;
     padding:0 40px;
+    position:relative;
 }
 
 .approach-tile{
     position:relative;
     background:var(--surface);
     border:1px solid var(--border);
-    padding:36px 32px;
+    padding:44px 36px;
     cursor:pointer;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    min-height:200px;
+    min-height:260px;
     user-select:none;
+    border-radius:16px;
+    overflow:hidden;
+    /* Начальное состояние для скролл-анимации */
     opacity:0;
     transform:translateY(30px);
     transition:
         opacity 0.6s ease,
         transform 0.6s cubic-bezier(.2,.8,.2,1),
         border-color 0.4s ease,
-        box-shadow 0.4s ease,
         background 0.4s ease;
+    will-change:transform, opacity;
+    /* Фоновая пульсация (idle) */
+    animation:tileBreathe 4s ease-in-out infinite;
+}
+
+@keyframes tileBreathe{
+    0%,100%{
+        box-shadow:
+            0 0 0 rgba(255,107,26,0);
+    }
+    50%{
+        box-shadow:
+            0 0 30px rgba(255,107,26,0.03),
+            0 0 60px rgba(255,107,26,0.02);
+    }
+}
+
+/* Псевдоэлемент для hover-волны (оранжевый блик) */
+.approach-tile::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:15%;
+    right:15%;
+    bottom:0;
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,107,26,.07) 30%,
+        rgba(255,107,26,.10) 45%,
+        rgba(255,107,26,.07) 60%,
+        transparent 100%
+    );
+    pointer-events:none;
+    transform:translateX(-120%);
+    will-change:transform;
+    opacity:0;
+}
+
+.approach-tile:hover::after{
+    opacity:1;
+    animation:tileWave 0.7s ease-out forwards;
+}
+
+@keyframes tileWave{
+    0%{
+        transform:translateX(-120%);
+    }
+    60%{
+        transform:translateX(0%);
+    }
+    100%{
+        transform:translateX(120%);
+    }
+}
+
+/* Повтор волны при долгом hover */
+.approach-tile:hover::after{
+    animation:
+        tileWave 0.7s ease-out forwards,
+        tileWavePause 2.3s 0.7s,
+        tileWave 0.7s 3s ease-out forwards,
+        tileWavePause 2.3s 3.7s,
+        tileWave 0.7s 6s ease-out forwards;
+}
+
+@keyframes tileWavePause{
+    0%,100%{ transform:translateX(120%); }
 }
 
 .approach-tile.is-visible{
@@ -1394,23 +1465,26 @@ section[id] p{
 }
 
 .approach-tile:hover{
-    border-color:rgba(255,107,26,.4);
+    border-color:rgba(255,107,26,.35);
+    background:rgba(255,107,26,.02);
+    animation:none;
     box-shadow:
         0 8px 30px rgba(255,107,26,.08),
         0 0 40px rgba(255,107,26,.04);
-    background:rgba(255,107,26,.02);
 }
 
 .approach-tile:active{
-    transform:translateY(0) scale(.98);
+    transform:translateY(0) scale(.97);
 }
 
 .approach-tile .approach-number{
-    font-size:1.1rem;
+    font-size:1.5rem;
     color:var(--accent);
     letter-spacing:2px;
-    margin-bottom:12px;
+    margin-bottom:10px;
     transition:margin-bottom 0.4s ease;
+    position:relative;
+    z-index:1;
 }
 
 .approach-tile h3{
@@ -1419,7 +1493,8 @@ section[id] p{
     letter-spacing:-0.3px;
     text-align:center;
     line-height:1.3;
-    transition:opacity 0.4s ease;
+    position:relative;
+    z-index:1;
 }
 
 .approach-tile .approach-tile-hint{
@@ -1430,6 +1505,8 @@ section[id] p{
     letter-spacing:1px;
     opacity:0;
     transition:opacity 0.4s ease;
+    position:relative;
+    z-index:1;
 }
 
 .approach-tile:hover .approach-tile-hint{
@@ -1442,6 +1519,11 @@ section[id] p{
 }
 .approach-tile.is-viewed .approach-number{
     color:rgba(255,107,26,.5);
+}
+
+/* Состояние анимации колоды */
+.approach-tile.is-animating{
+    transition:none;
 }
 
 /* --- Approach modal --- */
@@ -1457,7 +1539,7 @@ section[id] p{
     justify-content:center;
     opacity:0;
     pointer-events:none;
-    transition:opacity 0.4s ease;
+    transition:opacity 0.3s ease;
     z-index:1000;
     padding:20px;
 }
@@ -1476,16 +1558,16 @@ section[id] p{
     padding:50px 48px 44px;
     border:1px solid rgba(255,255,255,.08);
     box-shadow:0 40px 100px rgba(0,0,0,.6);
-    transform:translateY(40px) scale(.96);
+    border-radius:16px;
+    transform:scale(.5) translateY(20px);
     opacity:0;
-    transition:
-        transform 0.5s cubic-bezier(.2,.8,.3,1),
-        opacity 0.4s ease;
+    will-change:transform, opacity;
 }
 
 .approach-modal-overlay.is-active .approach-modal{
-    transform:translateY(0) scale(1);
-    opacity:1;
+    transition:
+        transform 0.35s cubic-bezier(.2,.8,.2,1),
+        opacity 0.3s ease;
 }
 
 .approach-modal-close{
@@ -1501,6 +1583,7 @@ section[id] p{
     line-height:1;
     padding:4px 8px;
     transition:color 0.25s;
+    z-index:2;
 }
 
 .approach-modal-close:hover{
@@ -1537,6 +1620,17 @@ section[id] p{
 
 .approach-modal-body p:last-child{
     margin-bottom:0;
+}
+
+/* Вспышка при сборке/разборке колоды */
+.approach-flash{
+    position:fixed;
+    pointer-events:none;
+    border-radius:16px;
+    background:radial-gradient(circle, rgba(255,107,26,.15), transparent 70%);
+    opacity:0;
+    z-index:999;
+    will-change:transform, opacity;
 }
 
 /* --- REQUESTS --- */
@@ -1660,11 +1754,7 @@ section[id] p{
 
 /* --- Mobile adjustments for approach grid --- */
 
-@media(max-width:1000px){
-    .requests-list{
-        grid-template-columns:1fr;
-    }
-
+@media(max-width:768px){
     .approach-grid{
         grid-template-columns:1fr;
         padding:0 20px;
@@ -1676,8 +1766,23 @@ section[id] p{
         padding:28px 24px;
     }
 
+    .approach-tile .approach-number{
+        font-size:1.3rem;
+    }
+
     .approach-tile h3{
-        font-size:1.05rem;
+        font-size:1rem;
+    }
+
+    .approach-tile:hover{
+        animation:none;
+        border-color:var(--border);
+        box-shadow:none;
+        background:var(--surface);
+    }
+
+    .approach-tile:hover::after{
+        display:none;
     }
 
     .approach-modal{
@@ -1693,9 +1798,18 @@ section[id] p{
 
 @media(prefers-reduced-motion:reduce){
     .approach-tile{
-        transition:none;
-        opacity:1;
-        transform:none;
+        animation:none !important;
+        transition:none !important;
+        opacity:1 !important;
+        transform:none !important;
+    }
+
+    .approach-tile::after{
+        display:none !important;
+    }
+
+    .approach-tile.is-animating{
+        transition:none !important;
     }
 
     .article-card{
@@ -1706,8 +1820,17 @@ section[id] p{
         transform:none;
     }
 
-    .approach-modal,
     .approach-modal-overlay{
-        transition:none;
+        transition:opacity 0.2s ease;
+    }
+
+    .approach-modal{
+        transition:
+            transform 0.2s ease,
+            opacity 0.2s ease;
+    }
+
+    .approach-flash{
+        display:none !important;
     }
 }
