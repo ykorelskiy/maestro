@@ -1,6 +1,6 @@
 # Project State — Maestro
 
-**Last updated:** 2026-05-21 (Session 3)
+**Last updated:** 2026-05-22 (Session 4)
 
 ---
 
@@ -54,6 +54,13 @@ Ready to start Session 2: filling sections with content.
 - Added sessionStorage tracking for "viewed" tiles
 - Added mobile single-column fallback for grid
 - Committed: `d771d54`
+
+## Done in Session 4
+- Логотип «MAESTRO.» стал ссылкой на Hero (#hero) — клик возвращает наверх
+- Добавлена кнопка scroll-to-top (оранжевая стрелка в правом нижнем углу)
+  - Появляется после 400px скролла
+  - При клике плавно скроллит наверх
+  - Hover — заливка оранжевым, смена цвета иконки
 
 ---
 

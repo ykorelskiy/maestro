@@ -61,10 +61,56 @@
 
 ---
 
+### `.word-cloud`
+
+- **Что делает:** контейнер для облака слов с flex-wrap, тремя слоями (lg/md/sm), анимацией дыхания и hover-эффектом.
+- **Где применяется:** секция «С чем ко мне» (`#requests`).
+- **Когда использовать:** только в секции запросов, для типографической композиции вместо списка.
+
+```html
+<div class="word-cloud">
+  <span class="word-cloud__word word-cloud__word--lg" style="--r:-2deg">слово</span>
+  <span class="word-cloud__word word-cloud__word--md" style="--r:3deg">слово</span>
+  <span class="word-cloud__word word-cloud__word--sm" style="--r:-1deg">слово</span>
+</div>
+```
+
+**Слои:**
+- `--lg` — крупный (1.7rem), акцентный цвет `var(--accent)`, вес 600
+- `--md` — средний (1.15rem), основной текст `var(--text)`, вес 400
+- `--sm` — мелкий (0.85rem), приглушённый `var(--muted)` + opacity 0.6
+
+**Каждое слово** получает inline-стиль `--r` для случайного поворота (-4deg…+4deg).
+
+**Анимации:**
+- `pulse` / `pulseDim` — вспышка: scale(1.06) + translateY(-2px) на ~10% цикла, 80% времени — статика. Длительность: 7–14s, рандомизирована через 10 комбинаций `nth-child(10n+N)`, задержки 0–7.4s.
+- Примерно 20% слов активны в каждый момент.
+
+**Hover (только десктоп):**
+- lg: `animation-play-state:paused`, scale(1.15) за 0.35s ease, цвет остаётся акцентным
+- md: `animation-play-state:paused`, color → accent за 0.6s ease, размер не меняется
+- sm: `animation-play-state:paused`, color → accent + opacity → 1 за 0.6s ease, размер не меняется
+- При уходе курсора — transition возвращает в исходное состояние.
+
+**Техника:** у каждого слова есть `<span class="word-cloud__inner">`, на котором применяется pulse-анимация (transform + opacity), а на родителе — поворот через `--r`. Hover ставит animation-play-state:paused на inner и применяет свой transform/color через transition.
+
+**Мобильная адаптация (≤768px):**
+- lg: 1.7rem → 1.3rem
+- md: 1.15rem → 0.95rem
+- sm: 0.85rem → 0.75rem
+- gap уменьшен с 14px до 10px, max-height снят
+
+**prefers-reduced-motion:** анимация отключается, остаётся статика.
+
+---
+
 ## Анимации и тайминги
 
 | Анимация | Длительность | Интервал / Повтор | Easing | Где |
 |---|---|---|---|---|
+| `pulse` / `pulseDim` | 7–14s (цикл) | Бесконечно, 10 staggered-комбинаций | `ease-in-out` | Слова в облаке (#requests) |
+| hover `scale` (lg) | 350ms | — | `ease` | Крупные слова в облаке, десктоп |
+| hover `color` (md/sm) | 600ms | — | `ease` | Средние и мелкие слова в облаке, десктоп |
 | `shimmerWave` | 700ms | На hover: повтор с паузой 3s | `ease-out` | Плитки, кнопки, цитата |
 | `shimmerWave` (nav) | 700ms | Случайно каждые 8–15s | `ease-out` | Пункты меню (через `is-shimmer-active`) |
 | `navLinePulse` | 12s (цикл) | 2s stagger между пунктами | — | Линия над пунктами меню |

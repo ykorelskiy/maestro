@@ -81,6 +81,11 @@ body{
     backdrop-filter:blur(10px);
 }
 
+.logo-link{
+    text-decoration:none;
+    color:inherit;
+}
+
 .logo{
 
     font-size:14px;
@@ -154,6 +159,54 @@ body{
         width:100%;
         opacity:1;
         animation:none;
+    }
+}
+
+/* =========================================
+   SCROLL TO TOP
+========================================= */
+
+.scroll-top{
+    position:fixed;
+    bottom:36px;
+    right:36px;
+    z-index:100;
+
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:1px solid var(--accent);
+    background:var(--surface);
+    color:var(--accent);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(12px);
+    transition:
+        opacity 300ms ease,
+        transform 300ms ease,
+        background 400ms cubic-bezier(.2,.8,.2,1),
+        border-color 400ms cubic-bezier(.2,.8,.2,1);
+
+    /* Скрываем на десктопе пока нет скролла */
+}
+
+.scroll-top.is-visible{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(0);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .scroll-top:hover{
+        background:var(--accent);
+        color:var(--bg);
+        border-color:var(--accent);
     }
 }
 
@@ -2126,27 +2179,120 @@ section#about.about-stack{
     will-change:transform, opacity;
 }
 
-/* --- REQUESTS --- */
+/* --- REQUESTS — Word Cloud --- */
 
-.requests-list{
-    list-style:none;
-    padding:0;
-    margin:0 0 48px;
+.word-cloud{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:14px 14px;
+    min-height:60vh;
+    max-height:min(70vh, 700px);
+    padding:20px 0;
+    max-width:800px;
+    margin:0 auto;
 }
 
-.requests-list li{
-    position:relative;
-    padding-left:24px;
-    margin-bottom:12px;
-    line-height:1.7;
-    color:var(--text);
+.word-cloud__word{
+    display:inline-block;
+    cursor:default;
+    transform:rotate(var(--r, 0deg));
+    white-space:nowrap;
+    will-change:transform, opacity;
 }
 
-.requests-list li::before{
-    content:'—';
-    position:absolute;
-    left:0;
+/* Слой 1 — крупные, акцентный цвет */
+.word-cloud__word--lg{
+    font-size:1.7rem;
+    font-weight:600;
     color:var(--accent);
+    letter-spacing:-0.3px;
+}
+
+/* Слой 2 — средние, основной текст */
+.word-cloud__word--md{
+    font-size:1.15rem;
+    font-weight:400;
+    color:var(--text);
+    letter-spacing:-0.2px;
+}
+
+/* Слой 3 — мелкие, приглушённые */
+.word-cloud__word--sm{
+    font-size:0.95rem;
+    font-weight:300;
+    color:#c0c0c0;
+    opacity:0.75;
+}
+
+/* Внутренний обёртка для transform-совместимости */
+.word-cloud__inner{
+    display:inline-block;
+    transition:color 0.5s ease;
+}
+
+/* Pulse-анимация: 10 комбинаций длительности и задержки */
+.word-cloud__inner{
+    animation:pulse ease-in-out infinite;
+}
+
+.word-cloud__word:nth-child(10n+1) .word-cloud__inner{ animation-duration:7.2s; animation-delay:0s; }
+.word-cloud__word:nth-child(10n+2) .word-cloud__inner{ animation-duration:9.5s; animation-delay:1.8s; }
+.word-cloud__word:nth-child(10n+3) .word-cloud__inner{ animation-duration:11.3s; animation-delay:3.2s; }
+.word-cloud__word:nth-child(10n+4) .word-cloud__inner{ animation-duration:8.1s; animation-delay:5.5s; }
+.word-cloud__word:nth-child(10n+5) .word-cloud__inner{ animation-duration:12.7s; animation-delay:0.9s; }
+.word-cloud__word:nth-child(10n+6) .word-cloud__inner{ animation-duration:7.8s; animation-delay:4.3s; }
+.word-cloud__word:nth-child(10n+7) .word-cloud__inner{ animation-duration:10.2s; animation-delay:6.8s; }
+.word-cloud__word:nth-child(10n+8) .word-cloud__inner{ animation-duration:13.5s; animation-delay:2.5s; }
+.word-cloud__word:nth-child(10n+9) .word-cloud__inner{ animation-duration:8.9s; animation-delay:7.4s; }
+.word-cloud__word:nth-child(10n+10) .word-cloud__inner{ animation-duration:11.9s; animation-delay:5.1s; }
+
+@keyframes pulse{
+    0%, 20%, 100%{
+        transform:translateY(0);
+        opacity:1;
+    }
+    10%{
+        transform:translateY(-2px);
+        opacity:1;
+    }
+}
+
+.word-cloud__word--sm .word-cloud__inner{
+    animation-name:pulseDim;
+}
+
+@keyframes pulseDim{
+    0%, 20%, 100%{
+        transform:translateY(0);
+        opacity:0.75;
+    }
+    10%{
+        transform:translateY(-2px);
+        opacity:0.92;
+    }
+}
+
+/* Hover — только десктоп */
+@media (hover: hover) and (pointer: fine) {
+    .word-cloud__word--lg .word-cloud__inner{
+        transition:color 0.5s ease;
+    }
+
+    .word-cloud__word--lg:hover .word-cloud__inner{
+        color:var(--muted);
+    }
+
+    .word-cloud__word--md:hover .word-cloud__inner{
+        color:var(--accent);
+    }
+
+    .word-cloud__word--sm:hover .word-cloud__inner{
+        color:var(--accent);
+        opacity:1;
+    }
+
 }
 
 .requests-not-title{
@@ -2201,24 +2347,6 @@ section#about.about-stack{
     }
 }
 
-.requests-list{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px 32px;
-}
-
-.requests-list li::before{
-    content:'';
-    width:5px;
-    height:5px;
-    background:var(--accent);
-    border-radius:50%;
-    position:absolute;
-    left:0;
-    top:0.65em;
-    opacity:.7;
-}
-
 .requests-not-box{
     background:var(--surface);
     border:1px solid var(--border);
@@ -2238,6 +2366,25 @@ section#about.about-stack{
 /* --- Mobile adjustments --- */
 
 @media(max-width:768px){
+    .word-cloud{
+        gap:10px 10px;
+        min-height:auto;
+        max-height:none;
+        padding:10px 0;
+    }
+
+    .word-cloud__word--lg{
+        font-size:1.3rem;
+    }
+
+    .word-cloud__word--md{
+        font-size:0.95rem;
+    }
+
+    .word-cloud__word--sm{
+        font-size:0.85rem;
+    }
+
     .approach-grid{
         grid-template-columns:1fr;
         padding:0 20px;
@@ -2269,6 +2416,21 @@ section#about.about-stack{
 /* --- Reduced motion --- */
 
 @media(prefers-reduced-motion:reduce){
+    .word-cloud__word .word-cloud__inner,
+    .word-cloud__word--sm .word-cloud__inner{
+        animation:none !important;
+    }
+
+    .word-cloud__word--sm{
+        opacity:0.6;
+    }
+
+    .word-cloud__word:hover .word-cloud__inner{
+        animation-play-state:unset !important;
+        transform:none !important;
+        transition:none !important;
+    }
+
     .approach-tile{
         animation:none !important;
         transition:none !important;

@@ -927,3 +927,20 @@ rafScroll.subscribe((scrollY) => {
         });
     });
 })();
+
+/* =========================================
+   SCROLL TO TOP — показать/скрыть + скролл
+   ========================================= */
+(function(){
+    const btn = document.getElementById('scrollTop');
+    if(!btn) return;
+
+    // Показывать после 400px скролла
+    rafScroll.subscribe((scrollY) => {
+        btn.classList.toggle('is-visible', scrollY > 400);
+    });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+})();
