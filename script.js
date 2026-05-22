@@ -288,7 +288,6 @@ rafScroll.subscribe((scrollY) => {
     let isModalOpen = false;
     let modalAnimating = false;
     let scrollPos = 0;
-    const APPROACH_INTERVAL = 3000;
 
     // =============================================
     // Утилиты

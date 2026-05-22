@@ -610,19 +610,7 @@ body.is-menu-open{
 
 .shimmer-nav.is-shimmer-active::before{
     opacity:1;
-    animation:navShimmerWave 0.7s ease-out forwards;
-}
-
-@keyframes navShimmerWave{
-    0%{
-        transform:translateX(-120%);
-    }
-    60%{
-        transform:translateX(0%);
-    }
-    100%{
-        transform:translateX(120%);
-    }
+    animation:shimmerWave 0.7s ease-out forwards;
 }
 
 /* =========================================
