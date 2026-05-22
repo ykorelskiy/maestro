@@ -63,44 +63,44 @@
 
 ### `.word-cloud`
 
-- **Что делает:** контейнер для облака слов с flex-wrap, тремя слоями (lg/md/sm), анимацией дыхания и hover-эффектом.
+- **Что делает:** контейнер для облака слов с flex-wrap, тремя слоями (lg/md/sm), анимацией пульсации и hover-эффектом.
 - **Где применяется:** секция «С чем ко мне» (`#requests`).
 - **Когда использовать:** только в секции запросов, для типографической композиции вместо списка.
 
 ```html
 <div class="word-cloud">
-  <span class="word-cloud__word word-cloud__word--lg" style="--r:-2deg">слово</span>
-  <span class="word-cloud__word word-cloud__word--md" style="--r:3deg">слово</span>
-  <span class="word-cloud__word word-cloud__word--sm" style="--r:-1deg">слово</span>
+  <span class="word-cloud__word word-cloud__word--lg" style="--r:-2deg"><span class="word-cloud__inner">слово</span></span>
+  <span class="word-cloud__word word-cloud__word--md" style="--r:3deg"><span class="word-cloud__inner">слово</span></span>
+  <span class="word-cloud__word word-cloud__word--sm" style="--r:-1deg"><span class="word-cloud__inner">слово</span></span>
 </div>
 ```
 
 **Слои:**
 - `--lg` — крупный (1.7rem), акцентный цвет `var(--accent)`, вес 600
 - `--md` — средний (1.15rem), основной текст `var(--text)`, вес 400
-- `--sm` — мелкий (0.85rem), приглушённый `var(--muted)` + opacity 0.6
+- `--sm` — мелкий (0.95rem), приглушённый `#c0c0c0` + opacity 0.75
 
 **Каждое слово** получает inline-стиль `--r` для случайного поворота (-4deg…+4deg).
 
 **Анимации:**
-- `pulse` / `pulseDim` — вспышка: scale(1.06) + translateY(-2px) на ~10% цикла, 80% времени — статика. Длительность: 7–14s, рандомизирована через 10 комбинаций `nth-child(10n+N)`, задержки 0–7.4s.
-- Примерно 20% слов активны в каждый момент.
+- `pulse` / `pulseDim` — вспышка: translateY(-2px) на ~10% цикла, 80% времени — статика. Длительность: 7–14s, рандомизирована через 10 комбинаций `nth-child(10n+N)`, задержки 0–7.4s.
+- Примерно 20% слов активны в каждый момент. Анимация не использует scale, только translateY + opacity.
 
 **Hover (только десктоп):**
-- lg: `animation-play-state:paused`, scale(1.15) за 0.35s ease, цвет остаётся акцентным
-- md: `animation-play-state:paused`, color → accent за 0.6s ease, размер не меняется
-- sm: `animation-play-state:paused`, color → accent + opacity → 1 за 0.6s ease, размер не меняется
-- При уходе курсора — transition возвращает в исходное состояние.
+- lg: color → `var(--muted)` за 0.5s ease (оранжевый тускнеет до серого), размер не меняется
+- md: color → `var(--accent)` за 0.5s ease (белый подсвечивается оранжевым)
+- sm: color → `var(--accent)`, opacity → 1 за 0.5s ease
+- Pulse-анимация не останавливается — hover меняет только color/opacity, pulse двигает translateY. Конфликтов нет, так как свойства разные.
 
-**Техника:** у каждого слова есть `<span class="word-cloud__inner">`, на котором применяется pulse-анимация (transform + opacity), а на родителе — поворот через `--r`. Hover ставит animation-play-state:paused на inner и применяет свой transform/color через transition.
+**Техника:** у каждого слова есть `<span class="word-cloud__inner">` с `transition: color 0.5s ease`. Pulse-анимация на том же inner. Поворот через `--r` — на внешнем span'е.
 
 **Мобильная адаптация (≤768px):**
 - lg: 1.7rem → 1.3rem
 - md: 1.15rem → 0.95rem
-- sm: 0.85rem → 0.75rem
+- sm: 0.95rem → 0.85rem
 - gap уменьшен с 14px до 10px, max-height снят
 
-**prefers-reduced-motion:** анимация отключается, остаётся статика.
+**prefers-reduced-motion:** анимация отключается, цвет/opacity lg/md/sm фиксированы (hover не применяется).
 
 ---
 
@@ -109,8 +109,8 @@
 | Анимация | Длительность | Интервал / Повтор | Easing | Где |
 |---|---|---|---|---|
 | `pulse` / `pulseDim` | 7–14s (цикл) | Бесконечно, 10 staggered-комбинаций | `ease-in-out` | Слова в облаке (#requests) |
-| hover `scale` (lg) | 350ms | — | `ease` | Крупные слова в облаке, десктоп |
-| hover `color` (md/sm) | 600ms | — | `ease` | Средние и мелкие слова в облаке, десктоп |
+| hover `color` (lg) | 500ms | — | `ease` | Оранжевые слова → серый, десктоп |
+| hover `color` (md/sm) | 500ms | — | `ease` | Белые/серые слова → оранжевый, десктоп |
 | `shimmerWave` | 700ms | На hover: повтор с паузой 3s | `ease-out` | Плитки, кнопки, цитата |
 | `shimmerWave` (nav) | 700ms | Случайно каждые 8–15s | `ease-out` | Пункты меню (через `is-shimmer-active`) |
 | `navLinePulse` | 12s (цикл) | 2s stagger между пунктами | — | Линия над пунктами меню |
@@ -127,7 +127,7 @@
 | Ширина | Поведение |
 |---|---|
 | `<1000px` | Навигация `.nav-links` скрывается. Hero-секция переходит на мобильные отступы. Цитата на всю ширину. Кнопки в колонку. |
-| `<768px` | Сетка `.approach-grid` переходит в 1 колонку. Плитки уменьшаются. Hover-эффекты отключаются (на мобильных нет hover). |
+| `<768px` | Сетка `.approach-grid` переходит в 1 колонку. Плитки уменьшаются. Hover-эффекты отключаются. |
 | `<600px` | Контакты — визитка показывает контакты сразу, без hover. Отступы уменьшены. |
 
 ---
@@ -139,6 +139,8 @@
 - Анимация линии меню (`navLinePulse`)
 - Shimmer-эффекты на кнопках, цитате, плитках
 - Анимации колоды (сборка/разборка)
+- Pulse-анимация слов в облаке (#requests)
+- Hover-эффекты на словах в облаке (цвет фиксирован)
 - Отключается оранжевый hover на `.frame`
 
 Остаются:

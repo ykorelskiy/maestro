@@ -1,83 +1,79 @@
 # Project State — Maestro
 
-**Last updated:** 2026-05-22 (Session 4)
+**Last updated:** 2026-05-23 (Refactoring session)
 
 ---
 
 ## Current status
 
-End of Session 1. Site structure is complete, navigation works, content is empty.
-Ready to start Session 2: filling sections with content.
+Сайт полностью структурирован, все секции заполнены контентом. Проведён рефакторинг:
+починены баги, удалён мёртвый код, документация приведена в соответствие.
 
 ---
 
 ## Site structure (index.html)
 
-1. **Header** — navigation menu (working, scrolls to sections)
-2. **Hero** — main screen
-3. **#about** — About me *(empty)*
-4. **#approach** — My approach *(2×3 tile grid with modal)*
-5. **#articles** — Articles *(empty, no cards yet)*
-6. **#tools** — Tools *(empty)*
-7. **#contacts** — Contacts *(empty)*
-8. **Footer**
+1. **Header** — навигация (работает, скролл к секциям)
+2. **Hero** — главный экран с параллаксом
+3. **#about** — 6 карт (snap stack) с автоповтором анимации
+4. **#approach** — 6 плиток (2×3) с модальным окном и анимацией колоды
+5. **#requests** — облако слов (50 слов, 3 слоя, pulse-анимация)
+6. **#articles** — 3 карточки статей
+7. **#tools** — заглушка с описанием
+8. **#contacts** — визитка с letter scatter и контактами
+9. **Footer** — (отсутствует, опционально)
 
 ---
 
 ## Done in Session 1
 
-- Added 5 main sections with correct IDs
-- Styled sections according to existing design system
-- Fixed navigation: menu links now point to correct section IDs
-- All committed and pushed to GitHub
-
----
+- Добавлены 5 основных секций с правильными ID
+- Навигация: ссылки меню ведут на секции
+- Всё закоммичено и запушено на GitHub
 
 ## Done in Session 2
-- Implemented approach carousel with 6 cards
-- Added auto-play functionality (3 seconds interval)
-- Implemented keyboard navigation (left/right arrows)
-- Added cycle navigation (after last card - first, and vice versa)
-- Added pause on hover functionality
-- Added pause on user interaction functionality
-- Added slide indicators with active state
-- Fixed cycle navigation logic
-- Fixed scroll handler conflict during animation
-- Fixed keyboard navigation scope issues
-- Set correct 3-second interval
+- Реализован карусель подходов с 6 карточками
+- Автопроигрывание (3 секунды)
+- Клавиатурная навигация (стрелки влево/вправо)
+- Циклическая навигация
+- Пауза при hover
+- Пауза при взаимодействии пользователя
+- Индикаторы слайдов
 
 ## Done in Session 3
-- Replaced approach carousel with 2×3 tile grid
-- Added hover effects (border glow, box-shadow, background tint)
-- Added stagger reveal animation via IntersectionObserver (rows delayed)
-- Added modal overlay on tile click (close via ×/overlay/Esc)
-- Added sessionStorage tracking for "viewed" tiles
-- Added mobile single-column fallback for grid
-- Committed: `d771d54`
+- Карусель заменён на сетку 2×3 плиток
+- Hover-эффекты (border glow, box-shadow, background tint)
+- Stagger reveal через IntersectionObserver
+- Модальное окно по клику на плитку
+- sessionStorage для отслеживания просмотренных плиток
+- Мобильная одноколоночная версия
 
 ## Done in Session 4
-- Логотип «MAESTRO.» стал ссылкой на Hero (#hero) — клик возвращает наверх
-- Добавлена кнопка scroll-to-top (оранжевая стрелка в правом нижнем углу)
-  - Появляется после 400px скролла
-  - При клике плавно скроллит наверх
-  - Hover — заливка оранжевым, смена цвета иконки
+- Логотип «MAESTRO.» — ссылка на Hero (#hero)
+- Кнопка scroll-to-top (оранжевая, правый нижний угол)
+
+## Done in Session 5 (word cloud)
+- Секция #requests: список заменён на облако слов
+- 50 слов, 3 визуальных слоя (lg/md/sm)
+- Pulse-анимация (10 комбинаций длительности/задержки)
+- Hover: оранжевые тускнеют до серого, белые/серые — подсвечиваются оранжевым
+- Все 50 слов в HTML с псевдослучайным порядком
+
+## Done in Session 6 (refactoring)
+- Удалён дубль `shimmer:hover::after` (неработающий)
+- Удалён дубль `transition` для lg-слов в hover-блоке
+- Починена логика `prefers-reduced-motion`: sm opacity 0.75, hover md/sm не ломается
+- Удалён мёртвый tilt-код в contacts (mousemove без эффекта)
+- DESIGN_SYSTEM.md приведён в соответствие с кодом
+- PROJECT_STATE.md обновлён
 
 ---
 
-## Planned for Session 2
-- **Approach carousel implemented** — 6 cards with auto-play and navigation
-- About — short paragraph
-- Contacts — email / telegram (no form yet)
-- Articles — 2–3 placeholder cards
+## Известные проблемы
 
-Fill sections with content:
-1. About — short paragraph
-2. Approach — 3–5 theses
-3. Contacts — email / telegram (no form yet)
-4. Articles — 2–3 placeholder cards
-5. Tools — list of 3–5 items
-
-**Principle:** texts are written by user + ChatGPT in chat, Cline inserts them into HTML.
+- Нет `<footer>` (опционально)
+- Заголовок #articles: «Разборы и тексты», в навигации — «СТАТЬИ» (косметика)
+- Кнопки «Записаться» и «Все статьи» ведут на `#` (заглушки)
 
 ---
 

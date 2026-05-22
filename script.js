@@ -913,19 +913,6 @@ rafScroll.subscribe((scrollY) => {
         });
     }
 
-    // ── Tilt (desktop only, no reduced motion) ──
-    if(isReduced) return;
-
-    let tiltRAF = null;
-    card.addEventListener('mousemove', (e) => {
-        if(tiltRAF) cancelAnimationFrame(tiltRAF);
-        tiltRAF = requestAnimationFrame(() => {
-            const r = card.getBoundingClientRect();
-            const dx = (e.clientX - r.left - r.width / 2) / r.width;
-            const dy = (e.clientY - r.top - r.height / 2) / r.height;
-            tiltRAF = null;
-        });
-    });
 })();
 
 /* =========================================

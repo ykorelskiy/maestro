@@ -574,10 +574,6 @@ body.is-menu-open{
 @media (hover: hover) and (pointer: fine) {
     .shimmer:hover::after{
         opacity:1;
-        animation:shimmerWave 0.7s ease-out forwards;
-    }
-
-    .shimmer:hover::after{
         animation:
             shimmerWave 0.7s ease-out forwards,
             shimmerPause 2.3s 0.7s,
@@ -2276,10 +2272,6 @@ section#about.about-stack{
 
 /* Hover — только десктоп */
 @media (hover: hover) and (pointer: fine) {
-    .word-cloud__word--lg .word-cloud__inner{
-        transition:color 0.5s ease;
-    }
-
     .word-cloud__word--lg:hover .word-cloud__inner{
         color:var(--muted);
     }
@@ -2292,7 +2284,6 @@ section#about.about-stack{
         color:var(--accent);
         opacity:1;
     }
-
 }
 
 .requests-not-title{
@@ -2422,13 +2413,12 @@ section#about.about-stack{
     }
 
     .word-cloud__word--sm{
-        opacity:0.6;
+        opacity:0.75;
     }
 
-    .word-cloud__word:hover .word-cloud__inner{
-        animation-play-state:unset !important;
-        transform:none !important;
-        transition:none !important;
+    .word-cloud__word--md .word-cloud__inner,
+    .word-cloud__word--sm .word-cloud__inner{
+        color:inherit !important;
     }
 
     .approach-tile{
