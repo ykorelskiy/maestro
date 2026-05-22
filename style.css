@@ -2262,11 +2262,9 @@ section#about.about-stack{
 @keyframes pulseDim{
     0%, 20%, 100%{
         transform:translateY(0);
-        opacity:0.75;
     }
     10%{
         transform:translateY(-2px);
-        opacity:0.92;
     }
 }
 
