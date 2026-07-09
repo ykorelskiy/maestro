@@ -345,6 +345,8 @@ body.is-menu-open{
 
     display:flex;
 
+    flex-direction:column;
+
     padding:100px 60px 0;
 }
 
@@ -462,9 +464,9 @@ body.is-menu-open{
 
     max-width:760px;
 
-    margin-top:auto;
+    margin-top:0;
 
-    margin-bottom:auto;
+    margin-bottom:0;
 }
 
 .hero-label{
