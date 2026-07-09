@@ -170,26 +170,144 @@ export default function AboutStack() {
         <div className="about-card__bg"></div>
         <div className="about-card__graphic" aria-hidden="true">
           <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="80" y1="120" x2="520" y2="110" stroke="currentColor" strokeWidth="1.2" opacity="0.25" />
-            <line x1="80" y1="150" x2="520" y2="140" stroke="currentColor" strokeWidth="1.2" opacity="0.25" />
-            <line x1="80" y1="180" x2="520" y2="170" stroke="currentColor" strokeWidth="1.2" opacity="0.25" />
-            <line x1="80" y1="210" x2="520" y2="200" stroke="currentColor" strokeWidth="1.2" opacity="0.25" />
-            <line x1="80" y1="240" x2="520" y2="230" stroke="currentColor" strokeWidth="1.2" opacity="0.25" />
+            {/* Staff lines */}
+            <g stroke="currentColor" strokeWidth="1.2" opacity="0.2">
+              <line x1="50" y1="120" x2="550" y2="120" />
+              <line x1="50" y1="132" x2="550" y2="132" />
+              <line x1="50" y1="144" x2="550" y2="144" />
+              <line x1="50" y1="156" x2="550" y2="156" />
+              <line x1="50" y1="168" x2="550" y2="168" />
+            </g>
+
+            {/* Treble Clef */}
             <path
-              d="M130 120 C130 80 170 60 190 90 C210 120 180 180 160 200 C140 220 120 200 130 180 C140 160 160 170 155 190 C150 210 140 230 145 245 C150 260 165 255 170 240 C175 225 165 210 155 215 C145 220 140 210 145 200"
+              d="M 78 200 
+                 C 74 190, 84 182, 92 182 
+                 C 102 182, 108 190, 108 198 
+                 C 108 210, 92 225, 80 225 
+                 C 65 225, 55 210, 55 190 
+                 C 55 150, 90 110, 90 80 
+                 C 90 65, 82 55, 74 55 
+                 C 66 55, 62 67, 66 82 
+                 L 78 205 
+                 C 80 217, 74 225, 66 225 
+                 C 58 225, 54 217, 54 210" 
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.2"
               strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
               opacity="0.3"
             />
-            <g opacity="0.3">
-              <ellipse cx="260" cy="165" rx="10" ry="7" transform="rotate(-15 260 165)" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              <line x1="270" y1="165" x2="270" y2="110" stroke="currentColor" strokeWidth="1.2" />
-              <ellipse cx="340" cy="195" rx="10" ry="7" transform="rotate(-15 340 195)" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              <line x1="350" y1="195" x2="350" y2="140" stroke="currentColor" strokeWidth="1.2" />
-              <ellipse cx="410" cy="155" rx="10" ry="7" transform="rotate(-15 410 155)" stroke="currentColor" strokeWidth="1.5" fill="none" />
-              <line x1="420" y1="155" x2="420" y2="100" stroke="currentColor" strokeWidth="1.2" />
+
+            {/* Key Signature (C minor - 3 flats) */}
+            <g stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.3">
+              {/* B flat (y=144) */}
+              <path d="M 115 125 L 115 144 A 4 4 0 0 1 121 140 C 122 137, 118 135, 115 137" />
+              {/* E flat (y=126) */}
+              <path d="M 125 107 L 125 126 A 4 4 0 0 1 131 122 C 132 119, 128 117, 125 119" />
+              {/* A flat (y=150) */}
+              <path d="M 135 131 L 135 150 A 4 4 0 0 1 141 146 C 142 143, 138 141, 135 143" />
+            </g>
+
+            {/* Time Signature (Common time C) */}
+            <path
+              d="M 152 135 A 8 8 0 1 0 152 151"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+              opacity="0.3"
+            />
+
+            {/* Melody Notes (J.S. Bach - Fugue in C minor BWV 847) */}
+            <g opacity="0.35">
+              {/* 1. Eighth rest */}
+              <path d="M 168 142 Q 173 138, 172 144 Q 170 148, 176 142 L 170 156" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+              {/* Group 1: C5, B4, C5 */}
+              {/* C5 (y=138) */}
+              <ellipse cx="188" cy="138" rx="5.5" ry="3.8" transform="rotate(-20 188 138)" fill="currentColor" />
+              <line x1="182.8" y1="138" x2="182.8" y2="166" stroke="currentColor" strokeWidth="1.2" />
+              
+              {/* B4 (y=144) */}
+              <ellipse cx="208" cy="144" rx="5.5" ry="3.8" transform="rotate(-20 208 144)" fill="currentColor" />
+              <line x1="202.8" y1="144" x2="202.8" y2="172" stroke="currentColor" strokeWidth="1.2" />
+              
+              {/* C5 (y=138) */}
+              <ellipse cx="228" cy="138" rx="5.5" ry="3.8" transform="rotate(-20 228 138)" fill="currentColor" />
+              <line x1="222.8" y1="138" x2="222.8" y2="166" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Group 1 Beams (sixteenth notes) */}
+              <line x1="182.8" y1="166" x2="222.8" y2="166" stroke="currentColor" strokeWidth="3" />
+              <line x1="182.8" y1="160" x2="222.8" y2="160" stroke="currentColor" strokeWidth="1.5" />
+
+              {/* Group 2: G4, Ab4, F4, G4 */}
+              {/* G4 (y=156) */}
+              <ellipse cx="252" cy="156" rx="5.5" ry="3.8" transform="rotate(-20 252 156)" fill="currentColor" />
+              <line x1="257.2" y1="156" x2="257.2" y2="128" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Ab4 (y=150) */}
+              <ellipse cx="272" cy="150" rx="5.5" ry="3.8" transform="rotate(-20 272 150)" fill="currentColor" />
+              <line x1="277.2" y1="150" x2="277.2" y2="122" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* F4 (y=162) */}
+              <ellipse cx="292" cy="162" rx="5.5" ry="3.8" transform="rotate(-20 292 162)" fill="currentColor" />
+              <line x1="297.2" y1="162" x2="297.2" y2="134" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* G4 (y=156) */}
+              <ellipse cx="312" cy="156" rx="5.5" ry="3.8" transform="rotate(-20 312 156)" fill="currentColor" />
+              <line x1="317.2" y1="156" x2="317.2" y2="128" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Group 2 Beams */}
+              <line x1="257.2" y1="128" x2="317.2" y2="128" stroke="currentColor" strokeWidth="3" />
+              <line x1="257.2" y1="134" x2="317.2" y2="134" stroke="currentColor" strokeWidth="1.5" />
+
+              {/* Group 3: D4, Eb4, C4, D4 */}
+              {/* D4 (y=174) */}
+              <ellipse cx="336" cy="174" rx="5.5" ry="3.8" transform="rotate(-20 336 174)" fill="currentColor" />
+              <line x1="341.2" y1="174" x2="341.2" y2="146" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Eb4 (y=168) */}
+              <ellipse cx="356" cy="168" rx="5.5" ry="3.8" transform="rotate(-20 356 168)" fill="currentColor" />
+              <line x1="361.2" y1="168" x2="361.2" y2="140" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* C4 (y=180 + ledger line) */}
+              <ellipse cx="376" cy="180" rx="5.5" ry="3.8" transform="rotate(-20 376 180)" fill="currentColor" />
+              <line x1="381.2" y1="180" x2="381.2" y2="152" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="366" y1="180" x2="386" y2="180" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* D4 (y=174) */}
+              <ellipse cx="396" cy="174" rx="5.5" ry="3.8" transform="rotate(-20 396 174)" fill="currentColor" />
+              <line x1="401.2" y1="174" x2="401.2" y2="146" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Group 3 Beams */}
+              <line x1="341.2" y1="146" x2="401.2" y2="146" stroke="currentColor" strokeWidth="3" />
+              <line x1="341.2" y1="152" x2="401.2" y2="152" stroke="currentColor" strokeWidth="1.5" />
+
+              {/* Group 4: G4, C4, B3, C4 */}
+              {/* G4 (y=156) */}
+              <ellipse cx="420" cy="156" rx="5.5" ry="3.8" transform="rotate(-20 420 156)" fill="currentColor" />
+              <line x1="425.2" y1="156" x2="425.2" y2="128" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* C4 (y=180 + ledger line) */}
+              <ellipse cx="440" cy="180" rx="5.5" ry="3.8" transform="rotate(-20 440 180)" fill="currentColor" />
+              <line x1="445.2" y1="180" x2="445.2" y2="138" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="430" y1="180" x2="450" y2="180" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* B3 (y=186 + ledger line space) */}
+              <ellipse cx="460" cy="186" rx="5.5" ry="3.8" transform="rotate(-20 460 186)" fill="currentColor" />
+              <line x1="465.2" y1="186" x2="465.2" y2="144" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="450" y1="180" x2="470" y2="180" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* C4 (y=180 + ledger line) */}
+              <ellipse cx="480" cy="180" rx="5.5" ry="3.8" transform="rotate(-20 480 180)" fill="currentColor" />
+              <line x1="485.2" y1="180" x2="485.2" y2="152" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="470" y1="180" x2="490" y2="180" stroke="currentColor" strokeWidth="1.2" />
+
+              {/* Group 4 Beams (slanted) */}
+              <line x1="425.2" y1="128" x2="485.2" y2="152" stroke="currentColor" strokeWidth="3" />
+              <line x1="425.2" y1="134" x2="485.2" y2="158" stroke="currentColor" strokeWidth="1.5" />
             </g>
           </svg>
         </div>
