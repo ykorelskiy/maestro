@@ -36,6 +36,11 @@ export default function RootLayout({
       className={`${inter.variable} ${cormorant.variable}`}
     >
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if ('scrollRestoration' in window.history) { window.history.scrollRestoration = 'manual'; }`,
+          }}
+        />
         <div className="noise" aria-hidden="true" />
         {children}
       </body>
