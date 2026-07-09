@@ -326,40 +326,53 @@ export default function AboutStack() {
       >
         <div className="about-card__graphic" aria-hidden="true">
           <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Single continuous heartbeat-style line tracing the skyline */}
+            {/* 1. The glowing trail path */}
             <path
+              className="skyline-trail-path"
               d="M 50 300 
-                 L 100 300 
-                 C 115 285, 135 285, 150 300 
-                 C 165 285, 185 285, 200 300 
-                 C 215 285, 235 285, 250 300 
-                 L 250 260 
-                 L 252 260 
-                 L 252 300 
-                 L 290 300 
-                 L 310 275 
-                 L 330 275 
-                 C 335 255, 345 255, 350 265 
-                 L 353 265 
-                 L 354 80 
-                 L 355 80 
-                 L 356 265 
-                 L 375 265 
-                 L 385 275 
-                 L 430 275 
-                 C 435 255, 445 255, 448 240 
-                 L 449 160 
-                 L 450 160 
-                 L 451 240 
-                 C 454 255, 464 255, 470 275 
-                 L 490 275 
-                 L 510 300 
+                 L 120 300 
+                 L 210 160 
+                 L 230 280 
+                 L 275 280 
+                 C 280 260, 290 260, 295 270 
+                 L 298 270 
+                 L 300 80 
+                 L 301 80 
+                 L 303 270 
+                 L 310 270 
+                 L 320 280 
+                 L 370 280 
+                 L 390 160 
+                 L 480 300 
                  L 550 300"
-              stroke="currentColor"
+              stroke="var(--accent)"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity="0.3"
+            />
+            {/* 2. The running spark path */}
+            <path
+              className="skyline-spark-path"
+              d="M 50 300 
+                 L 120 300 
+                 L 210 160 
+                 L 230 280 
+                 L 275 280 
+                 C 280 260, 290 260, 295 270 
+                 L 298 270 
+                 L 300 80 
+                 L 301 80 
+                 L 303 270 
+                 L 310 270 
+                 L 320 280 
+                 L 370 280 
+                 L 390 160 
+                 L 480 300 
+                 L 550 300"
+              stroke="var(--accent)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>

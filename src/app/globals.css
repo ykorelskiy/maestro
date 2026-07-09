@@ -3101,6 +3101,68 @@ section#about.about-stack{
     }
 }
 
+/* =========================================
+   SKYLINE PULSE & SPARK ANIMATIONS
+========================================= */
+.skyline-trail-path {
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    opacity: 0;
+    animation: traceSkylineTrail 12s infinite ease-in-out;
+}
+
+.skyline-spark-path {
+    stroke-dasharray: 45 1400;
+    stroke-dashoffset: 1445;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px var(--accent));
+    animation: traceSkylineSpark 12s infinite ease-in-out;
+}
+
+@keyframes traceSkylineSpark {
+    0% {
+        stroke-dashoffset: 1445;
+        opacity: 0;
+    }
+    1% {
+        opacity: 1;
+    }
+    35% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+    36%, 100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes traceSkylineTrail {
+    0% {
+        stroke-dashoffset: 1400;
+        opacity: 0;
+    }
+    35% {
+        stroke-dashoffset: 0;
+        opacity: 0.35;
+    }
+    65% {
+        stroke-dashoffset: 0;
+        opacity: 0.35;
+        filter: drop-shadow(0 0 2px rgba(255, 107, 26, 0.2));
+    }
+    85% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+        filter: none;
+    }
+    100% {
+        stroke-dashoffset: 1400;
+        opacity: 0;
+    }
+}
+
+
 @media(max-width:600px) {
     .contact-modal-card {
         width: 100vw;
