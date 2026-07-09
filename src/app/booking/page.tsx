@@ -79,17 +79,10 @@ export default function BookingPage() {
           </div>
         ) : (
           <>
-            <h3 style={{ fontFamily: 'var(--cormorant)', fontSize: '2.5rem', fontWeight: 500, marginBottom: '12px', letterSpacing: '-1px', color: 'var(--text)' }}>
-              Запись на сессию
-            </h3>
-            <p className="desc" style={{ color: 'var(--muted)', fontSize: '14px', lineHeight: 1.5, marginBottom: '32px' }}>
-              Заполните форму ниже. Я рассмотрю ваш запрос и отвечу в течение 24 часов.
-            </p>
-
-            <form onSubmit={handleSubmit} className="contact-modal-form">
+            <form onSubmit={handleSubmit} className="contact-modal-form" style={{ marginTop: '10px', flex: 1 }}>
               <div className="contact-form-row-group">
                 <div className="contact-form-row">
-                  <label htmlFor="booking_name">Ваше имя</label>
+                  <label htmlFor="booking_name" className={clientName.trim() ? 'is-filled' : 'is-empty'}>Ваше имя</label>
                   <input
                     type="text"
                     id="booking_name"
@@ -103,7 +96,7 @@ export default function BookingPage() {
                 </div>
 
                 <div className="contact-form-row">
-                  <label htmlFor="booking_contact">Telegram или E-mail</label>
+                  <label htmlFor="booking_contact" className={contactInput.trim() ? 'is-filled' : 'is-empty'}>Telegram или E-mail</label>
                   <input
                     type="text"
                     id="booking_contact"
@@ -118,7 +111,7 @@ export default function BookingPage() {
               </div>
 
               <div className="contact-form-row">
-                <label>Тема обращения</label>
+                <label className="is-filled">Тема обращения</label>
                 <div className="subject-buttons">
                   <button
                     type="button"
@@ -147,11 +140,12 @@ export default function BookingPage() {
                 </div>
               </div>
 
-              <div className="contact-form-row">
-                <label htmlFor="booking_message">Сообщение / Запрос</label>
+              <div className="contact-form-row" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <label htmlFor="booking_message" className={message.trim() ? 'is-filled' : 'is-empty'}>Сообщение / Запрос</label>
                 <textarea
                   id="booking_message"
                   className="contact-form-input contact-form-textarea"
+                  style={{ flex: 1 }}
                   placeholder="Опишите кратко суть вашего обращения..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}

@@ -93,15 +93,10 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
           </div>
         ) : (
           <>
-            <h3>Связаться</h3>
-            <p className="desc">
-              Заполните форму ниже. Я рассмотрю ваш запрос и отвечу в течение 24 часов.
-            </p>
-
-            <form onSubmit={handleSubmit} className="contact-modal-form">
+            <form onSubmit={handleSubmit} className="contact-modal-form" style={{ marginTop: '10px' }}>
               <div className="contact-form-row-group">
                 <div className="contact-form-row">
-                  <label htmlFor="modal_name">Ваше имя</label>
+                  <label htmlFor="modal_name" className={clientName.trim() ? 'is-filled' : 'is-empty'}>Ваше имя</label>
                   <input
                     type="text"
                     id="modal_name"
@@ -115,7 +110,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 </div>
 
                 <div className="contact-form-row">
-                  <label htmlFor="modal_contact">Telegram или E-mail</label>
+                  <label htmlFor="modal_contact" className={contactInput.trim() ? 'is-filled' : 'is-empty'}>Telegram или E-mail</label>
                   <input
                     type="text"
                     id="modal_contact"
@@ -130,7 +125,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               </div>
 
               <div className="contact-form-row">
-                <label>Тема обращения</label>
+                <label className="is-filled">Тема обращения</label>
                 <div className="subject-buttons">
                   <button
                     type="button"
@@ -159,11 +154,12 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 </div>
               </div>
 
-              <div className="contact-form-row">
-                <label htmlFor="modal_message">Сообщение / Запрос</label>
+              <div className="contact-form-row" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <label htmlFor="modal_message" className={message.trim() ? 'is-filled' : 'is-empty'}>Сообщение / Запрос</label>
                 <textarea
                   id="modal_message"
                   className="contact-form-input contact-form-textarea"
+                  style={{ flex: 1 }}
                   placeholder="Опишите кратко суть вашего обращения..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
