@@ -347,7 +347,7 @@ body.is-menu-open{
 
     flex-direction:column;
 
-    padding:56px 0 0;
+    padding:72px 0 0;
 }
 
 /* =========================================
@@ -481,7 +481,7 @@ body.is-menu-open{
 
     gap:14px;
 
-    margin-bottom:36px;
+    margin-bottom:16px;
 
     color:var(--muted);
 
@@ -878,7 +878,7 @@ body.is-menu-open{
 
     .hero{
         align-items:flex-start;
-        padding-top:56px;
+        padding-top:72px;
         padding-left:0;
         padding-right:0;
         min-height:100vh;
@@ -1059,7 +1059,7 @@ body.is-menu-open{
 
 /* ============ SESSION 1: NEW SECTIONS ============ */
 
-section[id]{
+section[id]:not(#hero){
     padding:120px 0;
 }
 
