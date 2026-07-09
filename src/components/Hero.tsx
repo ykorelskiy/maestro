@@ -10,6 +10,10 @@ export default function Hero() {
 
   // Parallax and Fade on Scroll
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     let ticking = false;
 
     const updateParallax = () => {
