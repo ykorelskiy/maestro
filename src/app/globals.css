@@ -3105,15 +3105,15 @@ section#about.about-stack{
    SKYLINE PULSE & SPARK ANIMATIONS
 ========================================= */
 .skyline-trail-path {
-    stroke-dasharray: 1400;
-    stroke-dashoffset: 1400;
-    opacity: 0;
+    stroke-dasharray: 1700;
+    stroke-dashoffset: 1700;
+    opacity: 0.35;
     animation: traceSkylineTrail 12s infinite ease-in-out;
 }
 
 .skyline-spark-path {
-    stroke-dasharray: 45 1400;
-    stroke-dashoffset: 1445;
+    stroke-dasharray: 8 1700;
+    stroke-dashoffset: 1708;
     opacity: 0;
     filter: drop-shadow(0 0 6px var(--accent));
     animation: traceSkylineSpark 12s infinite ease-in-out;
@@ -3121,7 +3121,7 @@ section#about.about-stack{
 
 @keyframes traceSkylineSpark {
     0% {
-        stroke-dashoffset: 1445;
+        stroke-dashoffset: 1708;
         opacity: 0;
     }
     1% {
@@ -3139,8 +3139,8 @@ section#about.about-stack{
 
 @keyframes traceSkylineTrail {
     0% {
-        stroke-dashoffset: 1400;
-        opacity: 0;
+        stroke-dashoffset: 1700;
+        opacity: 0.35;
     }
     35% {
         stroke-dashoffset: 0;
@@ -3156,8 +3156,8 @@ section#about.about-stack{
         opacity: 0;
         filter: none;
     }
-    100% {
-        stroke-dashoffset: 1400;
+    90%, 100% {
+        stroke-dashoffset: 1700;
         opacity: 0;
     }
 }

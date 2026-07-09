@@ -329,22 +329,33 @@ export default function AboutStack() {
             {/* 1. The glowing trail path */}
             <path
               className="skyline-trail-path"
-              d="M 50 300 
-                 L 120 300 
-                 L 210 160 
-                 L 230 280 
-                 L 275 280 
-                 C 280 260, 290 260, 295 270 
-                 L 298 270 
-                 L 300 80 
+              d="M 50 320 
+                 L 160 320 
+                 L 170 300 
+                 L 245 150 
+                 L 240 160 
+                 L 185 300 
+                 L 175 320 
+                 L 200 320 
+                 L 210 290 
+                 L 270 290 
+                 C 275 270, 285 270, 290 285 
+                 L 295 285 
+                 L 297 220 
+                 L 299 80 
                  L 301 80 
-                 L 303 270 
-                 L 310 270 
-                 L 320 280 
-                 L 370 280 
-                 L 390 160 
-                 L 480 300 
-                 L 550 300"
+                 L 303 220 
+                 L 305 285 
+                 C 310 270, 320 270, 325 285 
+                 L 390 285 
+                 L 400 320 
+                 L 425 320 
+                 L 415 300 
+                 L 360 160 
+                 L 355 150 
+                 L 430 300 
+                 L 440 320 
+                 L 550 320"
               stroke="var(--accent)"
               strokeWidth="2"
               strokeLinecap="round"
@@ -353,22 +364,33 @@ export default function AboutStack() {
             {/* 2. The running spark path */}
             <path
               className="skyline-spark-path"
-              d="M 50 300 
-                 L 120 300 
-                 L 210 160 
-                 L 230 280 
-                 L 275 280 
-                 C 280 260, 290 260, 295 270 
-                 L 298 270 
-                 L 300 80 
+              d="M 50 320 
+                 L 160 320 
+                 L 170 300 
+                 L 245 150 
+                 L 240 160 
+                 L 185 300 
+                 L 175 320 
+                 L 200 320 
+                 L 210 290 
+                 L 270 290 
+                 C 275 270, 285 270, 290 285 
+                 L 295 285 
+                 L 297 220 
+                 L 299 80 
                  L 301 80 
-                 L 303 270 
-                 L 310 270 
-                 L 320 280 
-                 L 370 280 
-                 L 390 160 
-                 L 480 300 
-                 L 550 300"
+                 L 303 220 
+                 L 305 285 
+                 C 310 270, 320 270, 325 285 
+                 L 390 285 
+                 L 400 320 
+                 L 425 320 
+                 L 415 300 
+                 L 360 160 
+                 L 355 150 
+                 L 430 300 
+                 L 440 320 
+                 L 550 320"
               stroke="var(--accent)"
               strokeWidth="3.5"
               strokeLinecap="round"
