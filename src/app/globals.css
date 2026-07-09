@@ -345,8 +345,6 @@ body.is-menu-open{
 
     display:flex;
 
-    align-items:center;
-
     padding:140px 7vw 0;
 }
 
@@ -463,6 +461,10 @@ body.is-menu-open{
     z-index:5;
 
     max-width:760px;
+
+    margin-top:auto;
+
+    margin-bottom:auto;
 }
 
 .hero-label{
