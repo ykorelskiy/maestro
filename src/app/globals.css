@@ -15,7 +15,7 @@
     --transition:
     400ms cubic-bezier(.2,.8,.2,1);
 
-    --header-height:80px;
+    --header-height:64px;
 
     --inter: var(--font-inter), 'Inter', sans-serif;
     --cormorant: var(--font-cormorant), 'Cormorant Garamond', serif;
@@ -71,7 +71,7 @@ body{
 
     width:100%;
 
-    padding:34px 60px;
+    padding:20px 60px;
 
     display:flex;
 
