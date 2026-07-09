@@ -2743,3 +2743,266 @@ section#about.about-stack{
         gap: 8px;
     }
 }
+
+.btn-accent {
+    background: var(--accent) !important;
+    color: #050505 !important;
+    border-color: var(--accent) !important;
+    font-weight: 700 !important;
+}
+
+.btn-accent:hover {
+    background: transparent !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 20px rgba(255, 107, 26, 0.45);
+}
+
+/* =========================================
+   CONTACT REQUEST MODAL & OVERLAY
+========================================= */
+
+.contact-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-modal-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.contact-modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 580px;
+    padding: 40px;
+    position: relative;
+    transform: translateY(30px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    background-image: 
+        radial-gradient(circle at top right, rgba(255,107,26,0.03), transparent 30%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.025'/%3E%3C/svg%3E");
+}
+
+.contact-modal-overlay.is-active .contact-modal-card {
+    transform: translateY(0);
+}
+
+.contact-modal-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.contact-modal-close:hover {
+    color: var(--accent);
+}
+
+.contact-modal-card h3 {
+    font-family: var(--cormorant);
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+    color: var(--text);
+}
+
+.contact-modal-card p.desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.contact-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.contact-form-row label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.contact-form-input {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: var(--inter);
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-form-input:focus {
+    outline: none;
+    border-color: rgba(255, 107, 26, 0.5);
+    box-shadow: 0 0 10px rgba(255, 107, 26, 0.15);
+}
+
+.contact-form-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.subject-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.subject-btn {
+    flex: 1;
+    min-width: 140px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--muted);
+    font-family: var(--inter);
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.subject-btn:hover {
+    border-color: rgba(255, 107, 26, 0.35);
+    color: var(--text);
+}
+
+.subject-btn.is-active {
+    background: rgba(255, 107, 26, 0.05);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.contact-modal-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    justify-content: flex-end;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--muted);
+    padding: 14px 24px;
+    font-family: var(--inter);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.btn-cancel:hover {
+    color: var(--text);
+}
+
+.contact-modal-error {
+    color: #ff3b30;
+    font-size: 13px;
+    text-align: right;
+    margin-top: -8px;
+}
+
+.contact-modal-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    text-align: center;
+    gap: 16px;
+}
+
+.contact-modal-success h4 {
+    font-family: var(--cormorant);
+    font-size: 2.2rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -1px;
+}
+
+.contact-modal-success p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   STANDALONE BOOKING PAGE
+========================================= */
+.booking-page-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+    background: var(--bg);
+}
+
+.booking-page-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 640px;
+    padding: 48px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+    background-image: 
+        radial-gradient(circle at top right, rgba(255,107,26,0.03), transparent 30%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.025'/%3E%3C/svg%3E");
+}
+
+@media(max-width:600px) {
+    .contact-modal-card {
+        padding: 24px;
+    }
+    .booking-page-card {
+        padding: 32px 20px;
+    }
+    .subject-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .subject-btn {
+        width: 100%;
+    }
+}
