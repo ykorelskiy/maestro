@@ -326,90 +326,41 @@ export default function AboutStack() {
       >
         <div className="about-card__graphic" aria-hidden="true">
           <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g opacity="0.3" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">
-              {/* Baseline */}
-              <line x1="40" y1="340" x2="560" y2="340" strokeWidth="1.5" opacity="0.4" />
-
-              {/* Water waves */}
-              <path d="M 50 352 L 550 352" strokeWidth="0.8" opacity="0.15" />
-              <path d="M 70 362 Q 120 360 170 362 T 270 362 T 370 362 T 470 362 T 530 362" strokeWidth="0.8" opacity="0.1" />
-
-              {/* 1. Rostral Column (x: 60 - 110) */}
-              <path d="M 65 340 L 95 340 L 95 330 L 90 330 L 90 200 C 90 190, 88 185, 80 185 C 72 185, 70 190, 70 200 L 70 330 L 65 330 Z" strokeWidth="1.5" />
-              {/* Rostra Left 1 */}
-              <path d="M 70 280 C 60 278, 55 268, 50 272 C 55 278, 65 284, 70 284" strokeWidth="1.2" />
-              {/* Rostra Right 1 */}
-              <path d="M 90 280 C 100 278, 105 268, 110 272 C 105 278, 95 284, 90 284" strokeWidth="1.2" />
-              {/* Rostra Left 2 */}
-              <path d="M 70 240 C 62 238, 57 230, 53 234 C 57 240, 67 244, 70 244" strokeWidth="1.2" />
-              {/* Rostra Right 2 */}
-              <path d="M 90 240 C 98 238, 103 230, 107 234 C 103 240, 93 244, 90 244" strokeWidth="1.2" />
-              {/* Torch Bowl */}
-              <path d="M 72 185 L 88 185 L 92 175 L 68 175 Z" strokeWidth="1.5" />
-              {/* Flame */}
-              <path d="M 74 175 Q 76 158 80 160 Q 84 158 86 175" strokeWidth="1.2" />
-
-              {/* 2. St. Isaac's Cathedral (x: 135 - 245) */}
-              <path d="M 135 340 L 245 340 L 245 315 L 225 315 L 225 300 L 155 300 L 155 315 L 135 315 Z" strokeWidth="1.5" />
-              {/* Columns */}
-              <line x1="165" y1="315" x2="165" y2="340" strokeWidth="1.2" />
-              <line x1="177" y1="315" x2="177" y2="340" strokeWidth="1.2" />
-              <line x1="189" y1="315" x2="189" y2="340" strokeWidth="1.2" />
-              <line x1="201" y1="315" x2="201" y2="340" strokeWidth="1.2" />
-              <line x1="213" y1="315" x2="213" y2="340" strokeWidth="1.2" />
-              {/* Pediment Triangle */}
-              <path d="M 150 300 L 190 280 L 230 300 Z" strokeWidth="1.5" />
-              {/* Dome Drum */}
-              <path d="M 165 280 L 215 280 L 215 250 L 165 250 Z" strokeWidth="1.2" />
-              <line x1="175" y1="250" x2="175" y2="280" strokeWidth="1" />
-              <line x1="185" y1="250" x2="185" y2="280" strokeWidth="1" />
-              <line x1="195" y1="250" x2="195" y2="280" strokeWidth="1" />
-              <line x1="205" y1="250" x2="205" y2="280" strokeWidth="1" />
-              {/* Dome */}
-              <path d="M 167 250 C 167 195, 213 195, 213 250" strokeWidth="2" />
-              {/* Top Lantern */}
-              <path d="M 184 198 L 196 198 L 196 182 L 184 182 Z" strokeWidth="1.2" />
-              <path d="M 186 182 Q 190 172 194 182" strokeWidth="1.2" />
-              {/* Cross */}
-              <line x1="190" y1="172" x2="190" y2="162" strokeWidth="1.5" />
-              <line x1="186" y1="166" x2="194" y2="166" strokeWidth="1.2" />
-
-              {/* 3. Peter and Paul Cathedral (x: 270 - 360) */}
-              <path d="M 270 340 L 360 340 L 360 310 L 340 310 L 340 280 L 280 280 L 280 310 L 270 310 Z" strokeWidth="1.5" />
-              {/* Tower levels */}
-              <path d="M 292 280 L 328 280 L 328 240 L 292 240 Z" strokeWidth="1.2" />
-              <path d="M 298 240 L 322 240 L 322 205 L 298 205 Z" strokeWidth="1.2" />
-              <path d="M 302 205 C 302 195, 318 195, 318 205 Z" strokeWidth="1.2" />
-              {/* Spire */}
-              <line x1="310" y1="190" x2="310" y2="70" strokeWidth="2.2" />
-              {/* Cross & Angel */}
-              <line x1="310" y1="70" x2="310" y2="55" strokeWidth="1.2" />
-              <line x1="306" y1="62" x2="314" y2="62" strokeWidth="1.2" />
-              <path d="M 310 62 C 314 62, 317 58, 317 62" strokeWidth="1" />
-
-              {/* 4. Palace Bridge (x: 390 - 550) */}
-              {/* Left Pier */}
-              <path d="M 370 340 L 395 330 L 395 340 Z" strokeWidth="1.5" />
-              {/* Right Pier */}
-              <path d="M 550 340 L 525 330 L 525 340 Z" strokeWidth="1.5" />
-              {/* Left Wing (slanted up-right) */}
-              <line x1="395" y1="330" x2="450" y2="190" strokeWidth="2.2" />
-              <path d="M 395 330 Q 425 260 440 200" strokeWidth="1.2" />
-              {/* Left wing lattice members */}
-              <line x1="405" y1="305" x2="413" y2="280" strokeWidth="0.8" />
-              <line x1="415" y1="280" x2="423" y2="255" strokeWidth="0.8" />
-              <line x1="425" y1="255" x2="433" y2="230" strokeWidth="0.8" />
-              <line x1="435" y1="230" x2="443" y2="205" strokeWidth="0.8" />
-              
-              {/* Right Wing (slanted up-left) */}
-              <line x1="525" y1="330" x2="470" y2="190" strokeWidth="2.2" />
-              <path d="M 525 330 Q 495 260 480 200" strokeWidth="1.2" />
-              {/* Right wing lattice members */}
-              <line x1="515" y1="305" x2="507" y2="280" strokeWidth="0.8" />
-              <line x1="505" y1="280" x2="497" y2="255" strokeWidth="0.8" />
-              <line x1="495" y1="255" x2="487" y2="230" strokeWidth="0.8" />
-              <line x1="485" y1="230" x2="477" y2="205" strokeWidth="0.8" />
-            </g>
+            {/* Single continuous heartbeat-style line tracing the skyline */}
+            <path
+              d="M 50 300 
+                 L 100 300 
+                 C 115 285, 135 285, 150 300 
+                 C 165 285, 185 285, 200 300 
+                 C 215 285, 235 285, 250 300 
+                 L 250 260 
+                 L 252 260 
+                 L 252 300 
+                 L 290 300 
+                 L 310 275 
+                 L 330 275 
+                 C 335 255, 345 255, 350 265 
+                 L 353 265 
+                 L 354 80 
+                 L 355 80 
+                 L 356 265 
+                 L 375 265 
+                 L 385 275 
+                 L 430 275 
+                 C 435 255, 445 255, 448 240 
+                 L 449 160 
+                 L 450 160 
+                 L 451 240 
+                 C 454 255, 464 255, 470 275 
+                 L 490 275 
+                 L 510 300 
+                 L 550 300"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity="0.3"
+            />
           </svg>
         </div>
         <div className="about-card__content">
