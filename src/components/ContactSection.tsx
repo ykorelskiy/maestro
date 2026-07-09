@@ -219,7 +219,7 @@ export default function ContactSection() {
               aria-hidden="true"
             >
               <rect x="2" y="7" width="8" height="7" rx="1" stroke="currentColor" strokeWidth="1.2" />
-              <path d="M4 7V5a2 2 0 0 1 4 0v2" stroke="currentColor" stroke-width="1.2" fill="none" />
+              <path d="M4 7V5a2 2 0 0 1 4 0v2" stroke="currentColor" strokeWidth="1.2" fill="none" />
             </svg>
             <span>Конфиденциально</span>
           </div>
