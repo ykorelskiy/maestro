@@ -2787,19 +2787,26 @@ section#about.about-stack{
     border: 1px solid var(--border);
     border-radius: var(--radius);
     width: 100%;
-    max-width: 580px;
+    max-width: 840px;
     padding: 40px;
     position: relative;
-    transform: translateY(30px);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transform: scale(0.96) translateY(24px);
+    filter: blur(8px);
+    opacity: 0;
+    transition: 
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
     background-image: 
         radial-gradient(circle at top right, rgba(255,107,26,0.03), transparent 30%),
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.025'/%3E%3C/svg%3E");
 }
 
 .contact-modal-overlay.is-active .contact-modal-card {
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+    opacity: 1;
 }
 
 .contact-modal-close {
@@ -2841,6 +2848,12 @@ section#about.about-stack{
     gap: 20px;
 }
 
+.contact-form-row-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
 .contact-form-row {
     display: flex;
     flex-direction: column;
@@ -2873,7 +2886,7 @@ section#about.about-stack{
 }
 
 .contact-form-textarea {
-    min-height: 80px;
+    min-height: 180px;
     resize: vertical;
 }
 
@@ -2997,6 +3010,10 @@ section#about.about-stack{
     }
     .booking-page-card {
         padding: 32px 20px;
+    }
+    .contact-form-row-group {
+        grid-template-columns: 1fr;
+        gap: 16px;
     }
     .subject-buttons {
         flex-direction: column;

@@ -99,32 +99,34 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </p>
 
             <form onSubmit={handleSubmit} className="contact-modal-form">
-              <div className="contact-form-row">
-                <label htmlFor="modal_name">Ваше имя</label>
-                <input
-                  type="text"
-                  id="modal_name"
-                  className="contact-form-input"
-                  placeholder="Имя или никнейм"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
+              <div className="contact-form-row-group">
+                <div className="contact-form-row">
+                  <label htmlFor="modal_name">Ваше имя</label>
+                  <input
+                    type="text"
+                    id="modal_name"
+                    className="contact-form-input"
+                    placeholder="Имя или никнейм"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
 
-              <div className="contact-form-row">
-                <label htmlFor="modal_contact">Telegram или E-mail</label>
-                <input
-                  type="text"
-                  id="modal_contact"
-                  className="contact-form-input"
-                  placeholder="@username, t.me/username или name@email.com"
-                  value={contactInput}
-                  onChange={(e) => setContactInput(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
+                <div className="contact-form-row">
+                  <label htmlFor="modal_contact">Telegram или E-mail</label>
+                  <input
+                    type="text"
+                    id="modal_contact"
+                    className="contact-form-input"
+                    placeholder="@username, t.me/username или name@email.com"
+                    value={contactInput}
+                    onChange={(e) => setContactInput(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
               </div>
 
               <div className="contact-form-row">

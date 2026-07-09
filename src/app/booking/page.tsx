@@ -87,32 +87,34 @@ export default function BookingPage() {
             </p>
 
             <form onSubmit={handleSubmit} className="contact-modal-form">
-              <div className="contact-form-row">
-                <label htmlFor="booking_name">Ваше имя</label>
-                <input
-                  type="text"
-                  id="booking_name"
-                  className="contact-form-input"
-                  placeholder="Имя или никнейм"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
+              <div className="contact-form-row-group">
+                <div className="contact-form-row">
+                  <label htmlFor="booking_name">Ваше имя</label>
+                  <input
+                    type="text"
+                    id="booking_name"
+                    className="contact-form-input"
+                    placeholder="Имя или никнейм"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
 
-              <div className="contact-form-row">
-                <label htmlFor="booking_contact">Telegram или E-mail</label>
-                <input
-                  type="text"
-                  id="booking_contact"
-                  className="contact-form-input"
-                  placeholder="@username, t.me/username или name@email.com"
-                  value={contactInput}
-                  onChange={(e) => setContactInput(e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                />
+                <div className="contact-form-row">
+                  <label htmlFor="booking_contact">Telegram или E-mail</label>
+                  <input
+                    type="text"
+                    id="booking_contact"
+                    className="contact-form-input"
+                    placeholder="@username, t.me/username или name@email.com"
+                    value={contactInput}
+                    onChange={(e) => setContactInput(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
               </div>
 
               <div className="contact-form-row">
