@@ -2794,6 +2794,7 @@ section#about.about-stack{
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     transform: scale(0.96) translateY(24px);
     filter: blur(8px);
     opacity: 0;
@@ -3007,6 +3008,7 @@ section#about.about-stack{
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
     background-image: 
         radial-gradient(circle at top right, rgba(255,107,26,0.03), transparent 30%),
@@ -3053,6 +3055,49 @@ section#about.about-stack{
     50% {
         color: #ffb894;
         text-shadow: 0 0 12px rgba(255, 107, 26, 0.5);
+    }
+}
+
+/* Custom Card Shimmer */
+.contact-modal-card::after,
+.booking-page-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 107, 26, 0.04) 30%,
+        rgba(255, 107, 26, 0.08) 45%,
+        rgba(255, 107, 26, 0.04) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    transform: translateX(-120%);
+    will-change: transform;
+    opacity: 0;
+    border-radius: var(--radius);
+    z-index: 10;
+}
+
+.contact-modal-overlay.is-active .contact-modal-card::after,
+.booking-page-card::after {
+    opacity: 1;
+    animation: modalShimmerLoop 8s infinite ease-in-out;
+}
+
+@keyframes modalShimmerLoop {
+    0% {
+        transform: translateX(-120%);
+    }
+    12% {
+        transform: translateX(120%);
+    }
+    100% {
+        transform: translateX(120%);
     }
 }
 
