@@ -1,6 +1,6 @@
 # Project State — Maestro
 
-**Last updated:** 2026-10-10 (Supabase Reanimation & Keep-Alive Cron)
+**Last updated:** 2026-11-09 (Enhanced Supabase Keep-Alive: Read + Write Heartbeat Cron)
 
 ---
 
@@ -40,10 +40,11 @@
 - `articles` — база статей для блога (содержит заголовок, slug, контент в markdown, теги и статус публикации).
 - `bookings` — база заявок клиентов (имя, контакты, сфера запроса, результаты скрининга, описание).
 - `tools` — файлы упражнений и тестов для скачивания.
+- `_keepalive` — таблица сердцебиения (heartbeat) для защиты от автопаузы Supabase Free tier.
 
 **Защита от заморозки (Keep-Alive Cron)**:
-- Добавлен автоматический ежедневный запуск GitHub Actions (`.github/workflows/supabase-keepalive.yml` + `scripts/keepalive.mjs`).
-- Каждый день в 08:00 UTC (11:00 MSK) скрипт посылает HTTP `GET` (PostgREST `articles?select=id&limit=1`) к базе данных Supabase с использованием API ключа. Это имитирует активное обращение и предотвращает автозаморозку проекта Supabase на бесплатном тарифе.
+- Добавлен автоматический запуск GitHub Actions (`.github/workflows/supabase-keepalive.yml` + `scripts/keepalive.mjs`) 3 раза в день: в 00:00, 08:00 и 16:00 UTC (03:00, 11:00, 19:00 MSK).
+- Скрипт выполняет не только чтение, но и полноценный `UPSERT` (запись новой метки `updated_at` и инкремент `ping_count` в таблицу `_keepalive`), а также контрольный `SELECT` к `articles`. Это гарантирует наличие как read-, так и write-активности в Postgres, полностью исключая классификацию пинга как no-op.
 
 ---
 

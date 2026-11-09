@@ -21,3 +21,8 @@ CREATE POLICY "Allow admin all access to contact_requests"
     ON public.contact_requests FOR ALL
     USING (auth.role() = 'authenticated')
     WITH CHECK (auth.role() = 'authenticated'); -- Только авторизованный админ может читать/редактировать
+
+-- Права доступа Data API (Обязательно для Supabase с 30 октября)
+GRANT INSERT ON public.contact_requests TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_requests TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_requests TO service_role;
